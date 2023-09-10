@@ -1,10 +1,13 @@
 ---
-title: "At the Summit of Mount Rainier"
-date: 2023-09-10T20:37:56-04:00
+title: "Rainier"
+date: 2023-09-10T13:01:14-04:00
 draft: false
 ---
 
-##Intro
+# At the Summit of Mount Rainier
+
+
+## Intro
 
 I summited Mount Rainier in August 2023, specifically 9-12 August. I started my training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
 Realistically I started in January then went on a trip in march so I couldn't train at all that month.
@@ -17,11 +20,11 @@ For me being stressed out is a good thing, that generally means I’m doing some
 
 So the trip begins with some hiccups, my flight from NY to Seattle gets canceled and I had to scramble to find another one. Note to self: never fly JetBlue. I get to Seattle on 8th August and use the extra day to prep.
 
-##Day 1 (August 9th)
+## Day 1 (August 9th)
 
 I leave from Bellevue at 11 am in a rental car from Avis. The drive takes about 2 hours, and I arrive at IMG's office at 2 pm. Today is mostly about checking gear and meeting the guides and the group. Gear check goes on until 5 pm, and I have to rent a lot of stuff. Rentals are expensive, mind you. I spend around $550 on them. But the good thing is that I don't have to buy all that stuff, which could definitely cost thousands. After gear check, I get food from the bar and grill next to RMI. People say their pickles are amazing. Unfortunately, I didn't get any. I'm staying in a tent on IMG's premises, which is perfectly fine. There's a bathroom, shower, and laundry unit in their office.
 
-##Day 2 (August 10th)
+## Day 2 (August 10th)
 
 We leave IMG at 8 am and arrive at Paradise at 9 am. It's foggy and overcast, but the anticipation is electric. After a quick 5-minute break, the real adventure begins as we start hiking up the trail. One of the guides, Colton, has already taught us how to lift and wear our heavy packs—an essential skill, as they're quite a burden!
 
@@ -43,7 +46,7 @@ Dinner isn't just about amazing food. To my surprise, it's also teaching me a lo
 
 Okay, so after dinner, everyone is just relaxing, and I'm going to bed because of the headache. I can't tell if it's from the altitude or the exertion. Either way, I'm exhausted and going to sleep early, while the others wait for the sunset. The sunset is beautiful, by the way. I missed it, but I saw the pictures.
 
-##Day 3 (August 11th)
+## Day 3 (August 11th)
 
 I wake up pretty early and see the sunrise. It's magical. Also, nobody sleeps at Camp Muir. It's like New York City, always bustling with people, even at midnight. We go to the guides' tent (aka the kitchen) at 8 am. The treacherous trek to the tent is even worse with the 40-pound pack.
 
@@ -60,7 +63,7 @@ Oh, my tent neighbor Justin started snoring 30 minutes after dinner. I'm so envi
 
 Also, I should mention at this point that Camp Muir has bathrooms, and Ingraham Flats has a semi-private hole in the snow.
 
-##Day 4 (August 12th)
+## Day 4 (August 12th)
 
 I wake up at 10:40 pm, and no one else is up. I guess everyone got some sleep. The guides bring us some hot water, and I eat ramen. At home, I boil the shit out of the ramen, but here I've learned that just adding hot water works just as well, especially if you're on a mountain. With breakfast done, we start packing our stuff.
 
@@ -87,5 +90,7 @@ Four of us made it to the top, and three were family. These people are badasses.
 This write-up has become too long at this point. Let's get to the descent quickly. We reach the summit at 5:30 AM and start the descent at 5:40 AM. It's a grueling and painful journey that just won't end. We reach Ingraham Flats around 9:00 AM, rest for a bit, gather our stuff, and stuff it in our packs. Next stop, Camp Muir at 10:00 AM. This is an actual break. We stop here for about an hour, and I don't want to go any further down. I'm just thinking somehow I could stay here for a night and go down tomorrow.
 
 We start from Camp Muir at 11:00 AM and get to the parking lot at 2:30 PM. It's a long, excruciatingly painful, and incredibly fulfilling journey. I take my shoes off at Paradise and don't wear them till I have to get in my car to drive to Seattle. Everything about this trip is memorable: the challenge, the pain, the self-doubt, the camaraderie, the accomplishment, the experience, and of course, the olive oil.
+
+
 
 
