@@ -1,3 +1,9 @@
+---
+title: "At the Summit of Mount Rainier"
+date: 2023-09-10T20:37:56-04:00
+draft: false
+---
+
 ##Intro
 
 I summited Mount Rainier in August 2023, specifically 9-12 August. I started my training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
