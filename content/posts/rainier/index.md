@@ -6,19 +6,20 @@ draft: false
 
 # At the Summit of Mount Rainier
 
+{{< imgaction rainier Resize "600x Lanczos" >}}
 
 ## Intro
 
-I summited Mount Rainier in August 2023, specifically 9-12 August. I started my training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
+I summited [Mount Rainier](https://en.wikipedia.org/wiki/Mount_Rainier) in August 2023, specifically 9-12 August. I started training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
 Realistically I started in January then went on a trip in march so I couldn't train at all that month.
 
 My training was anything but planned. Being early made me lazy so I never followed a plan even though I wanted to and should have. I started climbing stairs with weights in April. It was hard and brutal. I think the best I did was 1:30 hours a couple of times and the max frequency I achieved was twice a week. 
 
 I had stressed about the prep so much that I started to get annoyed by it. It was long, monotonous and boring especially in humid NY summers. By may, I was somewhat burned out by the training program (still no program, it was all stairs once or twice a week with some weight training). 
 
-For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as uphill athlete suggest. 
+For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as [Uphill Athlete](https://uphillathlete.com/) suggests. 
 
-So the trip begins with some hiccups, my flight from NY to Seattle gets canceled and I had to scramble to find another one. Note to self: never fly JetBlue. I get to Seattle on 8th August and use the extra day to prep.
+So the trip begins with some hiccups, my flight from New York City to Seattle, WA gets canceled and I had to scramble to find another one. Note to self: never fly JetBlue. I get to Seattle on 8th August and use the extra day to prep.
 
 ## Day 1 (August 9th)
 
@@ -41,7 +42,7 @@ We're hiking to Camp Muir, and it's taking around 6 and a half hours. We're expe
 
 It's 3:30 pm and we're at the camp. I'm dying. We're staying at the Gombu, named after the famous Nawang Gombu Sherpa. It's one of those wooden huts. It's a small room with wooden bunks or platforms. We'll all be sleeping in there. I'll be honest, I was a bit down when I first saw it, and then Angie casually mentions that there's a mice issue at Muir. I have lots of other issues on my mind, mice not being one of them.
 
-{{< imgaction clouds Resize "600x Lanczos" "View from Camp Muir" >}}
+{{< imgaction clouds Resize "600x Lanczos" >}}
 View from Camp Muir
 
 After relaxing for a bit, the guides call us for dinner. It's 4:30 pm, the perfect time for dinner. There's a tent on the other side of Muir, and the only way to get there is treacherous. But I'll forgive all that because the dinner is amazing. Gage and Justin, the guides, are making chicken burritos. Who doesn't love burritos, especially at 10,000 feet? It's just wonderful: the food, the company. Plus you can have seconds. I'm certainly loading up on burritos and hot chocolate.
@@ -96,7 +97,7 @@ Okay, so I'm at the summit, and I have so many thoughts and feelings, but more t
 
 {{< imgaction down Resize "600x Lanczos" >}}
 
-Four of us made it to the top, and three were family. These people are badasses. The kind of things they do for fun is just incredible. Coming back to the summit, it's really cold, so we spend only ten minutes instead of the planned one hour. We also don't go any further. As per the guides, there's the summit crater and the rocky summit, which is at a higher elevation. I wouldn't call the crater the summit as it's not the highest point, but IMG does, and who am I to challenge the guides?
+Four of us made it to the top, and three were family. These people are badasses. The kind of things they do for fun is just incredible. Coming back to the summit, it's really cold, so we spend only ten minutes instead of the planned one hour. We also don't go any further. As per the guides, there's the summit crater and the rocky summit, which is at a higher elevation. I wouldn't call the crater the summit as it's not the highest point, but [IMG](https://www.mountainguides.com/) does, and who am I to challenge the guides?
 
 {{< imgaction me Resize "400x Lanczos" >}}
 
