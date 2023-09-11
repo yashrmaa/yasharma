@@ -17,7 +17,7 @@ My training was anything but planned. Being early made me lazy so I never follow
 
 I had stressed about the prep so much that I started to get annoyed by it. It was long, monotonous and boring especially in humid NY summers. By may, I was somewhat burned out by the training program (still no program, it was all stairs once or twice a week with some weight training). 
 
-For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as [Uphill Athlete](https://uphillathlete.com/) suggests. 
+For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as [Uphill Athlete](https://uphillathlete.com/) suggest. 
 
 So the trip begins with some hiccups, my flight from New York City to Seattle, WA gets canceled and I had to scramble to find another one. Note to self: never fly JetBlue. I get to Seattle on 8th August and use the extra day to prep.
 
