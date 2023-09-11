@@ -40,9 +40,9 @@ Oh, and I forgot to mention that the guides teach us how to walk at a consistent
 
 We're hiking to Camp Muir, and it's taking around 6 and a half hours. We're expected to reach Muir at 3:30 pm. This part is brutal, but I'm exceeding my expectations. I thought I wouldn't make it to Camp Muir, but I'm still going strong. I even asked Angie, our guide, yesterday how many people give up before Muir. To my surprise, almost everyone makes it there. I've been to Camp Muir once before, so it would have been a waste to come all the way from NY and hike with 40 pounds just to see Muir, which I could see any day without destroying my back.
 
-It's 3:30 pm and we're at the camp. I'm dying. We're staying at the Gombu, named after the famous Nawang Gombu Sherpa. It's one of those wooden huts. It's a small room with wooden bunks or platforms. We'll all be sleeping in there. I'll be honest, I was a bit down when I first saw it, and then Angie casually mentions that there's a mice issue at Muir. I have lots of other issues on my mind, mice not being one of them.
+It's 3:30 pm and we're at the camp. I'm dying. We're staying at the Gombu, named after the famous [Nawang Gombu Sherpa](https://en.wikipedia.org/wiki/Nawang_Gombu_Sherpa). It's one of those wooden huts. It's a small room with wooden bunks or platforms. We'll all be sleeping in there. I'll be honest, I was a bit down when I first saw it, and then Angie casually mentions that there's a mice issue at Muir. I have lots of other issues on my mind, mice not being one of them.
 
-{{< imgaction clouds Resize "600x Lanczos" >}}
+{{< imgaction hut Resize "600x Lanczos" >}}
 View from Camp Muir
 
 After relaxing for a bit, the guides call us for dinner. It's 4:30 pm, the perfect time for dinner. There's a tent on the other side of Muir, and the only way to get there is treacherous. But I'll forgive all that because the dinner is amazing. Gage and Justin, the guides, are making chicken burritos. Who doesn't love burritos, especially at 10,000 feet? It's just wonderful: the food, the company. Plus you can have seconds. I'm certainly loading up on burritos and hot chocolate.
