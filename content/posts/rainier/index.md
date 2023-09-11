@@ -19,7 +19,7 @@ I had stressed about the prep so much that I started to get annoyed by it. It wa
 
 For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as [Uphill Athlete](https://uphillathlete.com/) suggest. 
 
-So the trip begins with some hiccups, my flight from New York City to Seattle, WA gets canceled and I had to scramble to find another one. Note to self: never fly JetBlue. I get to Seattle on 8th August and used the extra day to prep.
+So the trip begins with some hiccups, my flight from New York City to Seattle, WA gets canceled and I had to scramble to find another one. (Note to self: never fly JetBlue) I get to Seattle on 8th August and used the extra day to prep.
 
 ## Day 1 (August 9th)
 
