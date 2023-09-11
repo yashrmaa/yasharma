@@ -13,9 +13,9 @@ draft: false
 I summited [Mount Rainier](https://en.wikipedia.org/wiki/Mount_Rainier) in August 2023, specifically 9-12 August. I started training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
 Realistically I started in January then went on a trip in march so I couldn't train at all that month.
 
-My training was anything but planned. Being early made me lazy so I never followed a plan even though I wanted to and should have. I started climbing stairs with weights in April. It was hard and brutal. I think the most I did was train for 1h 30m, a couple of times and the max frequency I achieved was twice a week. 
+My training was anything but planned. Being early made me lazy so I never followed a plan even though I wanted to and should have. I started climbing stairs with weights in April. It was hard. I think the most I did was train for 1h 30m, a couple of times and the max frequency I achieved was twice a week. 
 
-I had stressed about the prep so much that I started to get annoyed by it. It was long, monotonous and boring especially in humid NY summers. By may, I was somewhat burned out by the training program (still no program, it was all stairs once or twice a week with some weight training). 
+I had stressed about the training so much that I started to get annoyed by it. It was long, monotonous and boring especially in humid NY summers. By may, I was somewhat burned out by my training program (still no program, it was all stairs once or twice a week with some weight training). 
 
 For me being stressed out is a good thing, that generally means I’m doing something about it. Although, I’d say I was doing like 20% of what plans such as [Uphill Athlete](https://uphillathlete.com/) suggest. 
 
