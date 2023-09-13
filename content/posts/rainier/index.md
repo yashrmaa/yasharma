@@ -27,7 +27,7 @@ I leave from Bellevue at 11 am in a rental car from Avis. The drive takes about 
 
 {{< imgaction cat Resize "300x Lanczos" >}} Don't forget to meet Samson at [Ashford General Store](https://www.google.com/maps/place/Ashford+General+Store/@46.7585726,-122.0360836,17z/data=!3m1!4b1!4m6!3m5!1s0x54912953f5657763:0x97309165411bd1a2!8m2!3d46.758569!4d-122.0312127!16s%2Fg%2F1vj5zxmf?entry=ttu)
 
-{{< imgaction gear Resize "300x Lanczos" >}} The pack
+{{< imgaction gear Resize "800x Lanczos" >}} The pack
 
 
 ## Day 2 (August 10th)
