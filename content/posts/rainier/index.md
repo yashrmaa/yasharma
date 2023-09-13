@@ -25,22 +25,22 @@ So the trip begins with some hiccups, my flight from New York City to Seattle, W
 
 I leave from Bellevue at 11 am in a rental car from Avis. The drive takes about 2 hours, and I arrive at IMG's office at 2 pm. Today is mostly about checking gear and meeting the guides and the group. Gear check goes on until 5 pm, and I have to rent a lot of stuff. Rentals are expensive, mind you. I spend around $550 on them. But the good thing is that I don't have to buy all that stuff, which could definitely cost thousands. After gear check, I get food from the bar and grill next to RMI. People say their pickles are amazing. Unfortunately, I didn't get any. I'm staying in a tent on IMG's premises, which is perfectly fine. There's a bathroom, shower, and laundry unit in their office.
 
-{{< imgaction cat Resize "600x Lanczos" >}} Don't forget to meet Samson at [Ashford General Store](https://www.google.com/maps/place/Ashford+General+Store/@46.7585726,-122.0360836,17z/data=!3m1!4b1!4m6!3m5!1s0x54912953f5657763:0x97309165411bd1a2!8m2!3d46.758569!4d-122.0312127!16s%2Fg%2F1vj5zxmf?entry=ttu)
+{{< imgaction cat Resize "300x Lanczos" >}} Don't forget to meet Samson at [Ashford General Store](https://www.google.com/maps/place/Ashford+General+Store/@46.7585726,-122.0360836,17z/data=!3m1!4b1!4m6!3m5!1s0x54912953f5657763:0x97309165411bd1a2!8m2!3d46.758569!4d-122.0312127!16s%2Fg%2F1vj5zxmf?entry=ttu)
 
-{{< imgaction gear Resize "600x Lanczos" >}} The pack
+{{< imgaction gear Resize "300x Lanczos" >}} The pack
 
 
 ## Day 2 (August 10th)
 
 We leave IMG at 8 am and arrive at Paradise at 9 am. It's foggy and overcast, but the anticipation is electric. After a quick 5-minute break, the real adventure begins as we start hiking up the trail. One of the guides, Colton, has already taught us how to lift and wear our heavy packs—an essential skill, as they're quite a burden!
 
-{{< imgaction start Resize "600x Lanczos" >}} It begins
+{{< imgaction start Resize "300x Lanczos" >}} It begins
 
 The pace is brisk, but manageable with the group. I'd be out of breath in minutes if I were hiking alone, but here, I'm able to keep up without too much trouble. After about 2 hours, we take our first break to eat, drink, and change into our mountaineering boots. I'm excited to wear them, both because my hiking boots are subpar and because they'll shift some of the weight from my back to my feet.
 
 Did I mention how heavy my pack is?
 
-{{< imgaction line Resize "600x Lanczos" >}}
+{{< imgaction line Resize "300x Lanczos" >}}
 
 Actually, maybe I'm exaggerating a bit. My memory might be playing tricks on me, as I'm more vividly recalling how the pack felt at the end of the trip. Maybe it wasn't so bad at this point. Regardless, this part of the hike is pretty enjoyable. I'm chatting with the guides and hiking at a consistent pace.
 
