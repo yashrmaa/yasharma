@@ -41,6 +41,7 @@ Honestly, I am a little hesitant here as I have been wrong many times about this
 
 If this sounds interesting, please reach out at avjscfhr@duck.com.
 
+{{< imgaction row Resize "800x Lanczos" >}}
 
 {{< imgaction alaska Resize "300x Lanczos" >}}
 
