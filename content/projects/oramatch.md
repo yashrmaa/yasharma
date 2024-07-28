@@ -6,7 +6,7 @@ draft: false
 
 Dating is hard and it's become even harder with the [downfall of dating apps](https://www.npr.org/sections/money/2024/02/13/1228749143/the-dating-app-paradox-why-dating-apps-may-be-worse-than-ever) at a time when most of our lives are online. 
 
-OraMatch is trying to solve the problem the old fashioned way. You answer some questions and get matched with people whose answers are similar to yours. The questions are designed to focus on things that really matter in building deep relationships. 
+OraMatch is trying to solve the problem the old fashioned way. You answer some questions and get matched with people whose answers are similar to yours. The questions are designed to focus on building deep relationships. 
 
 ## How does it works?
 
