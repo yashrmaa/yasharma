@@ -10,7 +10,7 @@ OraMatch is trying to solve the problem the old fashioned way. You answer some q
 
 ## How does it work?
 
-Simply fill out the questionnaire, and an intelligent matching algorithm will identify compatible individuals based on your preferences. At the end of each month, you'll receive an email with detailed profiles of your top matches, empowering you to initiate contact and explore potential connections.
+Simply fill out the questionnaire, and a human assisted matching algorithm will identify compatible individuals based on your preferences. At the end of each month, you'll receive an email with detailed profiles of your top matches, empowering you to initiate contact and explore potential connections.
 
 ### Questions?
 
