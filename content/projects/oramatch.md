@@ -8,7 +8,7 @@ Dating is hard and it's become even harder with the [downfall of dating apps](ht
 
 OraMatch is trying to solve the problem the old fashioned way. You answer some questions and get matched with people whose answers are similar to yours. The questions are designed to focus on building deep relationships. 
 
-## How does it works?
+## How does it work?
 
 Every month you will get an email with details of your matches. Then it would be upto you to reach out to your matches. At that time you can request photos or additional information to explore.
 
