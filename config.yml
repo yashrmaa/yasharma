@@ -8,7 +8,7 @@ buildDrafts: false
 buildFuture: false
 buildExpired: false
 
-googleAnalytics: UA-123-45
+# googleAnalytics: UA-123-45
 
 minify:
   disableXML: true
@@ -122,10 +122,10 @@ menu:
       name: posts
       url: /posts/
       weight: 20
-    # - identifier: example
-    #   name: example.org
-    #   url: https://example.org
-    #   weight: 30
+    - identifier: projects
+      name: projects
+      url: /projects/
+      weight: 30
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
@@ -142,3 +142,9 @@ outputs:
     - HTML
     - RSS
     - JSON # necessary for search
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+      
