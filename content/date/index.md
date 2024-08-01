@@ -9,6 +9,8 @@ hidden: true
 
 Hey there! Welcome to my date me doc.
 
+**Upated July 31, 2024**
+
 ## About me
 
 I am 5 '10”, 34 M, software engineer at Google. I went to school in India and in Texas. I have lived in Delhi, College Station (TX), Plano, Seattle and now New York City.
