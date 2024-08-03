@@ -51,7 +51,7 @@ Honestly, I am a little hesitant here as I have been wrong many times about this
 
 * looking for a life partner and would like to have a monogamous relationship.
 * looking to have biological children.
-* interested in outdoor activities. It’s okay if you don’t want to climb mountains but some interest in hiking/backpacking would be great.
+* a little bit spontaneous and believes in living in the moment.
 * intellectually curious and is ready to put in the effort to make both of our lives better. I think wisdom is realizing that nobody’s perfect and you have to put in effort in every aspect of life.
 
 If this sounds interesting, please reach out at avjscfhr@duck.com.
