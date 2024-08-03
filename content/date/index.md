@@ -1,13 +1,13 @@
 ---
 title: "Date Me"
-date: 2024-03-10T12:38:02-04:00
+date: 2024-07-31T12:38:02-04:00
 draft: false
 hidden: true
 ---
 
 {{< imgaction suit Resize "400x Lanczos" >}}
 
-Hey there! Welcome to my date me doc.
+Hey there! Welcome to my [date me doc](https://www.nytimes.com/2023/08/02/style/date-me-docs.html).
 
 **Upated July 31, 2024**
 
