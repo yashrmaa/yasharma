@@ -6,7 +6,7 @@ draft: false
 
 # Think Simple
 
-My previous manager [Pavel Curtis](https://en.wikipedia.org/wiki/Pavel_Curtis) used to say that there's a simple program trying to break free in this complex code. He would say this almost every time he reviewed my code. It's such a great advice that unlike most things, I was able to internalize. That's what I advice people now. 
+My previous manager Pavel used to say that there's a simple program trying to break free in this complex code. He would say this almost every time he reviewed my code. It's such a great advice that unlike most things, I was able to internalize. That's what I advice people now. 
 
 Thinking back I think it makes even more sense for a couple of reasons.
 * Simple is good. It's what most people are looking for in their lives. We apply this principle of *only keeping the things that are essential* to life and we get (drumrolls please) [minimalism](https://en.wikipedia.org/wiki/Minimalism). 
