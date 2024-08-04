@@ -13,7 +13,7 @@ I work at Google, New York and recently, I have been working on AI in Observabil
 * I write sometimes and publish it here. I am trying to be more consistent with this.
 * Learning the guitar. Started it three months back.
 * Meeting new people. Goal is to talk to someone new everyday. It's hard but that's why I love it. I fail most days but I keep trying.
-* [OraMatch](https://oramatch.xyz) Because I am tired of the dating problem.
+* [OraMatch](https://oramatch.xyz), because I am tired of the dating problem.
 
 ### Abandoned
 * Started building an AI language tutor but wasn't motivated enough to go through with it.
