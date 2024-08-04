@@ -1,7 +1,7 @@
 ---
 title: "Date me directory"
 date: 2024-08-04T16:46:32-04:00
-draft: true
+draft: false
 ---
 
 # Submissions
