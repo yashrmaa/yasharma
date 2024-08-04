@@ -4,6 +4,12 @@ date: 2024-08-04T16:46:32-04:00
 draft: false
 ---
 
+A directory to host date me docs for *the feels alumni*.
+Location is assumed to be NYC.
+
+Please refresh the page to see the submission once you have added it to the form.
+
+
 # Submissions
 
 <iframe class="airtable-embed" src="https://airtable.com/embed/app1kKOGKdD9YJYi7/shrMaPC31gUdGe3cM?viewControls=on" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
