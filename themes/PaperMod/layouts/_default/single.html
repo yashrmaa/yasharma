@@ -48,6 +48,13 @@
     {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
     {{- partial "share_icons.html" . -}}
     {{- end }}
+    <!-- Comments by Cusdis -->
+    <h4>Comments:</h4>
+    <div id="cusdis_thread" data-host="https://cusdis.com"
+      data-app-id="17150cc9-52a7-4153-8790-d8b2f783d653"
+      data-page-id="{{ .File.UniqueID }}" data-page-url="{{ .Permalink }}"
+      data-page-title="{{ .Title }}"></div>
+    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
   </footer>
 
   {{- if (.Param "comments") }}
