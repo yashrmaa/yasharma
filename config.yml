@@ -1,6 +1,6 @@
 baseURL: "https://yasharma.com/"
 title: Yash Sharma
-paginate: 5
+paginate: 10
 theme: PaperMod
 
 enableRobotsTXT: true
