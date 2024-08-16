@@ -4,10 +4,14 @@ date: 2024-08-04T16:46:32-04:00
 draft: false
 ---
 
-A directory to host date me docs for *the feels alumni*.
+A directory to host [date me docs](https://archive.is/oHrMg) for *[the feels alumni](https://catchthefeels.co/)*.
 Location is assumed to be NYC.
 
-Please refresh the page to see the submission once you have added it to the form.
+What is a *Date me Doc*?
+
+It's a free form dating bio. The New York Times covered it in detail. Please see the article [here](https://archive.is/oHrMg).
+
+Please refresh the page to see the submission after adding it to the form.
 
 
 # Submissions
