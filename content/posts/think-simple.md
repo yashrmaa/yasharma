@@ -4,8 +4,6 @@ date: 2024-06-02T13:23:38-04:00
 draft: false
 ---
 
-# Think Simple
-
 My previous manager Pavel used to say that there's a simple program trying to break free in this complex code. He would say it almost every time he reviewed my code. It's such great advice that unlike most things, I was able to internalize it. That's what I advise people now. 
 
 Thinking back I think it makes even more sense for a couple of reasons.
