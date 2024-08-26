@@ -4,11 +4,11 @@ date: 2024-08-25T19:59:11-04:00
 draft: false
 ---
 
-Cities shape us in profound ways, often more than we realize. I am sure you have heard of the quote that you’re the average of 5 people around you. I can’t say how true that is but I can say the basic idea makes sense that we are influenced by our surroundings, both consciously and unconsciously.
+Cities shape us in profound ways, often more than we realize. I am sure you have heard of the quote that you’re the average of 5 people around you. I can’t say how true that is but I can say that the basic idea makes sense. We are influenced by our surroundings, both consciously and unconsciously.
 
 Cities, however, are more than just collections of people. Each city has its own culture and an implicit message, and whether we like it or not we’re influenced by it to a degree. These messages can be obvious or nuanced, and while you might have some preconceptions, truly understanding a city's essence requires living there.
 
-I have lived in multiple cities more recently, NYC and Seattle. Each has a very different message and each enabled me to explore different sides of me. I discovered things about me that have changed my outlook towards life. Let’s talk about it.
+I have had the opportunity to live in multiple cities. More recently, I have lived in NYC and Seattle. Each has a very different message and each enabled me to explore different aspects of me. I discovered things about me that have changed my outlook towards life. Let’s talk about it.
 
 ### Seattle
 
