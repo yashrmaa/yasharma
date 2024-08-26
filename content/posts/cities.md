@@ -1,5 +1,5 @@
 ---
-title: "Cities And Us"
+title: "Cities and Us"
 date: 2024-08-25T19:59:11-04:00
 draft: false
 ---
