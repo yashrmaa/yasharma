@@ -12,6 +12,8 @@ I have had the opportunity to live in multiple cities. More recently, I have liv
 
 ### Seattle
 
+{{< imgaction seattle Resize "600x Lanczos" >}}
+
 I moved to Seattle in 2018 and lived there for 4 years. I moved there for a job without ever visiting the place, in-line with how I have moved most of my life, sight unseen. I knew no one in the city but gradually, I made some friends. In the first few weeks, I noticed that most social conversation with friends and at work had a common thread: the outdoors. It’s no surprise to anyone that folks in Seattle live and breathe the outdoors but back then, I was completely unaware of it. 
 
 I remember Hiking, in particular, was omnipresent in every conversation. I had almost no hiking experience but the constant mentions piqued my interest. I vividly remember my first hike in Seattle, the [old mailbox trail](https://www.wta.org/go-hiking/hikes/mailbox-peak-old-trail). *(The WTA page for the trail is as delightful as the trail. I encourage you, the reader, to take a gander.)* It was unexpectedly challenging and, at moments, frightening. I remember being terrified at the top as the weather worsened and fatigue set in. I safely made it back and in hindsight, the fear was somewhat overblown. I later found out that it is one of the most challenging trails in the area. 
@@ -23,6 +25,8 @@ It made me take on greater challenges like [summiting Mount Rainier](https://yas
 I would say Seattle's message is: explore the outdoors, challenge yourself, and live in harmony with nature. I've internalized this ethos and continue to pursue these interests.
 
 ### NYC
+
+{{< imgaction nyc Resize "400x Lanczos" >}}
 
 People often say that NYC is all about money, but that's an oversimplification. I can say that’s true but the message is so much more than just money. NYC also says, dress well, be fit, be busy, do more. I don't think anyone can talk about the full picture because we can only see the sliver we experience. 
 
