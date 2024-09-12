@@ -1,4 +1,11 @@
-Peru
+---
+title: "Peru"
+date: 2024-09-11T14:27:04-04:00
+draft: false
+---
+
+
+
 
 I am at the Lima airport waiting for my flight back to NYC. It’s been a fabulous 11 days in Peru. I don’t think I got to see a whole lot of places but I did have a fantastic time and I made a bunch of friends. It’s amazing and unexpected how great this trip has been.
 
