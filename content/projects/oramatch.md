@@ -14,7 +14,7 @@ Simply fill out the questionnaire, and a human assisted matching algorithm will 
 
 ### Questions?
 
-Please message me on Twitter [@yasharmaa](https://x.com/yasharmaa) or email at [yash@yasharma.xyz](mailto:yash@yashamra.xyz?subject=OraMatch:)
+Please message me on Twitter [@yasharmaa](https://x.com/yasharmaa) or email at [yash@yasharma.com](mailto:yash@yashamra.com?subject=OraMatch:)
 
 ## Form
 
