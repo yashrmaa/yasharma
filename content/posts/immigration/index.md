@@ -4,6 +4,8 @@ date: 2024-09-12T10:51:25-04:00
 draft: false
 ---
 
+**The [essay](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/) was published on [Tangle](https://www.readtangle.com/)**.
+
 Regardless of their politics, everyone has a view on immigration. More often than not, people [support legal immigration over illegal immigration](https://news.gallup.com/poll/508520/americans-value-immigration-concerns.aspx). Both sides also generally agree that highly skilled immigrants are a valuable asset to the U.S. economy. I would even say most people who immigrate illegally would want to do so legally. But obscure and dated laws in the U.S. make legal immigration downright painful. 
 
 I am a legal immigrant from India on the H-1B visa. I work in technology and have lived in the U.S. for 8 years now. I am considered a highly skilled immigrant, and despite a recent statement from Trump [perferring immigrants with college degrees](https://www.cnn.com/2024/06/20/politics/trump-green-cards-gradutate-college/index.html) and an executive order from Biden [prioritizing tech workers](https://www.whitehouse.gov/briefing-room/statements-releases/2023/10/30/fact-sheet-president-biden-issues-executive-order-on-safe-secure-and-trustworthy-artificial-intelligence/), I have no realistic path for permanent residence (green card) and citizenship.  
