@@ -4,7 +4,7 @@ date: 2024-10-04T14:54:54-04:00
 draft: false
 ---
 
-{{< imgaction sfo Resize "600x Lanczos" >}}
+{{< imgaction sfo Resize "300x Lanczos" >}}
 
 This is my 6th time (or maybe it’s 7th, I am not certain) in San Francisco and everytime I come here, I have feelings in the realm of:
 * oh, this city could be a paradise but sadly it’s so far away from it.
