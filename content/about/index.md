@@ -16,5 +16,10 @@ Before Google, I worked at Microsoft where I was involved in building a technica
 
 I am interested in highly scalable distributed systems and AI.
 
-<!-- ![img](photo.jpeg) -->
+**Interesting bits**
+
+* Published a [paper](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=RCYDJ_wAAAAJ&citation_for_view=RCYDJ_wAAAAJ:u5HHmVD_uO8C) that demonstrates the capabilities of AI as a tool for medical differential diagnosis.
+* Blog post on [AMIE](https://research.google/blog/amie-a-research-ai-system-for-diagnostic-medical-reasoning-and-conversations/), an AI system for medical diagnosis and reasoning.
+* Guest on [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb).
+* Published an [opinion piece about legal immigration on Tangle](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/).
 
