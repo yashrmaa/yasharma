@@ -16,6 +16,6 @@ I have wished and tried hard to like this place and I feel so happy that it’s 
 
 This neighborhood is not a ghost town but it’s also not crowded like the East Village or even Upper East Side in NYC. It seems vibrant from this vantage point. I came to Dolores Park because someone I met in Peru lives in Mission Dolores and she had good things to say about the neighborhood. 
 
-At this moment, I feel happy. The reason I have tried to like San Francisco is because it’s the tech capital of the world and I work in tech. It’s a no-brainer to be in the SF but I never liked it. It’s like we all know we need to eat healthy but it just doesn’t taste good and then suddenly one day, brussel sprouts taste like fries.
+At this moment, I feel happy. The reason I have tried to like San Francisco is because it’s the tech capital of the world and I work in tech. It’s a no-brainer to be in the SF but I never liked it. It’s like we all know we need to eat healthy but it just doesn’t taste good and then suddenly one day, brussels sprouts taste like fries.
 
 Hey there, San Francisco! I’ll make you a permanent fixture, soon!
