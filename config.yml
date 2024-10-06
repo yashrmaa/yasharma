@@ -126,14 +126,15 @@ menu:
       name: projects
       url: /projects/
       weight: 30
-    - identifier: now
-      name: now
-      url: /now/
-      weight: 40
     - identifier: personal
       name: personal
       url: /personal/
       weight: 40
+    - identifier: now
+      name: now
+      url: /now/
+      weight: 50
+    
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
