@@ -16,6 +16,8 @@ Before Google, I worked at Microsoft where I was involved in building a technica
 
 I am interested in highly scalable distributed systems and AI.
 
+[*Twitter*](https://x.com/yasharmaa) \* [Linkedin](https://linkedin.com/in/yasharmaa) \* [Curius](https://curius.app/yash-sharma) 
+
 **Interesting bits**
 
 * Published a [paper](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=RCYDJ_wAAAAJ&citation_for_view=RCYDJ_wAAAAJ:u5HHmVD_uO8C) that demonstrates the capabilities of AI as a tool for medical differential diagnosis.
