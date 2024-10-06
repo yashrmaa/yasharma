@@ -16,7 +16,7 @@ Before Google, I worked at Microsoft where I was involved in building a technica
 
 I am interested in highly scalable distributed systems and AI.
 
-[*Twitter*](https://x.com/yasharmaa) \* [Linkedin](https://linkedin.com/in/yasharmaa) \* [Curius](https://curius.app/yash-sharma) 
+[*Twitter*](https://x.com/yasharmaa) \* [*Linkedin*](https://linkedin.com/in/yasharmaa) \* [*Curius*](https://curius.app/yash-sharma) 
 
 **Interesting bits**
 
