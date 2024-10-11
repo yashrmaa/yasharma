@@ -67,3 +67,5 @@ If this sounds interesting, please reach out at avjscfhr@duck.com.
 {{< imgaction lake Resize "500x Lanczos" >}}
 
 {{< imgaction paneer Resize "500x Lanczos" >}}
+
+{{< imgaction alpaca Resize "500x Lanczos" >}}
