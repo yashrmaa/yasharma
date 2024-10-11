@@ -4,7 +4,7 @@ date: 2024-10-06T17:42:21-04:00
 draft: false
 ---
 
-{{< imgaction beach Resize "800x Lanczos" >}} La Jolla, San Diego, March 2019
+{{< imgaction beach Resize "800x Lanczos" >}} *La Jolla, San Diego, March 2019*
 
 ## Quotes
 
