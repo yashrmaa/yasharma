@@ -65,7 +65,7 @@ jobs:
         with:
           path: ./public
       - name: Run pagefind
-        run: npx -y pagefind --bundle-dir pagefind
+        run: npx -y pagefind --bundle-dir ./public/pagefind
 
   # Deployment job
   deploy:
