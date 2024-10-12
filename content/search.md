@@ -2,6 +2,7 @@
 title: "Search"
 draft: false
 comments: false
+hideMeta: true
 ---
 
 
