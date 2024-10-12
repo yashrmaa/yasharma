@@ -1,6 +1,5 @@
 ---
 title: "Search"
-date: 2024-10-12T13:23:38-04:00
 draft: false
 ---
 
