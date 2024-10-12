@@ -64,6 +64,8 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+      - name: Run pagefind
+        run: npx -y pagefind --site ./public
 
   # Deployment job
   deploy:
