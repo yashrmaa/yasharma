@@ -4,7 +4,7 @@ date: 2024-10-25T17:48:27-04:00
 draft: false
 ---
 
-{{< imgaction fall Resize "400x Lanczos" >}}
+{{< imgaction fall Resize "1000x Lanczos" >}}
 
 It’s 7 am and we’re driving towards the national park to see the Cadillac mountain. It’s the final spot on the itinerary. A friend invited me to this trip. We’re four guys, two of them I met the first time at the rental car center. It’s a short weekend trip with people with very different personalities. 
 
