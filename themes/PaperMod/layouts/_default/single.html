@@ -62,7 +62,7 @@
       <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
     {{ end }}
 
-    <script>
+    <!-- <script>
       document.addEventListener('DOMContentLoaded', function() {
         const cusdisThread = document.getElementById('cusdis_thread');        
         if (cusdisThread) {
@@ -75,7 +75,19 @@
           }
         }
       });
-      </script>    
+      </script>     -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const iframe = document.querySelector('#cusdis_thread iframe');
+        if (iframe) {
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.objectFit = 'contain';
+        }
+      });
+    </script>
+        
   </footer>
 
   {{- if (.Param "comments") }}
