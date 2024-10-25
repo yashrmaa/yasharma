@@ -56,16 +56,26 @@
       <div id="cusdis_thread" data-host="https://cusdis.com"
         data-app-id="17150cc9-52a7-4153-8790-d8b2f783d653"
         data-page-id="{{ .File.UniqueID }}" data-page-url="{{ .Permalink }}"
-        data-page-title="{{ .Title }}"></div>
+        data-page-title="{{ .Title }}"
+        style="width: 100%; height: 600px; max-height: 600px;">
+      </div>
       <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
     {{ end }}
-    <!-- Comments by Cusdis
-    <h4>Comments:</h4>
-    <div id="cusdis_thread" data-host="https://cusdis.com"
-      data-app-id="17150cc9-52a7-4153-8790-d8b2f783d653"
-      data-page-id="{{ .File.UniqueID }}" data-page-url="{{ .Permalink }}"
-      data-page-title="{{ .Title }}"></div>
-    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script> -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const cusdisThread = document.getElementById('cusdis_thread');        
+        if (cusdisThread) {
+          const iframe = cusdisThread.querySelector('iframe');
+          if (iframe) {
+            iframe.style.width = '100%';
+            iframe.style.height = '100%'; 
+            // Force aspect ratio
+            iframe.style.objectFit = 'contain';
+          }
+        }
+      });
+      </script>    
   </footer>
 
   {{- if (.Param "comments") }}
