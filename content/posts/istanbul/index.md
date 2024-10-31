@@ -4,10 +4,15 @@ date: 2024-10-31T13:10:48-04:00
 draft: false
 ---
 
+{{< imgaction catist Resize "800x Lanczos" >}}
+
 ## Day 0
 I couldn't sleep at night, thanks jet lag! So, I decided to go get something to eat at 3 am and [my neighborhood bakery](https://maps.app.goo.gl/PhBcWYYj3Qd6JscC6) was open. It's 24*7 and highly rated. The bakery is tiny with lots of outdoor seating on both sides of the street. It was 3 am and it felt like 8 pm. The street was bustling with people, chai, cigarettes and chatter. I couldn't believe my eyes. I walked around a bit to see if other places down the street were actually this lively and I found people around bars and in general walking around. It was surprising for 3 am. Also, people partying at 3 am on a Monday night? Everything about this neighborhood is eclectic. 
 
 ## Day 1
+
+
+{{< imgaction hagia Resize "800x Lanczos" >}}
 
 I like history. I think about it as an alien world. A world so different from my own. A world where I wasn't typing this on a phone sitting in a cafe drinking an Americano in Istanbul. America and Istanbul so far apart yet so similar.
 
@@ -22,6 +27,9 @@ Overall, the old district in Istanbul is definitely worth a visit. I went to the
 I ended the day with a late night eat. Something I have never had before and didn't know what it was. The entire thing was beautiful. I went to an eatery at 12 am and the owner was sitting outside drinking chai with a friend. Gotta love that, it reminds of India so much. As I entered, he swiftly comes in and says, *[Dürüm](https://en.wikipedia.org/wiki/D%C3%BCr%C3%BCm)*, I didn't know what that was so I said *yes*, while quickly scanning the menu. He made it in like 3 minutes. Turns out it's a cold wrap. There's no heating it up. The guy spoke no English so I used Google translate to ask this specifically. I was in no mood to get a cold sandwich but that was his specialty. The place didn't even have a stove. He only served cold wraps. It was delicious and I was surprised at how good it tasted.
 
 ## Day 2
+
+
+{{< imgaction suley Resize "800x Lanczos" >}}
 
 Last night, I met someone at my neighborhood bakery who recommended me to checkout the [Suleymaniye Mosque](https://tr.wikipedia.org/wiki/S%C3%BCleymaniye_Camii). They said it was as pretty as the other ones with no lines and tickets. The thought of no lines drew me towards it. They were right, the mosque was grand with amazing architecture. The dome had such a beautiful mosaic and I was surprised at how new it seemed. Unlike the Hagia Sophia, this one seemed like a new construction. Well, it is a new construction compared to the Hagia Sophia, new by a 1000 years. Do ancient religious structures age differently? Is 1532 AD really not that old? It certainly didn’t seem that way. Although, I have to add that they go through repair periods and for the Suleymani, the last one ended in 2010, so yeah, it was touched up recently. 
 
