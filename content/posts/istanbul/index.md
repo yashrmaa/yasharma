@@ -43,6 +43,8 @@ To share a few, I thought about why humans build such grand structures? It’s e
 
 As I was absorbed with my thoughts, looking at the stained glass which reminded me of Roman churches (the Ottomans were inspired by Byzantine architecture), I thought about India’s historical architecture. The [Mughals](https://en.wikipedia.org/wiki/Mughal_Empire) were not much different from the Ottomans. They also built mosques and forts in the same time period. I have lived so close to these structures but have never been interested enough to go visit them. Now, I am! I want to see the grand forts and mosques in India that’s part Indian and part arab. The [Mughal architecture](https://en.wikipedia.org/wiki/Mughal_architecture) is modern when compared to all the other ancient structures that exist. I want to see the [Sanchi Stupa](https://en.wikipedia.org/wiki/Sanchi) from the 3rd century B.C.
 
+{{< imgaction sufi Resize "500x Lanczos" >}}
+
 ## Day 3
 
 Today, was the most interesting one. I did the usual walk around a new neighborhood, see some new places. I went to [Beşiktaş](https://tr.wikipedia.org/wiki/Be%C5%9Fikta%C5%9F), a neighborhood west of [Beyoğlu](https://tr.wikipedia.org/wiki/Beyo%C4%9Flu) where I am staying. I didn't see a lot of Beşiktaş partly because it just seemed like a normal neighborhood in a cosmopolitan city. There was a cool waterfront and a university so it was bustling with people. I'd say Beşiktaş in some ways represents the lives of everyday Istanbulites? If that's even a word. I went to a fast food chain next to the university and was disappointed. Honestly, except for this one restaurant, the expectations for food have *not* held up.
