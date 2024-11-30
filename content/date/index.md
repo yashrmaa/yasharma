@@ -4,6 +4,7 @@ date: 2024-10-11T12:38:02-04:00
 draft: false
 hidden: true
 comments: false
+search_ignore: true
 ---
 
 {{< imgaction suit Resize "400x Lanczos" >}}
@@ -14,7 +15,7 @@ Hey there! Welcome to my [date me doc](https://www.nytimes.com/2023/08/02/style/
 
 ## About me
 
-I am 5 '10”, 34 M, software engineer at Google. I went to school in India and Texas. I have lived in Delhi, College Station (TX), Plano, Seattle, New York City and San Francisco.
+I am 5 '10”, 34 M, software engineer at Google. I went to school in India and Texas. I have lived in Delhi, College Station (TX), Plano, Seattle, New York City and now, San Francisco.
 
 
 I grew up in a small town in India which was such a blessing to be honest. I have lived in the US for more than 8 years now and I think I have really adapted to the culture here. I am fond of the life I have built.
