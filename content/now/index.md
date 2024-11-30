@@ -6,7 +6,7 @@ draft: false
 
 ## Professionally
 
-I work at Google, New York and recently, I have been working on AI in Observability. Software breaks all the time (remember, the recent [CrowdStrike](https://en.wikipedia.org/wiki/2024_CrowdStrike_incident) outage?) so naturally, we want to mitigate and prevent issues asap. Systems are designed to leave a paper trail and we engineers use that to understand what went wrong. Now, I am trying to use AI to make that process easier. Imagine a world where an AI tells you "Oh, here's what happened and this is how I fixed it!".
+I work at Google, San Francisco and recently, I have been working on AI in Observability. Software breaks all the time (remember, the recent [CrowdStrike](https://en.wikipedia.org/wiki/2024_CrowdStrike_incident) outage?) so naturally, we want to mitigate and prevent issues asap. Systems are designed to leave a paper trail and we engineers use that to understand what went wrong. Now, I am trying to use AI to make that process easier. Imagine a world where an AI tells you "Oh, here's what happened and this is how I fixed it!".
 
 ## Personally
 
