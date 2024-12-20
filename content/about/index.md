@@ -9,7 +9,7 @@ comments: false
 
 Hey there!
 
-I am Yash Sharma. I am a software engineer at Google and I live in New York.
+I am Yash Sharma. I am a software engineer at Google and I live in San Francisco.
 
 At Google, I work on the intersection of AI and observability. The goal is to transform how engineers debug errors. If we're successful, LLMs would understand what went wrong in the production system and recommend a fix with great accuracy.
 
@@ -17,12 +17,17 @@ Before Google, I worked at Microsoft where I was involved in building a technica
 
 I am interested in highly scalable distributed systems and AI.
 
-[*Twitter*](https://x.com/yasharmaa) \* [*Linkedin*](https://linkedin.com/in/yasharmaa) \* [*Curius*](https://curius.app/yash-sharma) 
-
 **Interesting bits**
 
 * Published a [paper](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=RCYDJ_wAAAAJ&citation_for_view=RCYDJ_wAAAAJ:u5HHmVD_uO8C) that demonstrates the capabilities of AI as a tool for medical differential diagnosis.
 * Blog post on [AMIE](https://research.google/blog/amie-a-research-ai-system-for-diagnostic-medical-reasoning-and-conversations/), an AI system for medical diagnosis and reasoning.
+* Blog post on [Advancing AMIE towards specialist care and real-world validation](https://research.google/blog/advancing-amie-towards-specialist-care-and-real-world-validation/)
 * Guest on [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb).
 * Published an [opinion piece about legal immigration on Tangle](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/).
+
+**Other (maybe interesting?) bits**
+
+* I enjoying hiking, backpacking and mountaineering. *Alright, I have only climbed one mountain but I enjoyed it.*
+* I love history especially about civilization and culture. If you have a book recommendation, let me know. 
+
 
