@@ -1,7 +1,7 @@
 ---
 title: "Date Me"
 date: 2024-10-11T12:38:02-04:00
-draft: false
+draft: true
 hidden: true
 comments: false
 search_ignore: true
