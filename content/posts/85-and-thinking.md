@@ -1,7 +1,7 @@
 ---
 title: "85 and thinking if I did it right?"
 date: 2025-07-06T20:43:38-04:00
-draft: false
+draft: true
 ---
 
 I can't run away from the thought that when/if I am 85, I can look back with pride and say I made good use of the life that I was given. There are infinite ways to do that because it's what you value but to me, the imagination boils down to:
