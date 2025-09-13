@@ -2,6 +2,7 @@
 title: "Now"
 date: 2024-08-04T14:24:41-04:00
 draft: false
+comments: false
 ---
 
 ## Professionally
