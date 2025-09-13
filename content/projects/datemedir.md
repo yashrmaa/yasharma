@@ -2,6 +2,7 @@
 title: "Date me directory"
 date: 2024-08-04T16:46:32-04:00
 draft: false
+comments: false
 ---
 
 A directory to host [date me docs](https://archive.is/oHrMg) for *[the feels alumni](https://catchthefeels.co/)*.

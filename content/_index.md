@@ -8,6 +8,7 @@ ShowReadingTime: false
 ShowBreadCrumbs: false
 ShowPostNavLinks: false
 ShowWordCount: false
+comments: false
 ---
 
 <img src="about/photo.jpeg" alt="Yash Sharma" width="200" style="border-radius: 8px; margin-bottom: 20px;">

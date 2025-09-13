@@ -2,6 +2,7 @@
 title: "OraMatch"
 date: 2024-07-28T09:56:29-04:00
 draft: false
+comments: false
 ---
 
 Dating is hard and it's become even harder with the [downfall of dating apps](https://www.npr.org/sections/money/2024/02/13/1228749143/the-dating-app-paradox-why-dating-apps-may-be-worse-than-ever) at a time when most of our lives are online. 
