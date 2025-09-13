@@ -10,7 +10,7 @@ ShowPostNavLinks: false
 ShowWordCount: false
 ---
 
-<img src="about/photo.jpeg" alt="Yash Sharma" width="300" style="border-radius: 8px; margin-bottom: 20px;">
+<img src="about/photo.jpeg" alt="Yash Sharma" width="200" style="border-radius: 8px; margin-bottom: 20px;">
 
 I live in San Francisco and build AI agents at work.
 
