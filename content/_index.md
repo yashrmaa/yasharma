@@ -65,3 +65,5 @@ Experimenting with fruit-till-noon eating, rethinking decision-making frameworks
 ---
 
 *Questions? Ideas? [Get in touch](mailto:yash@yasharma.com)*
+
+[Twitter](https://twitter.com/yasharmaa) • [GitHub](https://github.com/yashrmaa) • [LinkedIn](https://linkedin.com/in/yasharmaa) • [Google Scholar](https://scholar.google.com/citations?user=RCYDJ_wAAAAJ&hl=en)
