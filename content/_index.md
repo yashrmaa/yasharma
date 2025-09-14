@@ -36,7 +36,7 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 
 ### Other projects
 
-* I built the easter egg on [Isaac Newton](https://www.google.com/search?hl=en&q=Isaac%20newton) as a training project. *Google Isaace Newton and click that apple tree.*  
+* I built the easter egg on [Isaac Newton](https://www.google.com/search?hl=en&q=Isaac%20newton) as a training project. **Google Isaac Newton and click that apple tree.**  
 
 * I wanted all the substacks and blogs that I follow to be at one place and have an AI to know what my interests and feature only the ones that I would want to read. The AI part is unfinished but the newsletter is [here](https://yasharma.com/posts/).  
 
