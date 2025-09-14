@@ -45,7 +45,7 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 
 ## Podcast
 
-* I was a guest on [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb) where we talked about AI and my journey from a small town in India to AI agents in San Francisco.
+* I was a guest on the [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb) where I talked about AI and my journey from a small town in India to the forefront of AI in San Francisco.”
 
 
 ## Writing
