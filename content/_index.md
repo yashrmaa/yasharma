@@ -34,9 +34,12 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 * Oversight is the prerequisite anything in Health so we created a framework for Scalable Oversights for *AMIE* called *Guardrailed AMIE or g-AMIE* and demonstrated that AI can augment our existing medical systems and improve care. Published our findings in [Towards physician-centered oversight of conversational diagnostic AI](https://arxiv.org/abs/2507.15743). [Google blog post](https://research.google/blog/enabling-physician-centered-oversight-for-amie/)
 
 
-### Side projects
+### Other projects
+
+* I built the easter egg on [Isaac Newton](https://www.google.com/search?hl=en&q=Isaac%20newton) as a training project. *Google Isaace Newton and click that apple tree.*  
 
 * I wanted all the substacks and blogs that I follow to be at one place and have an AI to know what my interests and feature only the ones that I would want to read. The AI part is unfinished but the newsletter is [here](https://yasharma.com/posts/).  
+
 * I vibe-coded an [iOS app](https://github.com/yashrmaa/noisemeter) that measures noise and tells me it's impact on my health.
 
 
