@@ -43,9 +43,15 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 * I vibe-coded an [iOS app](https://github.com/yashrmaa/noisemeter) that measures noise and tells me it's impact on my health.
 
 
-## Podcast
+## Media
 
 * I was a guest on the [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb) where I talked about AI and my journey from a small town in India to the forefront of AI in San Francisco.
+
+* I wrote a reader essay about [legal immigration](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/) on Tangle.
+
+* My essay was referenced in [The H-1B debate between Trump, Musk, and MAGA.](https://www.readtangle.com/h1b-debate-musk-trump-immigration/) in Jan, 2025.
+
+* My essay was again featured in the story: [President Trump orders H-1B visa applicants to pay a $100,000 fee](https://www.readtangle.com/president-trump-orders-h1b-visa-applicants-to-pay-a-100-000-fee/) in Sep, 2025.
 
 
 ## Writing
