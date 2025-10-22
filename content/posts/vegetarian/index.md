@@ -1,5 +1,5 @@
 ---
-title: "Vegetarian"
+title: "Why I became Vegetarian?"
 date: 2025-10-22T13:01:14-04:00
 draft: false
 ---
