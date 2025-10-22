@@ -10,7 +10,7 @@ India has perfected vegetarian dishes over millennia. Contrary to the popular be
 
 A few years ago my main motivation was climate change. I was focused on reducing my climate footprint. I read about meat industry's contribution to climate change and it was eye-opening. For instance, [37% of methane emissions come from livestock and agricultural practices](https://www.epa.gov/snep/agriculture-and-aquaculture-food-thought).
 
-From the EPA
+From the [EPA](https://www.epa.gov/snep/agriculture-and-aquaculture-food-thought)
 > Methane is 28-times more powerful than CO2 on a 100-year timescale and 80-times more powerful over 20 years.
 
 The UN's [report](https://www.un.org/en/climatechange/science/climate-issues/food) describes the contribution of various food sources.
