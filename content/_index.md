@@ -19,7 +19,7 @@ I live in San Francisco and build AI agents at work.
 
 I work on autonomous bug fixing agents. The goal is to build a product that can fix most software bugs on it's own. It's like you've got this really smart co-worker that works when you sleep. Production systems have tons of issues some are priority, most are not. Our system works on them and regularly sends pull requests for engineers to review.
 
-* I built an unreleased multi-agent system based on [GDM AI Co-Scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/).
+* I built an unreleased multi-agent system based on [GDM's AI Co-Scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/).
 * Improved [pass@k](https://arxiv.org/pdf/2107.03374) performance while reducing tokens used by designing a new context compaction strategy inspired from [observation masking](https://arxiv.org/pdf/2508.21433).
 
 ### Health AI
