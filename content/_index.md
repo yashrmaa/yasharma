@@ -69,10 +69,11 @@ Interesting pieces:
 
 [→ All writing](/posts/)
 
+**I crosspost on substack. [Subscribe](yasharma.substack.com) to substack to get new posts in emails.**
 
 ## Currently
 
-Experimenting with fruit-till-noon eating, rethinking decision-making frameworks, and living more in the moment. Always planning the next adventure.
+Learning guitar, rethinking decision-making frameworks, and living more in the moment. 
 
 ---
 
