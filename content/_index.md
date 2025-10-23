@@ -69,7 +69,7 @@ Interesting pieces:
 
 [→ All writing](/posts/)
 
-**I crosspost on substack. [Subscribe](yasharma.substack.com) to substack to get new posts in emails.**
+**I crosspost on substack. [Subscribe](https://yasharma.substack.com) to get new posts in emails.**
 
 ## Currently
 
