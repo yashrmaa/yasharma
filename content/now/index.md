@@ -14,7 +14,6 @@ I work at Google, San Francisco and recently, I have been working on AI in Obser
 * I write sometimes and publish it here. I am trying to be more consistent with this.
 * Learning the guitar. Started it three months back.
 * Meeting new people. Goal is to talk to someone new everyday. It's hard but that's why I love it. I fail most days but I keep at it.
-* [OraMatch](https://oramatch.xyz), because I am tired of the dating apps.
 
 ### Abandoned
 * Started building an AI language tutor but wasn't motivated enough to go through with it.
