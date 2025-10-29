@@ -82,22 +82,14 @@ menu:
       name: posts
       url: /posts/
       weight: 20
-    - identifier: projects
-      name: projects
-      url: /projects/
-      weight: 30
-    - identifier: personal
-      name: personal
-      url: /personal/
-      weight: 40
     - identifier: now
       name: now
       url: /now/
-      weight: 50
+      weight: 30
     - identifier: search
       name: search
       url: /search/
-      weight: 60 
+      weight: 40 
 
 pygmentsUseClasses: true
 markup:
