@@ -86,10 +86,6 @@ menu:
       name: now
       url: /now/
       weight: 30
-    - identifier: search
-      name: search
-      url: /search/
-      weight: 40 
 
 pygmentsUseClasses: true
 markup:
