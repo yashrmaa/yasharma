@@ -8,7 +8,7 @@ One rainy Sunday I just decided to take a long walk in the city. I imagined I wo
 
 I left home around noon with an audiobook called *[Four Thousand Weeks](https://www.oliverburkeman.com/fourthousandweeks)*. Here's the route I took.
 
-{{< imgaction strava Resize "800x Lanczos" >}}
+{{< imgaction strava Resize "500x Lanczos" >}}
 
 I saw so many hidden gems and some famous gems that I wouldn't have visited otherwise. I spent 30 mins at the [Golden Gate Valley library](https://maps.app.goo.gl/Nv6QbQR1DY3kzhir7) reading [Novelist as a Vocation by Haruki Murakami](https://en.wikipedia.org/wiki/Novelist_as_a_Vocation). I didn't know the author. Now, I have a few of his books on my reading list. 
 I saw the [the pink lady mural](https://www.jascharanjiva.com/pink-lady-project) in Hayes. I learned about Jas Charanjiva. Her work is inspirational.
