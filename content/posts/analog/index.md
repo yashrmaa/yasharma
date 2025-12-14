@@ -4,6 +4,8 @@ date: 2025-12-13T19:06:37-08:00
 draft: false
 ---
 
+{{< imgaction analog Resize "300x Lanczos" >}}
+
 I was just listening to a podcast episode from the [Ezra Klein Show](https://www.nytimes.com/2024/09/17/opinion/ezra-klein-podcast-zadie-smith.html). The episode featured [Zadie Smith](https://en.wikipedia.org/wiki/Zadie_Smith) and they talked about how she hasn't owned a smartphone because the internet has become this manipulation machine. She said she doesn't want someone to influence what she thinks, how she thinks without her choice. I agree with that point of view. It does tell me what to think about and influences how I define the sides. I can't say I lose my original thoughts (in most cases I don't) but I'm certainly given a starting point I didn't choose.
 
 I have long romanticized an analog life. A time when information wasn't instantaneous and all-encompassing, when there was more awe and surprises, when we didn't have enormous choices making choice pointless, when we lived in the moment experiencing it now rather than saving a fraction of it on our phones to experience it later.
