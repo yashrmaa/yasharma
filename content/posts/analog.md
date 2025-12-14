@@ -1,7 +1,7 @@
 ---
 title: "Romanticizing the analog life"
 date: 2025-12-13T19:06:37-08:00
-draft: true
+draft: false
 ---
 
 I was just listening to a podcast episode from the [Ezra Klein Show](https://www.nytimes.com/2024/09/17/opinion/ezra-klein-podcast-zadie-smith.html). The episode featured [Zadie Smith](https://en.wikipedia.org/wiki/Zadie_Smith) and they talked about how she hasn't owned a smartphone because the internet has become this manipulation machine. She said she doesn't want someone to influence what she thinks, how she thinks without her choice. I agree with that point of view. It does tell me what to think about and influences how I define the sides. I can't say I lose my original thoughts (in most cases I don't) but I'm certainly given a starting point I didn't choose.
