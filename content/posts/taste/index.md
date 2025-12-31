@@ -10,6 +10,7 @@ draft: false
 
 
 
+
 I recently stumbled onto a post called [how to have good taste](https://www.commonreader.co.uk/p/how-to-have-good-taste). In the world of *how to* posts, books and videos where there's an explainer for everything, I find this to be a particularly terrible subject for the genre. The Substack paints a picture that once you go through a lot of something, you too can have good taste. The taste that makes you prefer the actual good stuff. 
 
 It's a little infuriating, to be honest. What does *good taste* even mean? The post seems to imply that creative endeavors are good or bad and you should like the *"good"* one. Well, who's the judge for good or bad? Does popularity make it good? The [highest-grossing movie](https://en.wikipedia.org/wiki/2025_in_film) in 2025 is *Ne Zha 2*; does that make it in good taste?
@@ -24,6 +25,8 @@ I think this has always been an issue in the arts and literary field. There's th
 I agree with the general premise of good work. Not all work is created equal. It would be stupid to say that my writing even comes close to any of the writers mentioned above. There's no denying that writing can be good or bad. Great writers take you on a journey. They present thoughts that surprise us, motivate us, move us. It's not easy to do. This essay isn't one. It's not going to take you on a journey.
 
 Yet, I feel *good taste* is just another way of saying you're just not well-read enough to understand that thing I am talking about. I think people forget what taste really means. What if I read them all yet I still like silly *how to* Substack posts? What if I eat the most exquisite food and still prefer *toast with butter*? I actually do enjoy *toast* more than a Michelin star restaurant. 
+
+I do agree with the fact that **knowledge enriches experience**. The more you read, the more you understand. Reading exposes you to various viewpoints, various styles of writing. You need to have eaten at a Michelin star restaurant to understand the complexity and innovation of the cuisine. But understanding complexity isn't the same as having superior taste.
 
 I believe taste just means your experience. You like what you like. There's no judge deciding good or bad. As a society, we just can't stop creating hierarchy to justify that we're so much better than the rest. There are countless ways to do so. Writers have their own ways e.g., liking George Eliot as I have been told by Henry Oliver. In the tech world, [people brag about *GitHub commits*](https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2Fs5kivao18u2a1.jpg). Now that AI is writing code, the GitHub commits have become meaningless, so we in the tech world will find something else to virtue signal. 
 
