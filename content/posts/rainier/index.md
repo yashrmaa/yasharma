@@ -6,6 +6,7 @@ draft: false
 
 {{< imgaction sun Resize "600x Lanczos" >}}
 
+
 ## Intro
 
 I summited [Mount Rainier](https://en.wikipedia.org/wiki/Mount_Rainier) in August 2023, specifically 9-12 August. I started training way too early on November ‘22. Felt like the more I train the more I’d enjoy the trip. You know things are way more enjoyable when you’re not dying. 
@@ -111,6 +112,7 @@ This write-up has become too long at this point. Let's get to the descent quickl
 
 We start from Camp Muir at 11:00 AM and get to the parking lot at 2:30 PM. It's a long, excruciatingly painful, and incredibly fulfilling journey. I take my shoes off at Paradise and don't wear them till I have to get in my car to drive to Seattle. Everything about this trip is memorable: the challenge, the pain, the self-doubt, the camaraderie, the accomplishment, the experience, and of course, the olive oil.
 
+{{< video src="sunrise.mp4" width="50%" >}}
 
 
 
