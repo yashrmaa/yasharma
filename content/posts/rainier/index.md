@@ -4,7 +4,7 @@ date: 2023-09-10T13:01:14-04:00
 draft: false
 ---
 
-{{< imgaction rainier Resize "600x Lanczos" >}}
+{{< imgaction sun Resize "600x Lanczos" >}}
 
 ## Intro
 
