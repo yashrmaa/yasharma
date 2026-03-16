@@ -63,7 +63,7 @@ Interesting pieces:
 
 **[Rainier](/posts/rainier/)** - I thought people like me don't climb mountains. I was wrong.  
 **[Peru](/posts/peru/)** - Went on a whim and met people who'd sold everything to travel. Made me question what I'm really chasing.  
-**[The Harsh Realities of Legal Immigration](/posts/the-harsh-realities-of-legal-immigration/)** - 9 years in America, still can't call it home. The system is broken.  
+**[The Harsh Realities of Legal Immigration](/posts/immigration/)** - 9 years in America, still can't call it home. The system is broken.  
 **[Cities](/posts/cities/)**  - Seattle taught me to climb mountains. NYC taught me to never stop moving. Places shape us more than we realize.  
 **[Istanbul](/posts/istanbul/)** - Couldn't sleep at 3 AM so I found the most alive street I've ever seen.  
 
