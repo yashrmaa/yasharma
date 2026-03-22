@@ -32,16 +32,19 @@ comments: false
 
 * Super Forecasting - Dan Gardner and Philip E. Tetlock
 * Replacing guilt - Nate Soares
-* Endurance (audiobook) - Alfred Lansing
 * An examined life - Stephen Grosz
 * Feasts and Fasts - Collen Taylor Sen
 * Four thousand weeks (audiobook) - Oliver Burkeman
 * Tiny beautiful things (audiobook) - Cheryl Strayed
+* Endurance (audiobook) - Alfred Lansing
 
 ### Unfinished
 
 * Slouching Towards Bethlehem - Joan Didion
 * The screwtape letters - CS Lewis
+* Either/Or - Søren Kierkegaard
+* The Overstory - Richard Powers
+* The Sun Also Rises - Ernest Hemingway
 
 
 # Notes
