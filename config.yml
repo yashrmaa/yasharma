@@ -1,6 +1,6 @@
 baseURL: "https://yasharma.com/"
 title: Yash Sharma
-paginate: 10
+paginate: 50
 theme: PaperMod
 
 enableRobotsTXT: true
@@ -86,6 +86,10 @@ menu:
       name: now
       url: /now/
       weight: 30
+    - identifier: books
+      name: books
+      url: /books/
+      weight: 40
 
 pygmentsUseClasses: true
 markup:
