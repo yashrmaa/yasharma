@@ -2,7 +2,7 @@
 title: "Books"
 date: 2026-03-21T14:09:41-04:00
 draft: false
-comments: false
+comments: true
 ---
 
 # Reading List
@@ -46,6 +46,7 @@ comments: false
 * The Overstory - Richard Powers
 * The Sun Also Rises - Ernest Hemingway
 
+*Let me know if you have any recommendations.*
 
 # Notes
 
