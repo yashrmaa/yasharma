@@ -64,7 +64,7 @@ comments: false
 
 > Below, on the Lyngen’s small companionway, all the women are standing; they embrace me as though each of them were my own mother. - page 214
 
-## Voice of Marrakesh - Elias Canneti
+## The Voices of Marrakesh - Elias Canneti
 
 **The unseen**
 > I have said that another feeling choked me as I slunk away: pride. I was proud of the bundle because it was alive.
