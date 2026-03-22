@@ -13,7 +13,7 @@ comments: false
 
 * Super communicators - Charles Duhigg 
 * Hidden Potential - Adam Grant
-* Voice of Marrakesh - Elias Canneti
+* The Voices of Marrakesh - Elias Canneti
 * A woman in the polar night - Christiane Ritter
 * Silence - Erling Kagge
 
