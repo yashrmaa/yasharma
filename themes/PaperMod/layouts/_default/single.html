@@ -59,23 +59,13 @@
         data-page-title="{{ .Title }}"
         style="width: 100%;">
       </div>
-      <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-    {{ end }}
-
-    <script>
-      // Wait for the Cusdis iframe to load, then resize it
-      const observer = new MutationObserver(function(mutations) {
-        const iframe = document.querySelector('#cusdis_thread iframe');
-        if (iframe) {
-          iframe.style.height = '350px';
-          observer.disconnect();
+      <script defer src="https://cusdis.com/js/cusdis.es.js" type="module"></script>
+      <style>
+        #cusdis_thread iframe {
+          min-height: 350px;
         }
-      });
-      const target = document.getElementById('cusdis_thread');
-      if (target) {
-        observer.observe(target, { childList: true, subtree: true });
-      }
-    </script>
+      </style>
+    {{ end }}
         
   </footer>
 
