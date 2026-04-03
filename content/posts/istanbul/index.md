@@ -8,9 +8,11 @@ draft: false
 
 ## Day 0
 
-I couldn't sleep at night, thanks jet lag! So, I decided to go get something to eat at 3 am and [my neighborhood bakery](https://maps.app.goo.gl/PhBcWYYj3Qd6JscC6) was open. It's 24*7 and highly rated. The bakery is tiny with lots of outdoor seating on both sides of the street. It was 3 am and it felt like 8 pm. The street was bustling with people, chai, cigarettes and chatter. I couldn't believe my eyes. I walked around a bit to see if other places down the street were actually this lively and I found people around bars and in general walking around. It was surprising for 3 am. Also, people partying at 3 am on a Monday night? Everything about this neighborhood is eclectic. 
+I couldn't sleep at night, thanks jet lag! So, I decided to go get something to eat at 3 am and [my neighborhood bakery](https://maps.app.goo.gl/PhBcWYYj3Qd6JscC6) was open. It's 24*7 and highly rated. The bakery is tiny with lots of outdoor seating on both sides of the street. It was 3 am but it felt like 8 pm. The street was bustling with people, chai, cigarettes and chatter. I couldn't believe my eyes. I walked around a bit to see if other places down the street were actually this lively and I found people around bars and in general walking around. It was surprising for 3 am. Also, people partying at 3 am on a Monday night? Everything about this neighborhood is eclectic. 
 
 {{< imgaction hagia Resize "800x Lanczos" >}}
+
+*Hagia Sophia*
 
 ## Day 1
 
