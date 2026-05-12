@@ -9,9 +9,11 @@ comments: true
 
 ### Reading now
 
-* Exhalations - Ted Chiang
-* Swimming Studies - Leanne Shapton
 * Notes from the underground - Fyodor Dostoevsky
+* Tiny beautiful things - Cheryl Strayed
+* Meditations - Marcus Aurelius
+* Human Compatible - Stuart J. Russell
+* Life 3.0 - Max Tegmark
 
 ## 2026
 
@@ -23,6 +25,9 @@ comments: true
 * A woman in the polar night - Christiane Ritter
 * Silence - Erling Kagge
 * Other minds - Peter Godfrey-Smith
+* The Alignment Problem - Brian Christian
+* A Bright Future - Joshua S. Goldstein and Staffan A. Qvist
+* This is water - David Foster Wallace
 
 ### Unfinished
 
@@ -30,6 +35,10 @@ comments: true
 * Working - Robert Caro
 * The river of doubt - Candice Millard
 * The courage to be disliked - Fumitake Koga and Ichiro Kishimi
+* Exhalations - Ted Chiang
+* Swimming Studies - Leanne Shapton
+* Ducks, Newburyport - Lucy Ellmann
+* See What You're Missing: New Ways of Looking at the World Through Art - Will Gompertz
  
 ## 2025
 
