@@ -12,8 +12,6 @@ comments: true
 * Notes from the underground - Fyodor Dostoevsky
 * Tiny beautiful things - Cheryl Strayed
 * Meditations - Marcus Aurelius
-* Human Compatible - Stuart J. Russell
-* Life 3.0 - Max Tegmark
 
 ## 2026
 
@@ -28,17 +26,18 @@ comments: true
 * The Alignment Problem - Brian Christian
 * A Bright Future - Joshua S. Goldstein and Staffan A. Qvist
 * This is water - David Foster Wallace
+* When Breath Becomes Air (audiobook) - Paul Kalanithi
 
 ### Unfinished
 
 * A writer's diary v1, v2 - Fyodor Dostoevsky
 * Working - Robert Caro
 * The river of doubt - Candice Millard
-* The courage to be disliked - Fumitake Koga and Ichiro Kishimi
 * Exhalations - Ted Chiang
 * Swimming Studies - Leanne Shapton
 * Ducks, Newburyport - Lucy Ellmann
 * See What You're Missing: New Ways of Looking at the World Through Art - Will Gompertz
+* The Living Mountain - Nan Shepherd
  
 ## 2025
 
