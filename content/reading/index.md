@@ -77,6 +77,14 @@ comments: true
 
 # Notes
 
+## Scale - Geoffery West
+
+- blood flow is like ac current where heart pulses to push blood forward to the body and then small arteries take to the cells like dc current. That’s why you can feel a pulse everywhere.
+- all mammals have roughly the same number of branch levels about 15 where the flow is predominantly dc. 
+- Blue whale is hundred million times heaver than a shrew, the avg distance bw capillaries is only about (10^8)^1/12 or 4.6 times larger
+- Krogh radius leads to an estimate of 100 kgs for maximum size so blue whale is max a mammal could be.
+- If a size of organism doubles, number of cells double, energy increases by a factor of 2 so 4 times but metabolic rate (supply of energy) increases by factor of 2^3/4 =1.682
+
 ## A World Appears - Michael Pollan
 
 - Plants can feel anesthesia, they sleep, they explore their environment. Roots can find the ammonia rich part of soil.
