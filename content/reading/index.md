@@ -1,11 +1,9 @@
 ---
-title: "Books"
+title: "Reading List"
 date: 2026-08-04T14:09:41-04:00
 draft: false
 comments: true
 ---
-
-# Reading List
 
 ### Reading now
 
