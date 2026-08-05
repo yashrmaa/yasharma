@@ -11,7 +11,7 @@ comments: true
 
 * Notes from the underground - Fyodor Dostoevsky
 * Tiny beautiful things - Cheryl Strayed
-* Meditations - Marcus Aurelius
+* Scale - Geoffery West
 
 ## 2026
 
@@ -27,6 +27,7 @@ comments: true
 * A Bright Future - Joshua S. Goldstein and Staffan A. Qvist
 * This is water - David Foster Wallace
 * When Breath Becomes Air (audiobook) - Paul Kalanithi
+* A World Appears - Michael Pollan
 
 ### Unfinished
 
@@ -70,12 +71,42 @@ comments: true
 * Order without design - Alain Bertaud
 * Notes from the underground - Fyodor Dostoevsky
 * Crime and punishment - Fyodor Dostoevsky
-* Scale - Geoffery West
 
 
 *Let me know if you have any recommendations.*
 
 # Notes
+
+## A World Appears - Michael Pollan
+
+- Plants can feel anesthesia, they sleep, they explore their environment. Roots can find the ammonia rich part of soil.
+- Neurons are overrated because other cells can do the same things albeit slower.
+- basal cognition- bio electricity between cells for communication. All cells exchange unfortunately, store memories in the network.
+- Planaria can regenerate its head and remember things like how to perform a taught task. How would you teach a worm something is beyond me.
+- Cells that ignore bioelectric orders become cancer. Woah. There’s some experimental support. Levin.
+- Bio electricity tweaks enable creating two heads, eyes on tails. 
+- If even a cell has sentience like the xenobot levin created then how can one eat lab grown meat. Can you grow new animals in a petridish?
+- Karl J friston most frequently cited neuroscientist alive 
+- We are systems trying to predict the world with the limited senses we possess. Life is just trying to escape entropy.
+- Evolution itself is inference about what might work best in this ecological environment. 
+- You don’t see the windshield or meta consciousness and then some substance allows you to see it; see the formation of your thoughts.
+- Is there something more than consciousness that humans don’t possess?
+- Consciousness is nothing grander than inference about my future.
+- Why do people think only humans ask what’s it like to be a bat?
+- The hard problem of consciousness itself emerges from being able to entertain the counterfactual hypothesis that we might not be conscious. What?
+- Hinduism is panpsychiam.
+- Could all life be sentient- evan thompson
+- western science bifurcated empirical evidence based stuff and experience. That made them think of nature as lifeless so it could be exploited.
+- Integrated information theory and global workspace theory 
+- Feeling is an interior experience while emotion is an outward manifestation. 
+- Damasio showed without feelings: decision making is poor and slow.
+- Brains evolved to keep the bodies alive not the other way.
+- Pain and suffering is the inaugural act of consciousness.
+- feelings like hunger require reasoning. Reasoning and thinking might have emerged to address the complex human environment.
+- why information processing has to be “like” something?
+- Feelings are just a form of information to the brain. That makes sense to me.
+
+
 
 ## A woman in the polar night - Christiane Ritter
 
