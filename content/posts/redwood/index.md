@@ -11,7 +11,6 @@ I went to [Armstrong Redwoods State Natural Reserve](https://www.parks.ca.gov/?p
 
 Here are some notes from that day.
 
-```
 I’m sitting on this burnt redwood log. It’s immense. My feet are dangling three feet from the ground. My shoe soles have charcoal on it. It’s quiet and tranquil in here. I hear birds, a plane, some voices and car tires and bugs.
 
 The ground is full of foliage from the trees that you can barely see the mud. It keeps on falling like rain. For a few seconds, there’s complete silence without the human voices. Then you hear wind rustling the branches, mosquito buzzing around my ear, the constant sound of falling foliage, birds at a distant and this hum coming from far away — my guess is those the cars on the highway.
@@ -21,4 +20,3 @@ The tree in front has burn marks that reaches a 100 feet and the one next to it 
 The oldest tree I saw was the Armstrong. The plaque said it’s 1400 years old. That’s 600 AD, when the world was much bigger. When this place was covered with bigger and older redwoods. When giants surrounded the Armstrong tree.
 
 I feel peaceful right now. I don’t want to leave. I want to continue to exist this way.
-```
