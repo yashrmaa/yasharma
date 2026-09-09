@@ -78,10 +78,6 @@ params:
 
 menu:
   main:
-    - identifier: resume
-      name: resume
-      url: /resume/
-      weight: 10
     - identifier: posts
       name: posts
       url: /posts/
