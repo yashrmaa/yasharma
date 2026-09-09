@@ -7,7 +7,7 @@ draft: false
 
 I went to [Armstrong Redwoods State Natural Reserve](https://www.parks.ca.gov/?page_id=450). It's about 2 hours from SF. I stopped at [Della Fattoria Downtown Café](https://maps.app.goo.gl/THj5aBAJXmYGwFkb7) for breakfast. It's a beautiful cafe. The vibe is fun and the coffee is out of the world. I haven't seen such beautiful latte art. Don't know how can one make it. I have taken a class and it's incredible hard to even get the most basic shape right. I love flat whites and I am always on the look out for a good one. Will say, this one is so spectacular it would put SF to shame. Here's a photo.
 
-{{< imgaction coffee Resize "500x Lanczos" >}}
+{{< imgaction coffee Resize "300x Lanczos" >}}
 
 Here are some notes from that day.
 
