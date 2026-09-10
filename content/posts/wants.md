@@ -2,6 +2,8 @@
 title: "Wants"
 date: 2025-11-08T13:10:54-08:00
 draft: true
+categories: [Life]
+aliases: [/posts/wants/]
 ---
 
 As a kid I was obsessed with planes and flying. I wanted to fly a fighter jet, I still do. I didn't become a pilot but that want never went away. I was told millitary is not the best career option so I trained myself to want something else. Ever since the training has been in progress. Tech was the best career in my situation so I trained myself to like tech. 

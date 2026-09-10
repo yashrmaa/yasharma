@@ -2,6 +2,8 @@
 title: "Rituals"
 date: 2024-08-10T14:27:14-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/ritual/]
 ---
 
 

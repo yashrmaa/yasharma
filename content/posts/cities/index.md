@@ -2,6 +2,8 @@
 title: "Cities"
 date: 2024-08-25T19:59:11-04:00
 draft: false
+categories: [Places]
+aliases: [/posts/cities/]
 ---
 
 Cities shape us in profound ways, often more than we realize. I am sure you have heard of the quote that you’re the average of 5 people around you. I can’t say how true that is but I can say that the basic idea makes sense. We are influenced by our surroundings, both consciously and unconsciously.
@@ -20,7 +22,7 @@ I remember Hiking, in particular, was omnipresent in every conversation. I had a
 
 This experience, however daunting, made me realize that I like the outdoors. I started hiking regularly and looked for opportunities to up the challenge. I learned to ski and tried trail running. I had a fun time but more importantly, I discovered that I really like challenging myself and that I can be methodical to achieve it. 
 
-It made me take on greater challenges like [summiting Mount Rainier](https://yasharma.com/posts/rainier/). That took some years to build the courage to sign up but it happened. I am grateful to Seattle for giving me the confidence to climb a mountain. This confidence is transferable and I have been making good use of it in all aspects of life.
+It made me take on greater challenges like [summiting Mount Rainier](https://yasharma.com/blog/rainier/). That took some years to build the courage to sign up but it happened. I am grateful to Seattle for giving me the confidence to climb a mountain. This confidence is transferable and I have been making good use of it in all aspects of life.
 
 I would say Seattle's message is: explore the outdoors, challenge yourself, and live in harmony with nature. I've internalized this ethos and continue to pursue these interests.
 

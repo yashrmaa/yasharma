@@ -2,6 +2,8 @@
 title: "Maine"
 date: 2024-10-25T17:48:27-04:00
 draft: false
+categories: [Places]
+aliases: [/posts/maine/]
 ---
 
 {{< imgaction fall Resize "1000x Lanczos" >}}

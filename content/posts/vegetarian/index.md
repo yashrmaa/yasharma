@@ -2,6 +2,8 @@
 title: "Why I became Vegetarian?"
 date: 2025-10-22T13:01:14-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/vegetarian/]
 ---
 
 I became vegetarian in March this year. It's the first time I have been able to stick with it. My previous attempt lasted 2 months. The big difference this time around has been that my desire for meat has gone. I am not tempted by it even when the veggie options are terrible. However, I do feel that I am getting the short end of the stick most times. As a result, I have defaulted to Indian food as it's the most vegetarian friendly and flavorful.

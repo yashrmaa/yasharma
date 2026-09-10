@@ -2,6 +2,8 @@
 title: "San Francisco"
 date: 2024-10-04T14:54:54-04:00
 draft: false
+categories: [Places]
+aliases: [/posts/sfo/]
 ---
 
 {{< imgaction sfo Resize "300x Lanczos" >}}

@@ -2,6 +2,8 @@
 title: "30 Day Challenge: Fruit till noon"
 date: 2024-10-11T10:06:14-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/fruit/]
 ---
 
 {{< imgaction pine Resize "300x Lanczos" >}} *Baby pineapple, Peru* 

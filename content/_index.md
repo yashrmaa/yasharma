@@ -41,7 +41,7 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 
 * I built the easter egg on [Isaac Newton](https://www.google.com/search?hl=en&q=Isaac%20newton) as a training project. **Google Isaac Newton and click that apple tree.**  
 
-* I wanted all the substacks and blogs that I follow to be at one place and have an AI to know what my interests and feature only the ones that I would want to read. The AI part is unfinished but the newsletter is [here](https://yasharma.com/posts/).  
+* I wanted all the substacks and blogs that I follow to be at one place and have an AI to know what my interests and feature only the ones that I would want to read. The AI part is unfinished but the newsletter is [here](https://yasharma.com/blog/).\
 
 * I vibe-coded an [iOS app](https://github.com/yashrmaa/noisemeter) that measures noise and tells me it's impact on my health.
 
@@ -57,19 +57,19 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 * My essay was again featured in the story: [President Trump orders H-1B visa applicants to pay a $100,000 fee](https://www.readtangle.com/president-trump-orders-h1b-visa-applicants-to-pay-a-100-000-fee/) in Sep, 2025.
 
 
-## Writing
+## Selected writing
 
 Interesting pieces:
 
-**[Rainier](/posts/rainier/)** - I thought people like me don't climb mountains. I was wrong.  
-**[Peru](/posts/peru/)** - Went on a whim and met people who'd sold everything to travel. Made me question what I'm really chasing.  
-**[The Harsh Realities of Legal Immigration](/posts/immigration/)** - 9 years in America, still can't call it home. The system is broken.  
-**[Cities](/posts/cities/)**  - Seattle taught me to climb mountains. NYC taught me to never stop moving. Places shape us more than we realize.  
-**[Istanbul](/posts/istanbul/)** - Couldn't sleep at 3 AM so I found the most alive street I've ever seen.  
+**[Rainier](/blog/rainier/)** - I thought people like me don't climb mountains. I was wrong.\
+**[Peru](/blog/peru/)** - Went on a whim and met people who'd sold everything to travel. Made me question what I'm really chasing.\
+**[The Harsh Realities of Legal Immigration](/blog/immigration/)** - 9 years in America, still can't call it home. The system is broken.\
+**[Cities](/blog/cities/)**  - Seattle taught me to climb mountains. NYC taught me to never stop moving. Places shape us more than we realize.\
+**[Istanbul](/blog/istanbul/)** - Couldn't sleep at 3 AM so I found the most alive street I've ever seen.\
 
-[→ All writing](/posts/)
+[→ Blog](/blog/) · [Follow via RSS](/blog/index.xml)
 
-**I crosspost on substack. [Subscribe](https://yasharma.substack.com) to get new posts in emails.**
+I also crosspost on [Substack](https://yasharma.substack.com).
 
 ## Currently
 

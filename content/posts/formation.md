@@ -2,6 +2,8 @@
 title: "Formation Dinner"
 date: 2024-08-10T14:27:04-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/formation/]
 ---
 
 

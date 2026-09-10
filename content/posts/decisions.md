@@ -2,6 +2,8 @@
 title: "Decisions"
 date: 2024-09-21T13:11:54-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/decisions/]
 ---
 
 I haven't had a problem making decisions until now. I had always been at ease with them because I had a strong compass. The compass always pointed to career and financial success. I evaluated all my choices on the objective questions

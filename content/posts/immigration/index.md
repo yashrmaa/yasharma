@@ -2,6 +2,8 @@
 title: "The Harsh Realities of Legal Immigration"
 date: 2024-09-12T10:51:25-04:00
 draft: false
+categories: [Life, Work]
+aliases: [/posts/immigration/]
 ---
 
 **This [essay](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/) was published in [Tangle](https://www.readtangle.com/) in Sep, 2024 and was referenced in the newsletters: [The H-1B debate between Trump, Musk, and MAGA](https://www.readtangle.com/h1b-debate-musk-trump-immigration/) and [President Trump orders H-1B visa applicants to pay a $100,000 fee](https://www.readtangle.com/president-trump-orders-h1b-visa-applicants-to-pay-a-100-000-fee/).**

@@ -2,6 +2,8 @@
 title: "Romanticizing the analog life"
 date: 2025-12-13T19:06:37-08:00
 draft: false
+categories: [Technology]
+aliases: [/posts/analog/]
 ---
 
 {{< imgaction analog Resize "600x Lanczos" >}}

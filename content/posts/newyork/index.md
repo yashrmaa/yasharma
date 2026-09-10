@@ -2,6 +2,8 @@
 title: "Life in New York"
 date: 2024-04-13T14:18:02-04:00
 draft: false
+categories: [Places]
+aliases: [/posts/newyork/]
 ---
 
 {{< imgaction nyc Resize "800x Lanczos" >}} *The view never gets old*

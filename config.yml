@@ -1,7 +1,14 @@
 baseURL: "https://yasharma.com/"
 title: Yash Sharma
-paginate: 50
+paginate: 20
+summaryLength: 40
 theme: PaperMod
+
+taxonomies:
+  category: categories
+
+permalinks:
+  posts: /blog/:filename/
 
 enableRobotsTXT: true
 buildDrafts: false
@@ -32,13 +39,14 @@ params:
   UseHugoToc: true
   disableSpecial1stPost: false
   disableScrollToTop: false
-  comments: true
+  comments: false
   hidemeta: false
   hideSummary: false
   showtoc: false
   tocopen: false
 
-  mainSections: []  # Empty array means no sections show on homepage
+  mainSections: [posts]  # Used by PaperMod's archive and previous/next links.
+  # content/_index.md uses the single layout to keep the homepage professional.
 
 
   assets:
@@ -79,9 +87,13 @@ params:
 menu:
   main:
     - identifier: posts
-      name: posts
-      url: /posts/
+      name: Blog
+      url: /blog/
       weight: 20
+    - identifier: archives
+      name: Archive
+      url: /archives/
+      weight: 24
     - identifier: now
       name: now
       url: /now/
@@ -90,6 +102,10 @@ menu:
       name: reading
       url: /reading/
       weight: 40
+    - identifier: rss
+      name: RSS
+      url: /blog/index.xml
+      weight: 50
 
 pygmentsUseClasses: true
 markup:

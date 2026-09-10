@@ -2,6 +2,8 @@
 title: "Good taste, really?"
 date: 2025-12-31T13:06:23-08:00
 draft: false
+categories: [Culture]
+aliases: [/posts/taste/]
 ---
 
 

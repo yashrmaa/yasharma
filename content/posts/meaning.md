@@ -2,6 +2,8 @@
 title: "Meaning"
 date: 2024-12-30T21:37:33-08:00
 draft: false
+categories: [Life]
+aliases: [/posts/meaning/]
 ---
 
 

@@ -2,6 +2,8 @@
 title: "Walking"
 date: 2025-11-08T13:36:56-08:00
 draft: false
+categories: [Places]
+aliases: [/posts/walk/]
 ---
 
 One rainy Sunday I just decided to take a long walk in the city. I imagined I would walk for a couple of hours but it became a full day adventure. The weather was pleasant, it was misty with a breeze. I walked aimlessly with no plans, no destination in mind. I decided on the street when I encountered a turn. I like to live in the moment and experience the world with little expectations. Urban walks are great for this as I don't plan the route or the stops. I just do what I feel like.

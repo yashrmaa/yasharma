@@ -2,6 +2,8 @@
 title: "In the moment"
 date: 2024-09-29T18:51:30-04:00
 draft: false
+categories: [Life]
+aliases: [/posts/moment/]
 ---
 
 I was listening to a podcast that mentioned that Gen Z regularly binges old high school videos from the 80s and 90s on YouTube. The implication was that we really miss the old times of living in the moment. The time when you could talk to people anywhere, when nobody was on their phones all the time, when nobody was wearing airpods. To be honest, I am an old soul and I miss those times. There were no phones when I was in high school and I remember the time when you could go out and just be out. 

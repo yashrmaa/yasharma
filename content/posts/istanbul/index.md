@@ -2,6 +2,8 @@
 title: "Istanbul"
 date: 2024-10-31T12:02:22+03:00
 draft: false
+categories: [Places]
+aliases: [/posts/istanbul/]
 ---
 
 {{< imgaction catist Resize "500x Lanczos" >}}

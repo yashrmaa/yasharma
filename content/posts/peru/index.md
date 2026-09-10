@@ -2,6 +2,8 @@
 title: "Peru"
 date: 2024-09-11T14:27:04-04:00
 draft: false
+categories: [Places]
+aliases: [/posts/peru/]
 ---
 
 {{< imgaction alpaca Resize "600x Lanczos" >}}

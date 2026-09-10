@@ -2,6 +2,8 @@
 title: "Redwood"
 date: 2026-09-08T19:00:06-07:00
 draft: false
+categories: [Places]
+aliases: [/posts/redwood/]
 ---
 
 
