@@ -21,5 +21,5 @@ In other news, there's suddenly a huge discourse about AI safety. Everyone from 
 - Immigrants are causing housing crisis.
 - Immigrants live on welfare and engage in crime.
 
-How can one cause housing crisis by buying houses costing hundreds of thousands of dollars while living on welfare? Also this is America, is there even welfare? It's hard not to see the contradiction here but people would utter these contradictory statements in the same breath and never see it. Humans are fascinating creatures, aren't we?
+How can one cause housing crisis by buying houses costing hundreds of thousands of dollars while living on welfare? Also this is America, is there even welfare? It's hard not to see the contradiction here but people would utter these statements in the same breath and never see the contradiction. Humans are fascinating creatures, aren't we?
 
