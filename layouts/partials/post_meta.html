@@ -12,7 +12,7 @@
 {{- $scratch.Add "meta" (slice (i18n "words" .WordCount | default (printf "%d words" .WordCount))) }}
 {{- end }}
 
-{{- with .Params.daily }}
+{{- with .Params.day }}
 {{- $scratch.Add "meta" (slice (printf "Day %v" . | htmlEscape)) }}
 {{- end }}
 
