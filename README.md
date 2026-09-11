@@ -12,17 +12,24 @@ hugo server -D
 
 Open the new file in `content/posts/`, write a title and a few sentences, and preview
 at `http://localhost:1313/blog/`. The post archetype supplies the current date and
-starts as a draft:
+starts as a draft. For a daily post, add the optional `daily` field:
 
 ```yaml
 ---
-title: "Day 1 — A small observation"
+title: "A small observation"
 date: 2026-09-10T09:00:00-07:00
 draft: true
+daily: 1
 categories:
   - Life
 ---
 ```
+
+Set `daily` explicitly to the number you want displayed, such as `daily: 12`.
+It appears as ordinary metadata: `September 10, 2026 · 3 min · 600 words · Day 12 · Life`.
+The number is never calculated from dates. Keep the title normal; regular essays
+simply omit `daily`. The same metadata appears on posts, the Blog index, category
+pages, and the archive, including word count but no author name.
 
 Choose one broad category, occasionally two:
 

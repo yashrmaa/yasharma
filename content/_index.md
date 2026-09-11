@@ -69,7 +69,7 @@ Interesting pieces:
 
 [→ Blog](/blog/) · [Follow via RSS](/blog/index.xml)
 
-I also crosspost on [Substack](https://yasharma.substack.com).
+I also publish selected writing on [Substack](https://yasharma.substack.com).
 
 ## Currently
 

@@ -87,11 +87,11 @@ params:
 menu:
   main:
     - identifier: posts
-      name: Blog
+      name: blog
       url: /blog/
       weight: 20
     - identifier: archives
-      name: Archive
+      name: archive
       url: /archives/
       weight: 24
     - identifier: now
