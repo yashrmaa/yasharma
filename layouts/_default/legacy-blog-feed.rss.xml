@@ -1,1 +1,1 @@
-{{- template "_default/rss.xml" (site.GetPage "/posts") -}}
+{{- template "_default/rss.xml" (site.GetPage "/blog") -}}

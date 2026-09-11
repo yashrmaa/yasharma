@@ -6,11 +6,11 @@ research, and selected writing; the complete blog lives at `/blog/`.
 ## Write a post
 
 ```sh
-hugo new posts/a-small-observation.md
+hugo new blog/a-small-observation.md
 hugo server -D
 ```
 
-Open the new file in `content/posts/`, write a title and a few sentences, and preview
+Open the new file in `content/blog/`, write a title and a few sentences, and preview
 at `http://localhost:1313/blog/`. The post archetype supplies the current date and
 starts as a draft. For a daily post, add the optional `day` field:
 
@@ -53,7 +53,7 @@ front matter, or insert `<!--more-->` in the body to choose the excerpt cutoff.
 For a post with local images, use a page bundle instead:
 
 ```sh
-hugo new --kind posts posts/a-day-out/index.md
+hugo new --kind blog blog/a-day-out/index.md
 ```
 
 Set its title, put images alongside `index.md`, and reference them with Markdown
@@ -67,8 +67,8 @@ publishes the site. Drafts and future-dated posts are excluded from production.
 ## Browsing and maintenance
 
 - `/blog/` shows newest posts first, 20 per page, with dates, category links, and
-  short excerpts. Post URLs use `/blog/<slug>/`, while source files stay in
-  `content/posts/`. Hugo aliases redirect existing `/posts/` URLs to `/blog/`.
+  short excerpts. Post URLs use `/blog/<slug>/`, and source files live in
+  `content/blog/`. Hugo aliases redirect existing `/posts/` URLs to `/blog/`.
 - `/categories/` lists the categories in use, linked from the Blog page and post
   metadata. Categories stay out of the top navigation; tags are disabled.
 - `/archives/` uses PaperMod's compact year/month archive with post counts.
@@ -79,7 +79,7 @@ publishes the site. Drafts and future-dated posts are excluded from production.
   content for existing subscribers; `/index.xml` remains the site feed.
 
 The homepage uses `layout: single` in `content/_index.md`; keep that setting so
-it doesn't become a post stream. `params.mainSections: [posts]` enables the
+it doesn't become a post stream. `params.mainSections: [blog]` enables the
 archive and previous/next links. The post metadata partial and a small stylesheet
 add accessible category links. A one-line RSS template reuses PaperMod's feed at
 the legacy URL. Keep customizations outside `themes/PaperMod/`.

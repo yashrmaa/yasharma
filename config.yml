@@ -8,7 +8,7 @@ taxonomies:
   category: categories
 
 permalinks:
-  posts: /blog/:filename/
+  blog: /blog/:filename/
 
 enableRobotsTXT: true
 buildDrafts: false
@@ -45,7 +45,7 @@ params:
   showtoc: false
   tocopen: false
 
-  mainSections: [posts]  # Used by PaperMod's archive and previous/next links.
+  mainSections: [blog]  # Used by PaperMod's archive and previous/next links.
   # content/_index.md uses the single layout to keep the homepage professional.
 
 
@@ -86,7 +86,7 @@ params:
 
 menu:
   main:
-    - identifier: posts
+    - identifier: blog
       name: blog
       url: /blog/
       weight: 20

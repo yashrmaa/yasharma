@@ -20,7 +20,7 @@
 {{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
 {{- end -}}
 
-{{- if eq .Section "posts" }}
+{{- if eq .Section "blog" }}
 {{- with .GetTerms "categories" }}
 <span class="post-categories">
   &nbsp;·&nbsp;
