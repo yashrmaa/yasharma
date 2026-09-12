@@ -7,7 +7,7 @@ categories:
   - Life
 ---
 
-I was talking to my mentee today. It's funny how the relationship started as he reached out to me for mentorship a couple of years ago. For the longest time, it was me giving advice, guiding him but now, the script has somewhat flipped. I ask his advice more than he does. He seek out his opinion and some days (today was one of them), I learn a lot from me. Cue the saying *when the student becomes the master*.
+I was talking to my mentee today. It's funny how the relationship started as he reached out to me for mentorship a couple of years ago. For the longest time, it was me giving advice, guiding him but now, the script has somewhat flipped. I ask his advice more than he does. He seek out his opinion and some days (today was one of them), I learn a lot from him. Cue the saying *when the student becomes the master*.
 
 We talked about startups and how he would not invest in a startup founded by a new grad. Meanwhile I was thinking it takes guts and a sense of security that lets people to take such risks. I couldn't do such a thing right out of college. I don't think I can even do it now because still don't have the sense of security it takes to go after something you want. 
 
