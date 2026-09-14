@@ -21,6 +21,6 @@ The two years I lived there, I saw the generosity and warmth of the people aroun
 
 The Church and Steven organized events to celebrate Indian festivals like Diwali and even Indian independence day. The events were incredible with Indian food cooked by all of Steven’s family and some volunteers. Sometimes they had catering from an Indian restaurant. There’s only one Indian restaurant in College Station so people familiar with the town know what restaurant I am talking about. We had games, and singing and dancing in these events. It was where we all got together and celebrated our traditions in a uniquely Texan way.
 
-Texas was my definition of America for the first two years and it was a great one. People that are kind, caring and generous. The people, the Texas I experienced was real but so is the tweet.
+Texas was my definition of America for the first two years, and it was a great one. People who were kind, caring, and generous. The people I knew, the Texas I experienced, were real. But so is the tweet.
 
 
