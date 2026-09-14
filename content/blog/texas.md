@@ -7,7 +7,7 @@ categories:
   - Life
 ---
 
-It was a usual Sunday and I was at my local cafe sipping a delicious flat white. Decaf btw, because I drink too much coffee. I needed a distraction and I opened Twitter. It’s always a mistake to open the dumpster fire that’s Twitter. And the first thing I saw was this racist [tweet](https://x.com/bofrench/status/2099118916282810552) from a politician in Texas saying — “I heard UT graduation this year looked like this. I didn’t believe it. The problem is now obviously far worse than anyone imagined.” It was infuriating to see this. I went to grad school at Texas A&M. Although I am not supposed to like UT but honestly, I love them.
+It was a usual Sunday and I was at my local cafe sipping a delicious flat white. Decaf btw, because I drink too much coffee. I needed a distraction and I opened Twitter. It’s always a mistake to open the dumpster fire that’s Twitter. And the first thing I saw was this racist [tweet](https://x.com/bofrench/status/2099118916282810552) from a politician in Texas saying — “I heard UT graduation this year looked like this. I didn’t believe it. The problem is now obviously far worse than anyone imagined.” It was infuriating to see this. I went to grad school at Texas A&M. I am not supposed to like UT but honestly, I love them.
 
 The tweet has been making rounds. It has 20.7 million views as of now. It’s still infuriating 6 hours later but I have also been thinking, "Why does it feel like the whole world is crashing down? That living in America feels like a prison sentence rather than a privilege. It’s quite sad because that’s not the Texas I experienced. 
 
