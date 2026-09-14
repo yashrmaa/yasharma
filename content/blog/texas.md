@@ -1,5 +1,5 @@
 ---
-title: "Texas"
+title: "The Texas I knew"
 date: 2026-09-13T18:01:08-07:00
 draft: false
 day: 3
