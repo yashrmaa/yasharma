@@ -10,6 +10,7 @@ comments: true
 * Notes from the underground - Fyodor Dostoevsky
 * Tiny beautiful things - Cheryl Strayed
 * Scale - Geoffery West
+* Into thin air - Jon Krakauer
 
 ## 2026
 
@@ -26,6 +27,11 @@ comments: true
 * This is water - David Foster Wallace
 * When Breath Becomes Air (audiobook) - Paul Kalanithi
 * A World Appears - Michael Pollan
+* Thirty Below - Cassidy Randall
+* Dark Matter - Blake Crouch
+* The miracle of Morning Pages - Julia Cameron
+* Harry Potter 6, 7 (audiobook)
+
 
 ### Unfinished
 
