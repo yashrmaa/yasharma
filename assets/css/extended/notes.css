@@ -1,0 +1,19 @@
+.notes-intro { margin-bottom: 2rem; }
+.note-entry { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+.note-entry:first-child { padding-top: 0; }
+.note-source { margin-bottom: .75rem; font-size: 1.1rem; line-height: 1.5; }
+.note-source a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.note-source-label { display: block; color: var(--secondary); font-size: .75rem; }
+.note-content { margin: 0; }
+.note-content > :last-child { margin-bottom: .75rem; }
+.note-meta, .note-back { color: var(--secondary); font-size: .8rem; }
+.note-meta a, .note-back a { text-decoration: underline; text-underline-offset: 3px; }
+.note-back { margin-bottom: 2rem; }
+.note-single .note-entry { border-bottom: 0; }
+.note-entry, .recent-notes { overflow-wrap: anywhere; }
+.recent-notes time { color: var(--secondary); font-size: .8rem; white-space: nowrap; margin-right: .5rem; }
+.recent-notes li { margin-bottom: .6rem; }
+.note-entry a:focus-visible, .note-back a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 480px) {
+  .recent-notes time { display: block; }
+}

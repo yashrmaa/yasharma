@@ -1,0 +1,10 @@
+{
+  "name": "yasharma-note-publisher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:site": "node test/site.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

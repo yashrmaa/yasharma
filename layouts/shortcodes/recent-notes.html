@@ -1,0 +1,12 @@
+<section class="recent-notes" aria-labelledby="recent-notes-title">
+  <h2 id="recent-notes-title">Recently noted</h2>
+  {{ $notes := first 4 (where site.RegularPages "Section" "notes").ByDate.Reverse }}
+  {{ with $notes }}
+  <ul>
+    {{ range . }}
+    <li><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time> <a href="{{ .RelPermalink }}">{{ partial "notes/label.html" . }}</a></li>
+    {{ end }}
+  </ul>
+  {{ end }}
+  <p><a href="{{ "notes/" | relURL }}">More notes →</a></p>
+</section>

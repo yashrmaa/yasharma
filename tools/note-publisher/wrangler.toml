@@ -1,0 +1,15 @@
+name = "yasharma-note-publisher"
+main = "src/worker.mjs"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[vars]
+GITHUB_OWNER = "yashrmaa"
+GITHUB_REPO = "yasharma"
+GITHUB_BRANCH = "main"
+SITE_URL = "https://yasharma.com"
+
+# Set GITHUB_TOKEN and PUBLISH_SECRET using `wrangler secret put`.
+# Never put either credential in this file. Request/body logging stays disabled.
+[observability]
+enabled = false

@@ -3,6 +3,9 @@
 A Hugo site using the bundled PaperMod theme. The homepage stays focused on work,
 research, and selected writing; the complete blog lives at `/blog/`.
 
+The personal notebook lives at `/notes/`. For iPhone publishing, Worker setup,
+Shortcuts instructions, and tests, see [SETUP_NOTES.md](SETUP_NOTES.md).
+
 ## Write a post
 
 ```sh

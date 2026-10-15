@@ -1,0 +1,9 @@
+{{- $label := .Title -}}
+{{- if or (not $label) (eq $label "Note") -}}
+  {{- if eq .Params.kind "link" -}}
+    {{- $label = (urls.Parse .Params.source_url).Hostname -}}
+  {{- else -}}
+    {{- $label = .Plain | htmlUnescape | truncate 120 -}}
+  {{- end -}}
+{{- end -}}
+{{- return ($label | default (printf "Note from %s" (.Date.Format "January 2, 2006"))) -}}

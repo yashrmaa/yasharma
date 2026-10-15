@@ -71,6 +71,8 @@ Interesting pieces:
 
 I also publish selected writing on [Substack](https://yasharma.substack.com).
 
+{{< recent-notes >}}
+
 ## Currently
 
 Learning guitar, rethinking decision-making frameworks, and living more in the moment. 

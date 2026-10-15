@@ -9,6 +9,7 @@ taxonomies:
 
 permalinks:
   blog: /blog/:filename/
+  notes: /notes/:filename/
 
 enableRobotsTXT: true
 buildDrafts: false
@@ -94,6 +95,10 @@ menu:
       name: archive
       url: /archives/
       weight: 24
+    - identifier: notes
+      name: notes
+      url: /notes/
+      weight: 26
     - identifier: now
       name: now
       url: /now/

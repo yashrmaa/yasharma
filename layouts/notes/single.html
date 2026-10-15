@@ -1,0 +1,6 @@
+{{ define "main" }}
+<div class="note-single">
+  <p class="note-back"><a href="{{ "notes/" | relURL }}">← Notes</a></p>
+  {{ partial "notes/entry.html" . }}
+</div>
+{{ end }}
