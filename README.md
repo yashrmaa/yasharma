@@ -3,9 +3,24 @@
 A Hugo site using the bundled PaperMod theme. The homepage stays focused on work,
 research, and selected writing; the complete blog lives at `/blog/`.
 
-The personal notebook lives at `/notes/`. Publish from the web composer on your
-iPhone or Mac; it can be added to the Home Screen or Dock. For sign-in, Worker
-setup, and tests, see [SETUP_NOTES.md](SETUP_NOTES.md).
+## Notebook
+
+Use the [notebook composer](https://yasharma-note-publisher.yasharma.workers.dev/)
+on iPhone or Mac to publish to [/notes/](https://yasharma.com/notes/). Sign in with
+your publishing secret, write a thought or paste a URL on the first line, and
+tap **Publish**. Categories and up to three resized photos are optional. Drafts
+stay on the device; add the composer to your Home Screen or Dock for quick access.
+
+The Cloudflare Worker in `tools/note-publisher/` saves Markdown to `content/notes/`
+and photos to `static/notes-media/` through GitHub's Contents API. The final note
+commit triggers GitHub Actions deployment. Entries are grouped by Pacific date,
+with posting times, category links, and permanent URLs.
+
+From `tools/note-publisher/`, run `npm test` and `npm run test:runtime` to check the
+publisher, and `wrangler deploy` to update the Worker. Use the existing Homebrew
+Wrangler directly. Manage server-side credentials with `wrangler secret put
+PUBLISH_SECRET` and `wrangler secret put GITHUB_TOKEN`; the GitHub token needs
+Contents read/write access to this repository only. Never put credentials in code.
 
 ## Write a post
 

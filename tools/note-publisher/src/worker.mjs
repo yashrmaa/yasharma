@@ -133,12 +133,12 @@ export function markdown(entry, date) {
   if (entry.url) lines.push(`source_url: ${yamlString(entry.url)}`);
   if (entry.categories?.length) lines.push(`categories: [${entry.categories.map(yamlString).join(", ")}]`);
   lines.push("draft: false", "---", "");
-  // Composer/API input is literal text. Escape Markdown punctuation, raw HTML and Hugo
-  // shortcode delimiters; preserve paragraphs and Unicode in portable Markdown.
+  // Preserve Markdown syntax (links, lists, emphasis, code, and so on). Hugo
+  // shortcodes must not run from notebook text, and raw HTML must stay inert.
   const text = entry.text
-    .replace(/[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/g, "\\$&")
-    // Avoid Markdown indented code blocks displaying our escape backslashes.
-    .replace(/^[ \t]+/gm, spaces => spaces.replace(/ /g, "&#32;").replace(/\t/g, "&#9;"));
+    .replace(/{{(?=[<%])/g, "&#123;&#123;")
+    .replace(/<\/?[A-Za-z][A-Za-z0-9-]*(?:\s+[^<>]*?)?\s*\/?>/g, tag =>
+      tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
   const photos = (entry.photos || []).filter(photo => photo.url).map(photo => {
     const alt = (photo.alt || "").replace(/[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/g, "\\$&");
     return `![${alt}](${photo.url})`;

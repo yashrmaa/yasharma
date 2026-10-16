@@ -2,6 +2,9 @@
 .notes-day { margin: 2.5rem 0 .5rem; font-size: 1rem; font-weight: 600; color: var(--secondary); }
 .notes-day:first-child { margin-top: 0; }
 .note-content img { display: block; max-width: 100%; height: auto; border-radius: 4px; }
+@media (min-width: 768px) {
+  .note-content img { max-width: min(100%, 42rem); max-height: 30rem; width: auto; object-fit: contain; }
+}
 .note-meta { line-height: 1.8; }
 .note-entry { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
 .note-entry:first-child { padding-top: 0; }
