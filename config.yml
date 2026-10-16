@@ -21,6 +21,7 @@ minify:
   minifyOutput: true
 
 params:
+  notesTimeZone: America/Los_Angeles
   env: production
   title: "Yash Sharma"
   description: "Personal website and blog of Yash Sharma"

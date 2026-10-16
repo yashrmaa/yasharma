@@ -4,8 +4,9 @@
   {{ end }}
   {{ with .Content }}<div class="post-content note-content">{{ . }}</div>{{ end }}
   <footer class="note-meta">
-    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-    <span aria-hidden="true"> · </span><a href="{{ .RelPermalink }}">Permalink</a>
+    {{ $local := partial "notes/local-date.html" . }}
+    <a href="{{ .RelPermalink }}" aria-label="Permalink: {{ $local.Format "Jan 2, 2006 at 3:04 PM MST" }}"><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $local.Format "Jan 2, 2006 · 3:04 PM MST" }}</time></a>
+    {{ range .GetTerms "categories" }}<span aria-hidden="true"> · </span><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
     {{ if .Draft }} · Draft{{ end }}
   </footer>
 </article>

@@ -38,6 +38,11 @@ try {
   await writeFile(join(temp, "content/notes/fixture-title.md"), markdown({ kind: "link", url: "https://example.org/", title: trickyTitle, text: "A comment" }, "2020-01-25T12:00:00Z"));
   await writeFile(join(temp, "content/notes/fixture-draft.md"), '---\ndate: 2020-02-01\nkind: note\ndraft: true\n---\nDRAFT_SECRET_FIXTURE\n');
   await writeFile(join(temp, "content/notes/fixture-future.md"), '---\ndate: 2999-02-01\nkind: note\n---\nFUTURE_SECRET_FIXTURE\n');
+  await mkdir(join(temp, "static/notes-media"), { recursive: true });
+  await cp(new URL("./fixtures/photo.jpg", import.meta.url), join(temp, "static/notes-media/fixture.jpg"));
+  await writeFile(join(temp, "content/notes/fixture-before-midnight.md"), markdown({ kind: "note", text: "Before Pacific midnight", categories: ["fixture-places"], photos: [{ url: "https://yasharma.com/notes-media/fixture.jpg", alt: "Photo — 🪴" }] }, "2020-01-21T07:59:00Z"));
+  await writeFile(join(temp, "content/notes/fixture-after-midnight.md"), markdown({ kind: "note", text: "After Pacific midnight" }, "2020-01-21T08:01:00Z"));
+  await writeFile(join(temp, "content/notes/fixture-daylight.md"), markdown({ kind: "note", text: "Summer time" }, "2019-06-20T16:05:00Z"));
   build();
   const feed = await read("notes/index.html");
   assert.equal((feed.match(/class=note-entry/g) || []).length, 20);
@@ -48,6 +53,18 @@ try {
   assert.match(feed, /Permalink/);
   assert.match(feed, /Older notes/);
   assert.match(await read("notes/page/2/index.html"), /Newer notes/);
+  assert.equal((feed.match(/id=2020-01-21/g) || []).length, 1, "one heading per local day");
+  assert.ok(feed.indexOf("fixture-after-midnight/") < feed.indexOf("id=2020-01-20"));
+  assert.ok(feed.indexOf("id=2020-01-20") < feed.indexOf("fixture-before-midnight/"));
+  assert.match(await read("notes/fixture-before-midnight/index.html"), /Jan 20, 2020 · 11:59 PM PST/);
+  assert.match(await read("notes/fixture-after-midnight/index.html"), /Jan 21, 2020 · 12:01 AM PST/);
+  assert.match(await read("notes/fixture-daylight/index.html"), /9:05 AM PDT/);
+  assert.match(feed, /href=\/?categories\/fixture-places\//);
+  const category = await read("categories/fixture-places/index.html");
+  assert.match(category, /class=note-entry/);
+  assert.match(category, /Before Pacific midnight/);
+  assert.match(category, /<img[^>]+src=https:\/\/yasharma.com\/notes-media\/fixture.jpg/);
+  assert.ok((await readFile(join(output, "notes-media/fixture.jpg"))).length > 0);
   const single = await read("notes/fixture-literal/index.html");
   assert.match(single, /<title>Note \| Yash Sharma<\/title>/);
   assert.ok(!single.includes("<h1"), "titleless note should not have a headline");
@@ -76,16 +93,19 @@ try {
 import sys, xml.etree.ElementTree as E
 root = E.parse(sys.argv[1])
 items = root.findall('./channel/item')
-assert len(items) == 25
+assert len(items) == 28
 assert items[0].findtext('title') == sys.argv[2]
 assert items[1].findtext('title') == 'example.com'
 assert items[1].findtext('link').endswith('/notes/fixture-url-only/')
 assert 'https://example.com/article?a=1&amp;b=2' in items[1].findtext('description')
 assert items[2].findtext('title').startswith('Literal # heading **bold**')
 assert 'सोच' in items[2].findtext('description')
+photo = next(i for i in items if 'fixture-before-midnight' in i.findtext('link'))
+assert photo.findtext('category') == 'fixture-places'
+assert 'https://yasharma.com/notes-media/fixture.jpg' in photo.findtext('description')
 `, join(output, "notes/index.xml"), trickyTitle]);
   for (const path of existingPaths) assert.equal(await read(path), before.get(path), `${path} changed when notes were published`);
-  console.log("PASS: empty feed, 25 mixed entries, pagination, ordering, metadata, literal Unicode/YAML, RSS, homepage, draft/future filtering, existing pages.");
+  console.log("PASS: 28 mixed entries, Pacific day grouping/midnight/DST, category feed, photos, pagination, metadata, Unicode/YAML, RSS, homepage, draft/future filtering, existing pages.");
   if (process.env.KEEP_SITE_TEST) console.log(`Preview fixture output: ${output}`);
 } finally {
   if (!process.env.KEEP_SITE_TEST) await rm(temp, { recursive: true, force: true });

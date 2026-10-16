@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "test:site": "node test/site.mjs"
+    "test:site": "node test/site.mjs",
+    "test:browser": "node test/browser.mjs",
+    "test:runtime": "node test/runtime.mjs"
   },
   "engines": { "node": ">=22" }
 }

@@ -1,9 +1,18 @@
 {{ define "main" }}
 <header class="page-header"><h1>{{ .Title }}</h1></header>
-<div class="post-content notes-intro">{{ .Content }}<p><a href="{{ "notes/index.xml" | relURL }}">Notes RSS</a></p></div>
+<div class="post-content notes-intro">{{ .Content }}<p><a href="{{ "notes/index.xml" | relURL }}">Notes RSS</a> · <a href="{{ "categories/" | relURL }}">Browse categories</a></p></div>
 {{ $paginator := .Paginate (.RegularPages.ByDate.Reverse) }}
 <div class="notes-feed">
-  {{ range $paginator.Pages }}{{ partial "notes/entry.html" . }}{{ else }}
+  {{ $day := "" }}
+  {{ range $paginator.Pages }}
+    {{ $local := partial "notes/local-date.html" . }}
+    {{ $key := $local.Format "2006-01-02" }}
+    {{ if ne $day $key }}
+      <h2 class="notes-day" id="{{ $key }}"><a href="#{{ $key }}">{{ $local.Format "Monday, January 2, 2006" }}</a></h2>
+      {{ $day = $key }}
+    {{ end }}
+    {{ partial "notes/entry.html" . }}
+  {{ else }}
   <p class="note-meta">Nothing noted yet.</p>
   {{ end }}
 </div>

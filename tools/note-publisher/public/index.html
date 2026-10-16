@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d1e20" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Notebook">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Notebook · Yash Sharma</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/composer.css">
+  <script type="module" src="/composer.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div><p class="eyebrow">Yash Sharma</p><h1>Notebook</h1></div>
+      <button id="sign-out" class="quiet" type="button" hidden>Sign out</button>
+    </header>
+    <p id="connection" class="muted" role="status">Opening your notebook…</p>
+    <form id="sign-in" hidden>
+      <p>A place for things you want to remember.</p>
+      <label for="secret">Publishing secret</label>
+      <input id="secret" name="password" type="password" autocomplete="current-password" required maxlength="256" spellcheck="false" autocapitalize="none" aria-describedby="auth-help">
+      <p id="auth-help" class="muted">Sign in once on this device. Use your publishing secret, not your GitHub token.</p>
+      <button id="sign-in-button" type="submit">Sign in</button>
+    </form>
+    <form id="composer" hidden>
+      <label for="thought">What do you want to remember?</label>
+      <textarea id="thought" name="thought" rows="10" maxlength="15000" placeholder="A thought, a quote, something you learned…" aria-describedby="writing-help draft-status"></textarea>
+      <p id="writing-help" class="muted">For a link, paste its URL on the first line. Add a thought below it if you like.</p>
+      <p id="day-help" class="muted">Each publish adds a new timed entry under today’s date.</p>
+      <details id="extras">
+        <summary>Categories &amp; photos <span id="extras-count"></span></summary>
+        <label for="categories">Categories <span class="muted">(optional, separated by commas)</span></label>
+        <input id="categories" maxlength="330" placeholder="Life, Places, Technology" autocomplete="off" aria-describedby="category-help">
+        <p id="category-help" class="muted">Up to 8 categories. Reuse a name to collect related posts.</p>
+        <label for="photo-picker">Add photos <span class="muted">(up to 3)</span></label>
+        <input id="photo-picker" type="file" accept="image/*" multiple aria-describedby="photo-help">
+        <p id="photo-help" class="muted">Photos are resized on this device. You can publish a photo without text.</p>
+        <div id="photo-previews"></div>
+      </details>
+      <div class="publish-row">
+        <p id="draft-status" class="muted" role="status">Drafts stay on this device.</p>
+        <button id="publish" type="submit" disabled>Publish</button>
+      </div>
+    </form>
+    <section id="feedback" aria-live="polite" aria-atomic="true" hidden>
+      <p id="message"></p>
+      <p id="result-links" hidden><a id="note-link" target="_blank" rel="noopener noreferrer">View note ↗</a><span aria-hidden="true"> · </span><a id="deployment-link" target="_blank" rel="noopener noreferrer">Deployment status ↗</a></p>
+    </section>
+    <footer><a id="notebook-link" href="https://yasharma.com/notes/" target="_blank" rel="noopener noreferrer">Read notes ↗</a></footer>
+    <noscript>Enable JavaScript to save your draft and publish from this composer.</noscript>
+  </main>
+</body>
+</html>

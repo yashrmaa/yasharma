@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { createPublisher } from "../src/worker.mjs";
 
 const env = {
@@ -9,7 +10,30 @@ const env = {
 };
 const ids = ["11111111-1111-4111-8111-111111111111", "22222222-2222-4222-8222-222222222222", "33333333-3333-4333-8333-333333333333"];
 const date = "2026-10-15T16:05:00.000Z";
+const photo = { data: readFileSync(new URL("./fixtures/photo.jpg", import.meta.url)).toString("base64"), alt: "Trees — 🪴" };
 const created = url => Response.json({ commit: { sha: "abc123" }, content: { path: new URL(url).pathname.split("/contents/")[1] } }, { status: 201 });
+
+test("production fetch preserves the global receiver required by Cloudflare workerd", async () => {
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async function (url, options) {
+    assert.equal(this, globalThis, "unbound native fetch throws Illegal invocation in workerd");
+    assert.equal(options.redirect, "manual", "workerd rejects redirect: error");
+    calls++;
+    return created(url);
+  };
+  try {
+    // Deliberately do not inject fetch, unlike the other endpoint tests.
+    const worker = createPublisher();
+    const response = await worker.fetch(new Request("https://publisher.example/publish", {
+      method: "POST", headers: { Authorization: `Bearer ${env.PUBLISH_SECRET}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "note", text: "Runtime regression test" }),
+    }), env);
+    assert.equal(response.status, 201);
+    assert.equal((await response.json()).status, "committed");
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = original; }
+});
 
 function harness(responder = created) {
   const calls = [];
@@ -47,6 +71,7 @@ test("link commits to the fixed repository/branch/path and returns committed, no
   const call = h.calls[0];
   assert.equal(call.url, `https://api.github.com/repos/yashrmaa/yasharma/contents/${data.path}`);
   assert.equal(call.method, "PUT");
+  assert.equal(call.redirect, "manual");
   assert.equal(call.headers.Authorization, `Bearer ${env.GITHUB_TOKEN}`);
   const payload = JSON.parse(call.body);
   assert.equal(payload.branch, "main");
@@ -63,6 +88,93 @@ test("URL alone is sufficient; title falls back to domain", async () => {
   const { data } = await h.send({ kind: "link", url: "https://example.com" });
   assert.equal(data.ok, true);
   assert.match(h.document(), /title: "example.com"/);
+});
+
+test("categories are optional, normalized, deduplicated, and safely serialized", async () => {
+  const h = harness();
+  assert.equal((await h.send({ kind: "note", text: "Hello", categories: [" Life ", "life", "Places", "सोच"] })).response.status, 201);
+  assert.match(h.document(), /categories: \["life", "places", "सोच"\]/);
+});
+
+test("invalid categories and injection never reach GitHub", async () => {
+  for (const categories of [null, "Life", [""], ["../escape"], ["x\n---"], ["<script>"], [1], ["x".repeat(41)], Array(9).fill("life")]) {
+    const h = harness();
+    assert.equal((await h.send({ kind: "note", text: "Hello", categories })).response.status, 400);
+    assert.equal(h.calls.length, 0);
+  }
+});
+
+test("photo-only note uploads JPEG first then portable Markdown with escaped description", async () => {
+  const h = harness();
+  const result = await h.send({ kind: "note", photos: [{ ...photo, alt: "A [photo](bad) <script> {{< x >}}" }], categories: ["Places"] });
+  assert.equal(result.response.status, 201);
+  assert.equal(h.calls.length, 2);
+  assert.match(h.calls[0].url, /\/contents\/static\/notes-media\/2026-10-15-[a-f0-9-]+\.jpg$/);
+  assert.equal(JSON.parse(h.calls[0].body).content, photo.data);
+  assert.equal(JSON.parse(h.calls[0].body).sha, undefined);
+  assert.equal(h.calls[0].redirect, "manual");
+  assert.match(h.document(1), /!\[A \\\[photo\\\]/);
+  assert.match(h.document(1), /\]\(https:\/\/yasharma.com\/notes-media\/2026-10-15-/);
+  assert.match(h.document(1), /categories: \["places"\]/);
+  assert.ok(!h.document(1).includes("<script>"));
+});
+
+test("photo rejection, collision, redirect, lost response or partial success never create a note", async () => {
+  for (const status of [401, 403, 409, 422, 302, 500, "timeout", "partial"]) {
+    const h = harness(() => {
+      if (status === "timeout") throw new Error("Lost response");
+      if (status === "partial") return Response.json({ commit: { sha: "abc" } }, { status: 201 });
+      return new Response(null, { status });
+    });
+    const result = await h.send({ kind: "note", text: "Photo", photos: [photo] });
+    assert.equal(result.response.status, 502);
+    assert.equal(result.data.error.code, "photo_upload_failed");
+    assert.equal(h.calls.length, 1);
+    assert.ok(!h.calls[0].url.includes("content/notes"));
+  }
+});
+
+test("failed second photo never publishes the note or silently drops photos", async () => {
+  const h = harness((url, options, count) => count === 1 ? created(url) : new Response(null, { status: 403 }));
+  assert.equal((await h.send({ kind: "note", photos: [photo, photo] })).data.error.code, "photo_upload_failed");
+  assert.equal(h.calls.length, 2);
+  assert.ok(h.calls.every(call => call.url.includes("static/notes-media/")));
+});
+
+test("invalid photos, oversized uploads, and caller paths cannot be published", async () => {
+  for (const photos of [null, {}, Array(4).fill(photo), [{ ...photo, path: "../../x" }], [{ data: btoa("<svg></svg>") }], [{ ...photo, data: "!bad" }], [{ ...photo, alt: "x\n---" }], [{ ...photo, data: "A".repeat(700000) }]]) {
+    const h = harness();
+    assert.equal((await h.send({ kind: "note", text: "Photo", photos })).response.status, 400);
+    assert.equal(h.calls.length, 0);
+  }
+  const h = harness();
+  assert.equal((await h.send({ kind: "note", photos: [{ data: "A".repeat(2100000) }] })).response.status, 413);
+  assert.equal(h.calls.length, 0);
+});
+
+test("photo publishing still requires authentication and preserves unknown note commits", async () => {
+  const h = harness((url, options, count) => { if (count === 1) return created(url); throw new Error("Lost note confirmation"); });
+  assert.equal((await h.send({ kind: "note", photos: [photo] }, { headers: { Authorization: "" } })).response.status, 401);
+  assert.equal(h.calls.length, 0);
+  assert.equal((await h.send({ kind: "note", photos: [photo] })).data.error.code, "commit_unknown");
+  assert.equal(h.calls.length, 2);
+});
+
+test("three maximum-sized photos stay within the bounded request and upload serially", async () => {
+  const bytes = Buffer.from(photo.data, "base64");
+  const large = Buffer.concat([bytes.subarray(0, -2), Buffer.alloc(500 * 1024 - bytes.length), bytes.subarray(-2)]).toString("base64");
+  let writes = 0;
+  const worker = createPublisher({ fetch: async (url, options) => {
+    writes++;
+    assert.equal(options.redirect, "manual");
+    return created(url);
+  } });
+  const response = await worker.fetch(new Request("https://publisher.example/publish", {
+    method: "POST", headers: { Authorization: `Bearer ${env.PUBLISH_SECRET}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ kind: "note", photos: Array(3).fill({ data: large, alt: "" }) }),
+  }), env);
+  assert.equal(response.status, 201, await response.text());
+  assert.equal(writes, 4);
 });
 
 test("plain-text note needs no title; Unicode survives UTF-8/base64", async () => {
@@ -159,7 +271,7 @@ test("missing/weak secrets fail closed", async () => {
   }
 });
 
-for (const status of [401, 403, 404, 422, 429, 500]) {
+for (const status of [301, 302, 307, 308, 401, 403, 404, 422, 429, 500]) {
   test(`GitHub ${status} is a visible failure without upstream secrets`, async () => {
     const h = harness((url, options) => new Response(env.GITHUB_TOKEN, { status: options.method === "PUT" ? status : 404 }));
     const { response, data } = await h.send({ kind: "note", text: "Hello" });

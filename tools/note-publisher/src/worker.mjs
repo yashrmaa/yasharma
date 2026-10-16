@@ -1,3 +1,7 @@
+import { cookie, newSession, hasSession, sameOrigin, SECURITY_HEADERS } from "./session.mjs";
+import { validatePhotos } from "./photos.mjs";
+
+const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
 const MAX_BYTES = 32 * 1024;
 const encoder = new TextEncoder();
 
@@ -12,6 +16,7 @@ function json(status, value, headers = {}) {
   return new Response(JSON.stringify(value), {
     status,
     headers: {
+      ...SECURITY_HEADERS,
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
@@ -30,12 +35,12 @@ async function authorized(request, secret) {
   return difference === 0;
 }
 
-async function readJSON(request) {
+async function readJSON(request, maxBytes = MAX_BYTES) {
   if (request.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
     throw new PublishError(415, "invalid_content_type", "Use Content-Type: application/json.");
   }
-  if (Number(request.headers.get("Content-Length")) > MAX_BYTES) {
-    throw new PublishError(413, "request_too_large", "Request exceeds 32 KiB.");
+  if (Number(request.headers.get("Content-Length")) > maxBytes) {
+    throw new PublishError(413, "request_too_large", "Request exceeds the upload limit.");
   }
   // Bound actual bytes even when Content-Length is absent or dishonest.
   const reader = request.body?.getReader();
@@ -47,9 +52,9 @@ async function readJSON(request) {
         const { done, value } = await reader.read();
         if (done) break;
         size += value.byteLength;
-        if (size > MAX_BYTES) {
+        if (size > maxBytes) {
           await reader.cancel();
-          throw new PublishError(413, "request_too_large", "Request exceeds 32 KiB.");
+          throw new PublishError(413, "request_too_large", "Request exceeds the upload limit.");
         }
         chunks.push(value);
       }
@@ -60,11 +65,14 @@ async function readJSON(request) {
   const bytes = new Uint8Array(size);
   let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+  let value;
   try {
-    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
   } catch {
     throw new PublishError(400, "invalid_json", "Send a valid UTF-8 JSON object.");
   }
+  if (encoder.encode(JSON.stringify({ ...value, photos: undefined })).length > MAX_BYTES) throw new PublishError(413, "request_too_large", "Text and metadata exceed 32 KiB.");
+  return value;
 }
 
 function field(input, name, max) {
@@ -79,8 +87,8 @@ function validate(input, siteURL) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     throw new PublishError(400, "invalid_input", "Send a JSON object.");
   }
-  if (Object.keys(input).some(key => !["kind", "url", "title", "text"].includes(key))) {
-    throw new PublishError(400, "unknown_field", "Only kind, url, title, and text are accepted.");
+  if (Object.keys(input).some(key => !["kind", "url", "title", "text", "categories", "photos"].includes(key))) {
+    throw new PublishError(400, "unknown_field", "Only kind, url, title, text, categories, and photos are accepted.");
   }
   if (!["link", "note"].includes(input.kind)) {
     throw new PublishError(400, "invalid_kind", "kind must be link or note.");
@@ -88,6 +96,12 @@ function validate(input, siteURL) {
   const text = field(input, "text", 10000);
   let title = field(input, "title", 300);
   const rawURL = field(input, "url", 4096);
+  const categories = input.categories === undefined ? [] : input.categories;
+  if (!Array.isArray(categories) || categories.length > 8 || categories.some(category => typeof category !== "string" || !/^[\p{L}\p{N}][\p{L}\p{M}\p{N} &+_-]{0,39}$/u.test(category.trim()))) {
+    throw new PublishError(400, "invalid_categories", "Use up to 8 categories, each 1–40 letters/numbers, spaces, &, +, underscores or hyphens.");
+  }
+  let photos;
+  try { photos = validatePhotos(input.photos); } catch (error) { throw new PublishError(400, "invalid_photos", error.message); }
   let url;
   if (input.kind === "link") {
     try {
@@ -101,10 +115,10 @@ function validate(input, siteURL) {
       throw new PublishError(400, "invalid_url", "Supply an external http:// or https:// URL without credentials or spaces.");
     }
     title ||= url.hostname;
-  } else if (!text || rawURL) {
-    throw new PublishError(400, "invalid_note", "A note needs text and must not include a URL field. Put any links in the text.");
+  } else if ((!text && !photos.length) || rawURL) {
+    throw new PublishError(400, "invalid_note", "A note needs text or a photo and must not include a URL field. Put any links in the text.");
   }
-  return { kind: input.kind, text, title, url: url?.href };
+  return { kind: input.kind, text, title, url: url?.href, photos, categories: [...new Set(categories.map(value => value.trim().toLowerCase()))] };
 }
 
 // JSON strings are valid YAML quoted scalars. Escape YAML's extra line breaks too.
@@ -117,14 +131,19 @@ export function markdown(entry, date) {
   const lines = ["---", `date: ${yamlString(date)}`, `kind: ${entry.kind}`];
   if (entry.title) lines.push(`title: ${yamlString(entry.title)}`);
   if (entry.url) lines.push(`source_url: ${yamlString(entry.url)}`);
+  if (entry.categories?.length) lines.push(`categories: [${entry.categories.map(yamlString).join(", ")}]`);
   lines.push("draft: false", "---", "");
-  // Phone input is literal text. Escape Markdown punctuation, raw HTML and Hugo
+  // Composer/API input is literal text. Escape Markdown punctuation, raw HTML and Hugo
   // shortcode delimiters; preserve paragraphs and Unicode in portable Markdown.
   const text = entry.text
     .replace(/[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/g, "\\$&")
     // Avoid Markdown indented code blocks displaying our escape backslashes.
     .replace(/^[ \t]+/gm, spaces => spaces.replace(/ /g, "&#32;").replace(/\t/g, "&#9;"));
-  return `${lines.join("\n")}\n${text}\n`;
+  const photos = (entry.photos || []).filter(photo => photo.url).map(photo => {
+    const alt = (photo.alt || "").replace(/[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/g, "\\$&");
+    return `![${alt}](${photo.url})`;
+  }).join("\n\n");
+  return `${lines.join("\n")}\n${text}\n${photos ? `\n${photos}\n` : ""}`;
 }
 
 function config(env) {
@@ -141,20 +160,51 @@ function config(env) {
   return site.origin;
 }
 
-export function createPublisher({ fetch: githubFetch = globalThis.fetch, now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
+// workerd requires the global receiver for fetch; an extracted, unbound reference
+// throws "Illegal invocation" before sending anything to GitHub.
+export function createPublisher({ fetch: githubFetch = (url, options) => globalThis.fetch(url, options), now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
   return {
     async fetch(request, env) {
       try {
         const endpoint = new URL(request.url);
         if (endpoint.protocol !== "https:") throw new PublishError(400, "https_required", "Use HTTPS.");
+        if (ASSET_PATHS.has(endpoint.pathname) && ["GET", "HEAD"].includes(request.method)) {
+          if (!env.ASSETS) throw new PublishError(503, "not_configured", "Composer assets have not been deployed.");
+          const asset = await env.ASSETS.fetch(request);
+          const response = new Response(asset.body, asset);
+          for (const [name, value] of Object.entries(SECURITY_HEADERS)) response.headers.set(name, value);
+          return response;
+        }
+        if (endpoint.pathname === "/session" && !endpoint.search) {
+          const site = config(env);
+          if (request.method === "GET") {
+            return json(200, {
+              ok: true, authenticated: await hasSession(request, env.PUBLISH_SECRET, now()),
+              site_url: site,
+              actions_url: `https://github.com/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/actions/workflows/hugo.yaml`,
+            });
+          }
+          if (!["POST", "DELETE"].includes(request.method)) return json(405, { ok: false, error: { code: "method_not_allowed", message: "Use GET, POST, or DELETE." } }, { Allow: "GET, POST, DELETE" });
+          if (!sameOrigin(request)) throw new PublishError(403, "invalid_origin", "Open the composer directly to sign in or out.");
+          if (request.method === "DELETE") return json(200, { ok: true }, { "Set-Cookie": cookie("", 0) });
+          if (!await authorized(request, env.PUBLISH_SECRET)) throw new PublishError(401, "unauthorized", "Incorrect publishing secret.");
+          await readJSON(request);
+          return json(200, { ok: true }, { "Set-Cookie": await newSession(env.PUBLISH_SECRET, endpoint.origin, now()) });
+        }
         if (endpoint.pathname !== "/publish" || endpoint.search) throw new PublishError(404, "not_found", "Use /publish.");
         if (request.method !== "POST") return json(405, { ok: false, error: { code: "method_not_allowed", message: "Use POST." } }, { Allow: "POST" });
         const site = config(env);
-        if (!await authorized(request, env.PUBLISH_SECRET)) throw new PublishError(401, "unauthorized", "Invalid publishing secret.");
-        const entry = validate(await readJSON(request), site);
+        // Cookie-authenticated writes need an exact Origin match. Existing bearer
+        // API clients remain supported, without adding cross-origin browser access.
+        if (request.headers.has("Origin") && !sameOrigin(request)) throw new PublishError(403, "invalid_origin", "Publish from the composer on this site.");
+        if (request.headers.has("Authorization")) {
+          if (!await authorized(request, env.PUBLISH_SECRET)) throw new PublishError(401, "unauthorized", "Invalid publishing secret.");
+        } else {
+          if (!await hasSession(request, env.PUBLISH_SECRET, now())) throw new PublishError(401, "unauthorized", "Sign in again to publish. Your draft is kept on this device.");
+          if (!sameOrigin(request)) throw new PublishError(403, "invalid_origin", "Publish from the composer on this site.");
+        }
+        const entry = validate(await readJSON(request, 2 * 1024 * 1024), site);
         const date = now().toISOString();
-        const document = markdown(entry, date);
-        const content = btoa(String.fromCharCode(...encoder.encode(document)));
         const headers = {
           Authorization: `Bearer ${env.GITHUB_TOKEN}`,
           Accept: "application/vnd.github+json",
@@ -162,6 +212,26 @@ export function createPublisher({ fetch: githubFetch = globalThis.fetch, now = (
           "X-GitHub-Api-Version": "2026-03-10",
           "User-Agent": "yasharma-note-publisher",
         };
+        // Upload photos before creating the note. Failures can leave unreferenced
+        // photos, but never a published note pointing to a missing upload.
+        for (const photo of entry.photos) {
+          const path = `static/notes-media/${date.slice(0, 10)}-${uuid()}.jpg`;
+          let confirmed = false;
+          try {
+            const uploaded = await githubFetch(`https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/${path}`, {
+              method: "PUT", headers, redirect: "manual", signal: AbortSignal.timeout(15000),
+              body: JSON.stringify({ message: "Add notebook photo [skip ci]", content: photo.data, branch: env.GITHUB_BRANCH }),
+            });
+            if (uploaded.status === 201) {
+              const result = await uploaded.json();
+              confirmed = !!result?.commit?.sha && result?.content?.path === path;
+            }
+          } catch { /* No note write has been attempted yet. */ }
+          if (!confirmed) throw new PublishError(502, "photo_upload_failed", "Photo upload failed. No note was created. Your draft is safe to retry; an unused photo may remain in the repository.");
+          photo.url = `${site}/${path.slice("static/".length)}`;
+        }
+        const document = markdown(entry, date);
+        const content = btoa(String.fromCharCode(...encoder.encode(document)));
         for (let attempt = 0; attempt < 3; attempt++) {
           const id = `${date.slice(0, 10)}-${uuid()}`;
           const path = `content/notes/${id}.md`;
@@ -170,7 +240,9 @@ export function createPublisher({ fetch: githubFetch = globalThis.fetch, now = (
           let response;
           try {
             response = await githubFetch(api, {
-              method: "PUT", headers, redirect: "error", signal: AbortSignal.timeout(15000),
+              // workerd supports manual/follow, not the browser's "error" mode.
+              // Manual mode keeps the token on api.github.com; 3xx is a failure.
+              method: "PUT", headers, redirect: "manual", signal: AbortSignal.timeout(15000),
               // Omitting sha makes this create-only: existing files cannot be overwritten.
               body: JSON.stringify({ message: `Add ${entry.kind} ${id}`, content, branch: env.GITHUB_BRANCH }),
             });
@@ -196,7 +268,7 @@ export function createPublisher({ fetch: githubFetch = globalThis.fetch, now = (
             let existing;
             try {
               existing = await githubFetch(`${api}?ref=${encodeURIComponent(env.GITHUB_BRANCH)}`, {
-                headers, redirect: "error", signal: AbortSignal.timeout(10000),
+                headers, redirect: "manual", signal: AbortSignal.timeout(10000),
               });
             } catch { /* fall through to visible GitHub failure */ }
             if (attempt < 2 && (existing?.status === 200 || (response.status === 409 && existing?.status === 404))) {
