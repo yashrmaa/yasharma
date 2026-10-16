@@ -1,6 +1,6 @@
 ---
 title: Notes
-description: "A collection of things I find interesting, thoughts I want to remember, and ideas I'm figuring out. Mostly for myself."
+description: "Things I'm thinking about, learning, and figuring out. A public notebook of sorts."
 cascade:
   # A readable fallback for PaperMod's metadata/search and the site-wide RSS.
   # The notes templates show the text, never this fallback as a headline.
@@ -13,4 +13,4 @@ cascade:
   disableHLJS: true
 ---
 
-A collection of things I find interesting, thoughts I want to remember, and ideas I'm figuring out. Mostly for myself.
+Things I'm thinking about, learning, and figuring out. A public notebook of sorts.
