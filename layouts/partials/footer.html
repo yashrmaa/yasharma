@@ -5,6 +5,7 @@
     {{- else }}
     <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
     {{- end }}
+    <span> · RSS: <a href="{{ "index.xml" | relURL }}" aria-label="All posts RSS feed">All</a> · <a href="{{ "notes/index.xml" | relURL }}" aria-label="Notes RSS feed">Notes</a> · <a href="{{ "blog/index.xml" | relURL }}" aria-label="Blog RSS feed">Blog</a></span>
 </footer>
 {{- end }}
 

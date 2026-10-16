@@ -67,7 +67,7 @@ Interesting pieces:
 **[Cities](/blog/cities/)**  - Seattle taught me to climb mountains. NYC taught me to never stop moving. Places shape us more than we realize.\
 **[Istanbul](/blog/istanbul/)** - Couldn't sleep at 3 AM so I found the most alive street I've ever seen.\
 
-[→ Blog](/blog/) · [Follow via RSS](/blog/index.xml)
+[→ Blog](/blog/)
 
 I also publish selected writing on [Substack](https://yasharma.substack.com).
 
@@ -76,6 +76,8 @@ I also publish selected writing on [Substack](https://yasharma.substack.com).
 ## Currently
 
 Learning guitar, rethinking decision-making frameworks, and living more in the moment. 
+
+[More about what I'm doing now →](/now/)
 
 ---
 

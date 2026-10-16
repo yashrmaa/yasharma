@@ -1,0 +1,10 @@
+{{- $current := "" -}}
+{{- with .OutputFormats.Get "RSS" }}{{ $current = .Permalink }}{{ end -}}
+{{- range slice site.Home (site.GetPage "/notes") (site.GetPage "/blog") -}}
+  {{- $title := .Title -}}
+  {{- with .OutputFormats.Get "RSS" -}}
+    {{- if ne .Permalink $current }}
+<link rel="alternate" type="application/rss+xml" title="{{ $title }} RSS" href="{{ .Permalink }}">
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

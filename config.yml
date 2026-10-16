@@ -37,7 +37,7 @@ params:
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: false
   ShowWordCount: true
-  ShowRssButtonInSectionTermList: true
+  ShowRssButtonInSectionTermList: false
   UseHugoToc: true
   disableSpecial1stPost: false
   disableScrollToTop: false
@@ -88,30 +88,18 @@ params:
 
 menu:
   main:
+    - identifier: notes
+      name: notes
+      url: /notes/
+      weight: 10
     - identifier: blog
       name: blog
       url: /blog/
       weight: 20
-    - identifier: archives
-      name: archive
-      url: /archives/
-      weight: 24
-    - identifier: notes
-      name: notes
-      url: /notes/
-      weight: 26
-    - identifier: now
-      name: now
-      url: /now/
-      weight: 30
     - identifier: reading
       name: reading
       url: /reading/
-      weight: 40
-    - identifier: rss
-      name: RSS
-      url: /blog/index.xml
-      weight: 50
+      weight: 30
 
 pygmentsUseClasses: true
 markup:
