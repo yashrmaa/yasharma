@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { validatePhotos } from "../src/photos.mjs";
 import { createPublisher } from "../src/worker.mjs";
 
 const env = {
@@ -110,7 +111,7 @@ test("photo-only note uploads JPEG first then portable Markdown with escaped des
   assert.equal(result.response.status, 201);
   assert.equal(h.calls.length, 2);
   assert.match(h.calls[0].url, /\/contents\/static\/notes-media\/2026-10-15-[a-f0-9-]+\.jpg$/);
-  assert.equal(JSON.parse(h.calls[0].body).content, photo.data);
+  assert.equal(JSON.parse(h.calls[0].body).content, validatePhotos([photo])[0].data);
   assert.equal(JSON.parse(h.calls[0].body).sha, undefined);
   assert.equal(h.calls[0].redirect, "manual");
   assert.match(h.document(1), /!\[A \\\[photo\\\]/);
@@ -313,5 +314,33 @@ test("network timeouts and malformed success are unknown, never false success or
     assert.equal(data.error.code, "commit_unknown");
     assert.equal(data.status, "unknown");
     assert.equal(h.calls.length, 1);
+  }
+});
+
+
+test("strips metadata before storage, including between scans and after EOI", async () => {
+  const original = Buffer.from(photo.data, "base64");
+  const segments = [];
+  for (const marker of [224, 225, 226, 237, 239, 254]) {
+    const payload = Buffer.from("Exif\0\0GPS XMP IPTC PRIVATE_LOCATION");
+    const header = Buffer.from([255, marker, 0, payload.length + 2]);
+    segments.push(header, payload);
+  }
+  const metadata = Buffer.concat(segments);
+  const dirty = Buffer.concat([original.subarray(0, 2), metadata, original.subarray(2, -2), metadata, original.subarray(-2), Buffer.from("PRIVATE_TRAILER")]);
+  const h = harness();
+  assert.equal((await h.send({ kind: "note", photos: [{ ...photo, data: dirty.toString("base64") }] })).response.status, 201);
+  const stored = JSON.parse(h.calls[0].body).content;
+  assert.equal(stored, validatePhotos([photo])[0].data, "encoded image bytes are preserved");
+  assert.ok(!Buffer.from(stored, "base64").includes(Buffer.from("PRIVATE_")));
+  assert.equal(validatePhotos([{ data: stored }])[0].data, stored);
+});
+
+test("rejects truncated JPEG metadata and missing end markers before storage", async () => {
+  const bytes = Buffer.from(photo.data, "base64");
+  for (const invalid of [bytes.subarray(0, -2), Buffer.concat([bytes.subarray(0, 2), Buffer.from([255, 225, 255, 255]), bytes.subarray(2)])]) {
+    const h = harness();
+    assert.equal((await h.send({ kind: "note", photos: [{ data: invalid.toString("base64") }] })).response.status, 400);
+    assert.equal(h.calls.length, 0);
   }
 });
