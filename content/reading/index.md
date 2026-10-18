@@ -70,7 +70,6 @@ comments: true
 ### For later
 
 * Zen and the Art of Motorcycle Maintenance - Robert M. Pirsig
-* Thirty below - Cassidy Randall
 * Orbital - Samantha Harvey
 * Golden Gates - Conor Dougherty
 * Order without design - Alain Bertaud
