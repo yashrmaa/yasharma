@@ -70,9 +70,8 @@ try {
   assert.ok(!single.includes("<h1"), "titleless note should not have a headline");
   assert.match(single, /सोच — café 🪴 日本語/);
   const noteBody = single.match(/<div class="post-content note-content">[\s\S]*?<\/div>/)[0];
-  assert.match(noteBody, /&lt;script(?:&gt;|>)/);
   assert.ok(!noteBody.includes("<script>"));
-  assert.match(single, /Literal # heading \*\*bold\*\*/);
+  assert.match(single, /Literal # heading <strong>bold<\/strong>/);
   assert.match(single, /missing/); // Literal shortcode did not break Hugo.
   const home = await read("index.html");
   const recent = home.match(/<section class=recent-notes[\s\S]*?<\/section>/)?.[0];
@@ -98,13 +97,51 @@ assert items[0].findtext('title') == sys.argv[2]
 assert items[1].findtext('title') == 'example.com'
 assert items[1].findtext('link').endswith('/notes/fixture-url-only/')
 assert 'https://example.com/article?a=1&amp;b=2' in items[1].findtext('description')
-assert items[2].findtext('title').startswith('Literal # heading **bold**')
+assert items[2].findtext('title').startswith('Literal # heading bold')
 assert 'सोच' in items[2].findtext('description')
 photo = next(i for i in items if 'fixture-before-midnight' in i.findtext('link'))
 assert photo.findtext('category') == 'fixture-places'
 assert 'https://yasharma.com/notes-media/fixture.jpg' in photo.findtext('description')
 `, join(output, "notes/index.xml"), trickyTitle]);
   for (const path of existingPaths) assert.equal(await read(path), before.get(path), `${path} changed when notes were published`);
+  const attack = `Normal **bold** and [working link](https://example.com/docs).
+
+<img/src=x onerror=alert(1)>
+<ScRiPt/src=https://attacker.invalid/script.js></ScRiPt>
+<svg onload=alert(1)>
+
+[unsafe](javascript:alert%281%29)
+
+![unsafe image](javascript:alert%281%29)
+
+![unsafe data image](data:image/svg+xml;base64,PHN2Zy8+)
+
+{{< trusted-html >}}<script>alert(1)</script>{{< /trusted-html >}}
+
+\`\`\`html
+<img src="example.jpg">
+\`\`\`
+`;
+  await writeFile(join(temp, "content/notes/fixture-security.md"), markdown({ kind: "note", text: attack }, "2018-01-01T12:00:00Z"));
+  build();
+  const secured = await read("notes/fixture-security/index.html");
+  const body = secured.match(/<div class="post-content note-content">([\s\S]*?)<footer class=note-meta/)[1];
+  assert.ok(!/<(?:script|svg|img)\b[^>]*(?:onerror|onload|attacker\.invalid)/i.test(body));
+  assert.ok(!/(?:href|src)\s*=\s*["']?(?:javascript|data):/i.test(body));
+  assert.match(body, /<strong>bold<\/strong>/);
+  assert.match(body, /href=https:\/\/example.com\/docs/);
+  assert.match(body, /&lt;img/); // HTML code examples remain readable code.
+  assert.match(await read("index.html"), /src=about\/photo.jpeg/);
+  assert.match(await read("search/index.html"), /src=\/search\/pagefind-ui.js/);
+  for (const project of ["datemedir", "oramatch"]) assert.match(await read(`projects/${project}/index.html`), /<iframe/);
+  // Confirm generated JSON-LD remains valid, including hostile note text.
+  execFileSync("python3", ["-c", `
+import json, re, pathlib, sys
+for path in pathlib.Path(sys.argv[1]).rglob('*.html'):
+    for value in re.findall(r'<script type=["\\\']?application/ld\\+json["\\\']?>(.*?)</script>', path.read_text(), re.S):
+        json.loads(value)
+`, output]);
+  console.log("PASS: raw/malformed HTML, unsafe Markdown URLs, images and shortcode injection blocked; Markdown, code, trusted embeds and JSON-LD preserved.");
   console.log("PASS: 28 mixed entries, Pacific day grouping/midnight/DST, category feed, photos, pagination, metadata, Unicode/YAML, RSS, homepage, draft/future filtering, existing pages.");
   if (process.env.KEEP_SITE_TEST) console.log(`Preview fixture output: ${output}`);
 } finally {

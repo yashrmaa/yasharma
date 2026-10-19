@@ -1,0 +1,10 @@
+.DS_Store
+.hugo_build.lock
+.wrangler/
+node_modules/
+/public/
+/resources/_gen/
+.env
+.env.*
+!.env.example
+.dev.vars*

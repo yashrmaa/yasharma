@@ -1,0 +1,3 @@
+{{- /* Only repository-authored content may opt into raw HTML. The publisher
+      neutralizes shortcode delimiters before writing user-supplied Markdown. */ -}}
+{{- .Inner | safeHTML -}}

@@ -1,0 +1,11 @@
+{
+  "name": "yasharma-site",
+  "private": true,
+  "scripts": {
+    "build:search": "pagefind --site public --output-subdir search"
+  },
+  "devDependencies": {
+    "pagefind": "1.5.2"
+  },
+  "engines": { "node": ">=24" }
+}

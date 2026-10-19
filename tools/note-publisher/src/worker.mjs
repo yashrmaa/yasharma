@@ -133,12 +133,9 @@ export function markdown(entry, date) {
   if (entry.url) lines.push(`source_url: ${yamlString(entry.url)}`);
   if (entry.categories?.length) lines.push(`categories: [${entry.categories.map(yamlString).join(", ")}]`);
   lines.push("draft: false", "---", "");
-  // Preserve Markdown syntax (links, lists, emphasis, code, and so on). Hugo
-  // shortcodes must not run from notebook text, and raw HTML must stay inert.
-  const text = entry.text
-    .replace(/{{(?=[<%])/g, "&#123;&#123;")
-    .replace(/<\/?[A-Za-z][A-Za-z0-9-]*(?:\s+[^<>]*?)?\s*\/?>/g, tag =>
-      tag.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+  // Hugo's safe Markdown renderer handles raw HTML and unsafe URLs. Keep the
+  // Markdown source intact, but never let API text invoke trusted shortcodes.
+  const text = entry.text.replace(/{{(?=[<%])/g, "&#123;&#123;");
   const photos = (entry.photos || []).filter(photo => photo.url).map(photo => {
     const alt = (photo.alt || "").replace(/[!"#$%&'()*+,\-./:;<=>?@[\]\\^_`{|}~]/g, "\\$&");
     return `![${alt}](${photo.url})`;

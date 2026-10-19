@@ -11,7 +11,9 @@ ShowWordCount: false
 comments: false
 ---
 
+{{< trusted-html >}}
 <img src="about/photo.jpeg" alt="Yash Sharma" width="200" style="border-radius: 8px; margin-bottom: 20px;">
+{{< /trusted-html >}}
 
 I live in San Francisco and build AI agents at work.
 

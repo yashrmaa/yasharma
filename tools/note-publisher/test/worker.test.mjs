@@ -80,7 +80,7 @@ test("link commits to the fixed repository/branch/path and returns committed, no
   assert.match(h.document(), /title: "Cities"/);
   assert.match(h.document(), /source_url: "https:\/\/example.com\/article\?a=1&b=2"/);
   assert.match(h.document(), /draft: false/);
-  assert.match(h.document(), /A useful essay\\\./);
+  assert.match(h.document(), /A useful essay\./);
   assert.ok(!JSON.stringify(data).includes(env.GITHUB_TOKEN));
 });
 
@@ -195,14 +195,14 @@ test("rejects null optional fields instead of silently coercing them", async () 
   assert.equal(h.calls.length, 0);
 });
 
-test("indented text stays literal without becoming a Markdown code block", async () => {
+test("Markdown indentation and code source are preserved", async () => {
   const h = harness();
   assert.equal((await h.send({ kind: "note", text: "A thought\n\n    **indented**\n\t<text>" })).data.ok, true);
-  assert.ok(h.document().includes("&#32;&#32;&#32;&#32;\\*\\*indented"));
-  assert.ok(h.document().includes("&#9;\\<text\\>"));
+  assert.ok(h.document().includes("    **indented**"));
+  assert.ok(h.document().includes("\t<text>"));
 });
 
-test("YAML quoted values and literal text cannot inject front matter, HTML, or shortcodes", async () => {
+test("YAML stays quoted and shortcodes stay inert while Markdown source is preserved", async () => {
   const h = harness();
   const title = '"quoted": yes\n---\ndraft: true\\x\u0085\u2028\u2029';
   const { data } = await h.send({ kind: "link", url: "https://example.com", title, text: '---\ndraft: true\n<script>alert(1)</script>\n{{< missing >}}\n# Heading\n**bold**' });
@@ -210,10 +210,9 @@ test("YAML quoted values and literal text cannot inject front matter, HTML, or s
   const doc = h.document();
   const front = doc.split("\n---\n")[0];
   assert.equal(JSON.parse(front.split("\n").find(line => line.startsWith("title: ")).slice(7)), title.trim());
-  assert.equal((doc.match(/^---$/gm) || []).length, 2);
-  assert.ok(!doc.includes("<script>"));
+  assert.match(front, /draft: false/);
   assert.ok(!doc.includes("{{<"));
-  assert.ok(doc.includes("\\# Heading"));
+  assert.ok(doc.includes("# Heading"));
 });
 
 for (const url of ["javascript:alert(1)", "data:text/html,test", "file:///tmp/test", "ftp://example.com", "example.com", "//example.com", "", "https://user:pass@example.com", "https://yasharma.com/a", "https://www.yasharma.com/a", "http://localhost", "https://example.com/a b"]) {

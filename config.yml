@@ -1,6 +1,7 @@
 baseURL: "https://yasharma.com/"
 title: Yash Sharma
-paginate: 20
+pagination:
+  pagerSize: 20
 summaryLength: 40
 theme: PaperMod
 
@@ -108,7 +109,7 @@ markup:
     codeFences: true
   goldmark:
     renderer:
-      unsafe: true
+      unsafe: false
 
 outputs:
   home:

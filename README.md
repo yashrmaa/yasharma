@@ -93,8 +93,8 @@ publishes the site. Drafts and future-dated posts are excluded from production.
 - `/archives/` uses PaperMod's compact year/month archive with post counts.
 - Individual posts show categories near the date and PaperMod's
   previous/next links within the blog.
-- `/blog/index.xml` is the blog RSS feed, linked from navigation, the homepage,
-  and the blog index. The existing `/posts/index.xml` feed serves the same blog
+- `/blog/index.xml` is the blog RSS feed, linked from the footer. The existing
+  `/posts/index.xml` feed serves the same blog
   content for existing subscribers; `/index.xml` remains the site feed.
 
 The homepage uses `layout: single` in `content/_index.md`; keep that setting so
@@ -103,7 +103,22 @@ archive and previous/next links. The post metadata partial and a small styleshee
 add accessible category links. A one-line RSS template reuses PaperMod's feed at
 the legacy URL. Keep customizations outside `themes/PaperMod/`.
 
-Verified with Hugo 0.123.8 extended and the deployment version, 0.115.1 extended
+Verified with the deployment version, Hugo 0.168.0 extended
 (configured in `.github/workflows/hugo.yaml`). No additional dependencies are
 needed for the blog features. The existing search page also needs the deployment
 workflow's Pagefind step; a standalone Hugo build does not generate its assets.
+
+## Security and build dependencies
+
+The deployment pins Hugo 0.168.0 with a verified SHA-256, GitHub Actions by commit,
+and Pagefind through `package-lock.json`. Use `npm ci --ignore-scripts` and
+`npm audit` for the build dependencies; the publisher has no runtime dependencies.
+Dependabot checks npm and workflow updates weekly. When upgrading Hugo, update
+both the version and checksum in `.github/workflows/hugo.yaml` and review the
+[Hugo security advisories](https://github.com/gohugoio/hugo/security/advisories).
+
+Markdown permits formatting but omits raw HTML. Repository-authored HTML embeds
+use `trusted-html`; the authenticated publishing API prevents invoking shortcodes.
+Keep that boundary intact. Run `npm test --prefix tools/note-publisher` and
+`HUGO_BIN=/path/to/hugo npm run test:site --prefix tools/note-publisher` before
+deploying. The site checks exercise HTML/URL injection, feeds, layouts, and embeds.

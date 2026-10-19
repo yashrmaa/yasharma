@@ -6,6 +6,7 @@ hideMeta: true
 ---
 
 
+{{< trusted-html >}}
 <link href="/search/pagefind-ui.css" rel="stylesheet">
 <script src="/search/pagefind-ui.js"></script>
 <div id="search"></div>
@@ -14,3 +15,4 @@ hideMeta: true
         new PagefindUI({ element: "#search", showSubResults: true });
     });
 </script>
+{{< /trusted-html >}}

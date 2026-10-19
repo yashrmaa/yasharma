@@ -2,6 +2,6 @@
 url: /posts/
 layout: legacy-blog-feed
 outputs: [RSS]
-_build:
+build:
   list: never
 ---
