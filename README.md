@@ -117,6 +117,19 @@ Dependabot checks npm and workflow updates weekly. When upgrading Hugo, update
 both the version and checksum in `.github/workflows/hugo.yaml` and review the
 [Hugo security advisories](https://github.com/gohugoio/hugo/security/advisories).
 
+Checks run on pull requests, pushes to `main`, and weekly on Mondays. Only main
+pushes and manual deployments publish the site. The weekly check flags newer
+stable Hugo releases; it does not automatically install unreleased upstream code
+or block normal note publishing when a newer release appears. Dependency audits
+fail on moderate or higher advisories. Review Dependabot PRs after checks pass,
+and enable email notifications for security alerts and failed Actions runs.
+
+Keep two-factor authentication enabled on GitHub and Cloudflare. Keep the
+repository-only publishing token and publishing secret in your password manager,
+set an expiry reminder for the GitHub token, and replace either if exposed using
+`wrangler secret put GITHUB_TOKEN` or `wrangler secret put PUBLISH_SECRET` from
+`tools/note-publisher/`. Rotating `PUBLISH_SECRET` signs out existing devices.
+
 Markdown permits formatting but omits raw HTML. Repository-authored HTML embeds
 use `trusted-html`; the authenticated publishing API prevents invoking shortcodes.
 Keep that boundary intact. Run `npm test --prefix tools/note-publisher` and

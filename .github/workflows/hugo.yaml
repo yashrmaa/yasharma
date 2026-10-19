@@ -6,6 +6,11 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '23 14 * * 1'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -17,7 +22,7 @@ permissions:
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
-  group: "pages"
+  group: pages-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 
 # Default to bash
@@ -51,6 +56,7 @@ jobs:
           persist-credentials: false
       - name: Setup Pages
         id: pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -59,6 +65,8 @@ jobs:
           cache: npm
       - name: Install Node.js dependencies
         run: npm ci --ignore-scripts
+      - name: Audit build dependencies
+        run: npm audit --audit-level=moderate
       - name: Check publisher security and behavior
         run: npm test --prefix tools/note-publisher
       - name: Check rendered content and existing pages
@@ -74,16 +82,29 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"          
+            --baseURL "${{ steps.pages.outputs.base_url || 'https://yasharma.com' }}/"
       - name: Run pagefind
         run: npm run build:search
+      - name: Check for a newer stable Hugo release
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest="$(gh api repos/gohugoio/hugo/releases/latest --jq .tag_name)"
+          if [[ "$latest" != "v$HUGO_VERSION" ]]; then
+            printf '::error::Hugo %s is available. Review the release and update HUGO_VERSION and HUGO_SHA256.\n' "$latest"
+            exit 1
+          fi
+          printf 'Hugo %s is the current stable release.\n' "$HUGO_VERSION"
       - name: Upload artifact
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./public
 
   # Deployment job
   deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     permissions:
       pages: write
       id-token: write
