@@ -104,25 +104,41 @@ add accessible category links. A one-line RSS template reuses PaperMod's feed at
 the legacy URL. Keep customizations outside `themes/PaperMod/`.
 
 Verified with the deployment version, Hugo 0.168.0 extended
-(configured in `.github/workflows/hugo.yaml`). No additional dependencies are
+(pinned in `tools/hugo-version.json`). No additional dependencies are
 needed for the blog features. The existing search page also needs the deployment
 workflow's Pagefind step; a standalone Hugo build does not generate its assets.
 
 ## Security and build dependencies
 
-The deployment pins Hugo 0.168.0 with a verified SHA-256, GitHub Actions by commit,
+The deployment pins Hugo with a verified SHA-256, GitHub Actions by commit,
 and Pagefind through `package-lock.json`. Use `npm ci --ignore-scripts` and
 `npm audit` for the build dependencies; the publisher has no runtime dependencies.
-Dependabot checks npm and workflow updates weekly. When upgrading Hugo, update
-both the version and checksum in `.github/workflows/hugo.yaml` and review the
-[Hugo security advisories](https://github.com/gohugoio/hugo/security/advisories).
+Daily maintenance checks the latest official stable Hugo release, verifies its
+download checksum, and runs the publisher tests, rendered-site security checks,
+dependency audit, Hugo build, and search indexing. Only a passing candidate is
+committed to `tools/hugo-version.json` on `main`, then deployed automatically.
+No unreleased Hugo source is installed. Run it sooner with
+`gh workflow run maintenance.yaml --ref main`.
 
-Checks run on pull requests, pushes to `main`, and weekly on Mondays. Only main
-pushes and manual deployments publish the site. The weekly check flags newer
-stable Hugo releases; it does not automatically install unreleased upstream code
-or block normal note publishing when a newer release appears. Dependency audits
-fail on moderate or higher advisories. Review Dependabot PRs after checks pass,
-and enable email notifications for security alerts and failed Actions runs.
+Dependabot checks npm and pinned Actions daily. Successful PR checks trigger a
+separate trusted workflow that verifies the bot identity, current tested commit,
+current base, and changed files before merging and explicitly deploying. Only
+existing package version/lockfile changes and pinned Action references qualify;
+new dependencies or workflow behavior changes require review. No PR code runs
+with the merge credential. Dependency audits fail on moderate or higher advisories.
+Failed updates stay unapplied; keep notifications enabled for failed Actions runs.
+Pull requests and non-main manual runs cannot deploy the site.
+
+The Worker currently deploys with Homebrew `wrangler deploy`. To enable automatic
+Worker deployments, connect the GitHub repository once in Cloudflare → Workers &
+Pages → `yasharma-note-publisher` → Settings → Builds → Connect. Authorize the
+Cloudflare GitHub App for **this repository only**, select `main`, set the root to
+`tools/note-publisher`, build command `npm test`, deploy command `npx wrangler deploy`,
+and build watch path `tools/note-publisher/**`. Disable non-production branch
+builds. Cloudflare manages the build token; leave the existing Worker secrets in
+place. This `npx` runs on Cloudflare, not on your Mac. The existing Git connection
+was unavailable when configuring maintenance, so this one-time account consent is
+still required before Worker deployment can be automatic.
 
 Keep two-factor authentication enabled on GitHub and Cloudflare. Keep the
 repository-only publishing token and publishing secret in your password manager,

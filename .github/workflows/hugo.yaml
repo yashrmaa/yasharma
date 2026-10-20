@@ -9,8 +9,6 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: '23 14 * * 1'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,17 +35,7 @@ jobs:
     permissions:
       contents: read
       pages: read
-    env:
-      HUGO_VERSION: 0.168.0
-      HUGO_SHA256: b7cd5087c39bf5584e40180bd04fab0c6fb19f2913cd63121da8663e112a08db
     steps:
-      - name: Install Hugo CLI
-        run: |
-          curl --fail --location --proto '=https' --tlsv1.2 --retry 3 \
-            -o "$RUNNER_TEMP/hugo.deb" \
-            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
-          printf '%s  %s\n' "$HUGO_SHA256" "$RUNNER_TEMP/hugo.deb" | sha256sum --check --strict
-          sudo dpkg -i "$RUNNER_TEMP/hugo.deb"
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -56,13 +44,28 @@ jobs:
           persist-credentials: false
       - name: Setup Pages
         id: pages
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
           cache: npm
+      - name: Read pinned Hugo release
+        id: hugo
+        run: node tools/maintenance/hugo.mjs
+      - name: Install Hugo CLI
+        env:
+          HUGO_VERSION: ${{ steps.hugo.outputs.version }}
+          HUGO_SHA256: ${{ steps.hugo.outputs.sha256 }}
+        run: |
+          curl --fail --location --proto '=https' --tlsv1.2 --retry 3 \
+            -o "$RUNNER_TEMP/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          printf '%s  %s\n' "$HUGO_SHA256" "$RUNNER_TEMP/hugo.deb" | sha256sum --check --strict
+          sudo dpkg -i "$RUNNER_TEMP/hugo.deb"
+      - name: Check maintenance safeguards
+        run: node --test tools/maintenance/*.test.mjs
       - name: Install Node.js dependencies
         run: npm ci --ignore-scripts
       - name: Audit build dependencies
@@ -85,26 +88,15 @@ jobs:
             --baseURL "${{ steps.pages.outputs.base_url || 'https://yasharma.com' }}/"
       - name: Run pagefind
         run: npm run build:search
-      - name: Check for a newer stable Hugo release
-        if: github.event_name == 'schedule'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          latest="$(gh api repos/gohugoio/hugo/releases/latest --jq .tag_name)"
-          if [[ "$latest" != "v$HUGO_VERSION" ]]; then
-            printf '::error::Hugo %s is available. Review the release and update HUGO_VERSION and HUGO_SHA256.\n' "$latest"
-            exit 1
-          fi
-          printf 'Hugo %s is the current stable release.\n' "$HUGO_VERSION"
       - name: Upload artifact
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./public
 
   # Deployment job
   deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     permissions:
       pages: write
       id-token: write

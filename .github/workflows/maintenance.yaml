@@ -1,0 +1,86 @@
+name: Automatic Hugo maintenance
+
+on:
+  schedule:
+    - cron: '23 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maintenance
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.hugo.outputs.changed }}
+      content: ${{ steps.hugo.outputs.content }}
+      version: ${{ steps.hugo.outputs.version }}
+      original_sha: ${{ steps.original.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Record the current pin for a conditional commit
+        id: original
+        run: echo "sha=$(git hash-object tools/hugo-version.json)" >> "$GITHUB_OUTPUT"
+      - name: Prepare the latest official stable Hugo release
+        id: hugo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tools/maintenance/hugo.mjs update
+      - name: Install and verify candidate Hugo
+        env:
+          HUGO_VERSION: ${{ steps.hugo.outputs.version }}
+          HUGO_SHA256: ${{ steps.hugo.outputs.sha256 }}
+        run: |
+          curl --fail --location --proto '=https' --tlsv1.2 --retry 3 \
+            -o "$RUNNER_TEMP/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          printf '%s  %s\n' "$HUGO_SHA256" "$RUNNER_TEMP/hugo.deb" | sha256sum --check --strict
+          sudo dpkg -i "$RUNNER_TEMP/hugo.deb"
+      - run: npm ci --ignore-scripts
+      - run: npm audit --audit-level=moderate
+      - run: node --test tools/maintenance/*.test.mjs
+      - run: npm test --prefix tools/note-publisher
+      - run: npm run test:site --prefix tools/note-publisher
+        env:
+          HUGO_BIN: hugo
+      - run: hugo --gc --minify --baseURL https://yasharma.com/
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+      - run: npm run build:search
+
+  publish:
+    needs: validate
+    if: needs.validate.outputs.changed == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      # No downloaded upstream executable runs in this privileged job.
+      - name: Commit only the tested Hugo pin and deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PIN_CONTENT: ${{ needs.validate.outputs.content }}
+          PIN_SHA: ${{ needs.validate.outputs.original_sha }}
+          HUGO_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          jq -n --arg content "$PIN_CONTENT" --arg sha "$PIN_SHA" \
+            --arg message "Update Hugo to $HUGO_VERSION after validation" \
+            '{branch:"main",message:$message,content:$content,sha:$sha}' > "$RUNNER_TEMP/pin.json"
+          gh api --method PUT "repos/$GH_REPO/contents/tools/hugo-version.json" \
+            --input "$RUNNER_TEMP/pin.json" --silent
+          # GITHUB_TOKEN commits do not trigger push workflows; dispatch explicitly.
+          gh workflow run hugo.yaml --repo "$GH_REPO" --ref main

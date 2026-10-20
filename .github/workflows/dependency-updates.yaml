@@ -1,0 +1,35 @@
+name: Merge tested dependency updates
+
+on:
+  workflow_run:
+    workflows: [Deploy Hugo site to Pages]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-updates
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      # Always execute trusted main-branch code. Never check out the PR here.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Merge a verified Dependabot update and deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tools/maintenance/dependabot.mjs
