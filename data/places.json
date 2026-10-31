@@ -546,5 +546,33 @@
       "Stoa"
     ],
     "updatedAt": "2026-10-31T20:48:02.026Z"
+  },
+  {
+    "name": "Bel Ami Cafe",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "Lenox Hill",
+    "address": "960 Lexington Ave, New York, NY 10021",
+    "coordinates": [
+      40.769329,
+      -73.9633053
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/o5GwMwRK49PTVesw5?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/o5GwMwRK49PTVesw5?g_st=ic",
+    "comment": "",
+    "id": "bel-ami-cafe-cf058629",
+    "aliases": [
+      "Bel Ami Cafe"
+    ],
+    "updatedAt": "2026-10-31T23:15:53.842Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-9e9b802c-d307-422d-b5fd-ec4d536ba704.jpg",
+        "alt": "My photo from Bel Ami Cafe",
+        "date": "2026-10-31T23:15:53.842Z"
+      }
+    ]
   }
 ]
