@@ -76,7 +76,7 @@
       if (state.city && place.city !== state.city) return false;
       if (state.category && place.category !== state.category) return false;
       if (state.status && place.status !== state.status) return false;
-      const text = [place.name, place.city, place.neighborhood, place.address, place.category, ...(place.aliases || []), ...place.notes.map(note => note.text)].join(" ").toLocaleLowerCase();
+      const text = [place.name, place.city, place.neighborhood, place.address, place.category, place.comment || "", ...(place.aliases || []), ...place.notes.map(note => note.text)].join(" ").toLocaleLowerCase();
       return words.every(word => text.includes(word));
     });
   }
@@ -115,7 +115,8 @@
     const info = element("div", "place-detail-info");
     info.append(element("p", "", `${place.category} · ${place.neighborhood ? `${place.neighborhood}, ` : ""}${place.city}`));
     info.append(element("h3", "", place.name));
-    if (place.notes[0]?.text) info.append(element("p", "place-detail-text", place.notes[0].text));
+    const comment = place.notes[0]?.text || place.comment;
+    if (comment) info.append(element("p", "place-detail-text", comment));
     if (place.locationNote) info.append(element("p", "place-detail-approximate", place.locationNote));
     const links = element("div", "place-detail-links");
     links.append(link("Open in Google Maps ↗", place.mapsURL, true));
@@ -290,7 +291,7 @@
   window.addEventListener("popstate", () => { clearTimeout(searchTimer); readURL(); applyFilters({ updateURL: false }); });
 
   if (window.L) {
-    map = L.map(get("places-map"), { zoomControl: false, scrollWheelZoom: false, minZoom: 2, maxZoom: 19 });
+    map = L.map(get("places-map"), { zoomControl: false, scrollWheelZoom: false, minZoom: 0, maxZoom: 19 });
     L.control.zoom({ position: "topright" }).addTo(map);
     L.control.scale({ position: "bottomleft", imperial: false }).addTo(map);
     let loadedTiles = 0;

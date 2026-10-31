@@ -2,13 +2,19 @@
   {
     "id": "bello-coffee",
     "name": "Bello Coffee & Tea",
-    "aliases": ["Bello coffee", "Bello Coffee & Tea"],
+    "aliases": [
+      "Bello coffee",
+      "Bello Coffee & Tea"
+    ],
     "category": "Coffee",
     "status": "liked",
     "city": "San Francisco",
     "neighborhood": "Glen Park",
     "address": "2885 Diamond Street, San Francisco, CA",
-    "coordinates": [37.73381, -122.43397],
+    "coordinates": [
+      37.73381,
+      -122.43397
+    ],
     "precision": "address",
     "website": "https://www.bello.coffee/",
     "locationSource": "https://www.openstreetmap.org/node/974352510"
@@ -16,13 +22,19 @@
   {
     "id": "fellini-coffee",
     "name": "Fellini Coffee",
-    "aliases": ["Fellini Coffee", "Fellini in NYC"],
+    "aliases": [
+      "Fellini Coffee",
+      "Fellini in NYC"
+    ],
     "category": "Coffee",
     "status": "liked",
     "city": "New York",
     "neighborhood": "",
     "address": "New York, NY",
-    "coordinates": [40.7549, -73.984],
+    "coordinates": [
+      40.7549,
+      -73.984
+    ],
     "precision": "city",
     "locationNote": "City-level pin. I haven't recorded which Fellini location this was.",
     "website": "https://www.fellinicoffee.com/",
@@ -31,14 +43,159 @@
   {
     "id": "neighbors-coffee",
     "name": "Neighbors Coffee",
-    "aliases": ["Neighbors coffee", "Neighbors Coffee"],
+    "aliases": [
+      "Neighbors coffee",
+      "Neighbors Coffee"
+    ],
     "category": "Coffee",
     "status": "liked",
     "city": "San Francisco",
     "neighborhood": "",
     "address": "San Francisco, CA",
-    "coordinates": [37.7749, -122.4194],
+    "coordinates": [
+      37.7749,
+      -122.4194
+    ],
     "precision": "city",
     "locationNote": "City-level pin until I confirm the café's exact address."
+  },
+  {
+    "id": "kenyan-shibuya",
+    "name": "Kenyan Shibuya",
+    "aliases": [
+      "Kenyan Shibuya"
+    ],
+    "city": "Tokyo",
+    "neighborhood": "Shibuya",
+    "category": "Tea",
+    "status": "liked",
+    "address": "Japan, 〒150-0041 Tokyo, Shibuya, Jinnan, 1 Chome−14−8 南部ビル 1F",
+    "coordinates": [
+      35.6638151,
+      139.6999153
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/6tkYdRQhpNqzxMXJ9",
+    "locationSource": "https://maps.app.goo.gl/6tkYdRQhpNqzxMXJ9",
+    "comment": "get cheese cake and tea"
+  },
+  {
+    "id": "lades-menemen",
+    "name": "Lades Menemen",
+    "aliases": [
+      "Lades Menemen"
+    ],
+    "city": "Istanbul",
+    "neighborhood": "Beyoğlu",
+    "category": "Restaurants",
+    "status": "liked",
+    "address": "Sadri Alışık Sokak No. 11/12, Beyoğlu, Istanbul, Türkiye",
+    "coordinates": [
+      41.0345944,
+      28.9808312
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/cD6pgeybycJorJCY7",
+    "locationSource": "https://maps.app.goo.gl/cD6pgeybycJorJCY7",
+    "comment": "Incredible Menemen"
+  },
+  {
+    "id": "cihangir-tarihi-simit-firini",
+    "name": "Cihangir Tarihi Simit Fırını",
+    "aliases": [
+      "Cihangir Tarihi Simit Fırını"
+    ],
+    "city": "Istanbul",
+    "neighborhood": "Cihangir",
+    "category": "Bakeries",
+    "status": "liked",
+    "address": "Cihangir, Beyoğlu, Istanbul, Türkiye",
+    "coordinates": [
+      41.0313689,
+      28.9819155
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/drV7euNfQwhdpkGf9",
+    "locationSource": "https://maps.app.goo.gl/drV7euNfQwhdpkGf9",
+    "comment": "buzzing even at 3 am, get the baklava and chai"
+  },
+  {
+    "id": "melly-coffee-cihangir",
+    "name": "Melly Coffee Co. - Cihangir",
+    "aliases": [
+      "Melly Coffee Co. - Cihangir"
+    ],
+    "city": "Istanbul",
+    "neighborhood": "Cihangir",
+    "category": "Coffee",
+    "status": "liked",
+    "address": "Firuzağa Cami Sk. No:2 D:E, Kuloğlu, Beyoğlu, Istanbul, Türkiye",
+    "coordinates": [
+      41.0314879,
+      28.9822521
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/MXLRrC2owZvTVd477",
+    "locationSource": "https://maps.app.goo.gl/MXLRrC2owZvTVd477",
+    "comment": "drink coffee, pet some cats"
+  },
+  {
+    "id": "takagi-coffee",
+    "name": "Takagi Coffee",
+    "aliases": [
+      "Takagi Coffee"
+    ],
+    "city": "Kyoto",
+    "neighborhood": "",
+    "category": "Coffee",
+    "status": "mentioned",
+    "address": "Kyoto, Japan",
+    "coordinates": [
+      35.0002084,
+      135.7583899
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/UAxE8B33mF1FJpj16",
+    "locationSource": "https://maps.app.goo.gl/UAxE8B33mF1FJpj16",
+    "comment": "old school vibe, not so great tea"
+  },
+  {
+    "id": "maren-shinsaibashi",
+    "name": "MAREN Shinsaibashi",
+    "aliases": [
+      "MAREN Shinsaibashi"
+    ],
+    "city": "Osaka",
+    "neighborhood": "Shinsaibashi",
+    "category": "Restaurants",
+    "status": "saved",
+    "address": "Shinsaibashi, Osaka, Japan",
+    "coordinates": [
+      34.6730843,
+      135.503229
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/vKroZVfsTtcuXv4Q8",
+    "locationSource": "https://maps.app.goo.gl/vKroZVfsTtcuXv4Q8"
+  },
+  {
+    "id": "foodine-restaurant",
+    "name": "Foodine Restaurant - Indian Street Food & Thali",
+    "aliases": [
+      "Foodine Restaurant - Indian Street Food & Thali"
+    ],
+    "city": "Montréal",
+    "neighborhood": "",
+    "category": "Restaurants",
+    "status": "liked",
+    "address": "4939 Chemin Queen Mary, Montréal, QC H3W 1X4, Canada",
+    "coordinates": [
+      45.4866737,
+      -73.6268795
+    ],
+    "precision": "address",
+    "mapsURL": "https://maps.app.goo.gl/ji5CzDeDkm1iuTSQ9",
+    "locationSource": "https://maps.app.goo.gl/ji5CzDeDkm1iuTSQ9",
+    "comment": "authentic Gujarati food"
   }
 ]

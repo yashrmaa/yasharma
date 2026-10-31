@@ -138,6 +138,13 @@ try {
   await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
   await click("[data-fit]");
   await pause(800);
+  assert.equal(await evaluate(`(() => {
+    const bounds = document.querySelector("#places-map").getBoundingClientRect();
+    return [...document.querySelectorAll(".place-map-marker")].every(marker => {
+      const pin = marker.getBoundingClientRect();
+      return pin.left >= bounds.left && pin.right <= bounds.right && pin.top >= bounds.top && pin.bottom <= bounds.bottom;
+    });
+  })()`), true, "the mobile overview should fit every pin across all cities");
   await evaluate('document.body.classList.remove("dark"); window.scrollTo(0,0)');
   await screenshot("mobile");
   await evaluate('document.body.classList.add("dark"); window.scrollTo(0,0)');

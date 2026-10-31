@@ -61,6 +61,7 @@
             {{ with .text }}<blockquote><p>{{ . }}</p></blockquote>{{ end }}
             <a class="place-note-link" href="{{ .url }}">From my notebook <span>· {{ .label }}</span> <span aria-hidden="true">↗</span></a>
             {{ end }}{{ end }}
+            {{ if and (not .notes) .comment }}<blockquote><p>{{ .comment }}</p></blockquote>{{ end }}
             {{ with .locationNote }}<p class="place-location-note">{{ . }}</p>{{ end }}
             <div class="place-card-actions"><a href="{{ .mapsURL }}" target="_blank" rel="noopener noreferrer">Open in Google Maps <span aria-hidden="true">↗</span></a><button type="button" data-select="{{ .id }}" data-js-control hidden>Find on map <span aria-hidden="true">⊙</span></button></div>
           </article>

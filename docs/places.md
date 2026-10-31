@@ -51,6 +51,11 @@ Choose `liked`, `saved`, or `mentioned` for the status. Category and city filter
 come from the catalog, so new kinds of places and cities appear automatically.
 Saved places can exist without notes. `draft: true` hides a catalog entry.
 
+An optional `comment` stores a short personal remark directly on a place card
+without creating a notebook post. It appears in the map details and text search.
+An optional `mapsURL` preserves a specific Google Maps venue link instead of
+generating a name-and-address search URL.
+
 For a confirmed address, use its verified coordinates, `precision: "address"`,
 and remove the approximate-location note. `locationSource` can record where you
 verified the address. Fellini deliberately uses a city-level pin because the

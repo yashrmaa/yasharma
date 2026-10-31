@@ -27,6 +27,12 @@
     {{- end -}}
     {{- $query := printf "%s %s" .name .address -}}
     {{- $mapsURL := printf "https://www.google.com/maps/search/?api=1&query=%s" ($query | urlquery) -}}
+    {{- with .mapsURL -}}
+      {{- if not (findRE `^https://(maps\.app\.goo\.gl/|www\.google\.com/maps[/?]|maps\.google\.com/)` .) -}}
+        {{- errorf "Place %q needs a valid HTTPS Google Maps link" $place.id -}}
+      {{- end -}}
+      {{- $mapsURL = . -}}
+    {{- end -}}
     {{- $places = $places | append (merge $place (dict "notes" $entries "mapsURL" $mapsURL)) -}}
   {{- end -}}
 {{- end -}}
