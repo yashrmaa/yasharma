@@ -67,6 +67,7 @@ try {
   const initialPlaceIDs = catalog.map(place => place.id);
   const sanFranciscoIDs = catalog.filter(place => place.city === "San Francisco").map(place => place.id);
   const newYorkIDs = catalog.filter(place => place.city === "New York").map(place => place.id);
+  await evaluate('[...document.querySelectorAll(".place-photo img")].forEach(image => { image.loading = "eager"; })');
   await until('[...document.querySelectorAll(".place-photo img")].every(image => image.naturalWidth > 0)');
   assert.deepEqual(await visibleCards(), initialPlaceIDs);
   assert.equal(await evaluate('document.querySelectorAll(".place-map-marker").length'), initialPlaceIDs.length);
@@ -95,7 +96,8 @@ try {
   await until(`document.querySelector("#places-count").textContent === "1 place of ${initialPlaceIDs.length}"`);
   assert.deepEqual(await visibleCards(), ["fellini-coffee"]);
   await click('[data-select="fellini-coffee"]');
-  assert.match(await evaluate('document.querySelector("#place-map-detail").textContent'), /City-level pin/);
+  const fellini = catalog.find(place => place.id === "fellini-coffee");
+  if (fellini.locationNote) assert.ok((await evaluate('document.querySelector("#place-map-detail").textContent')).includes(fellini.locationNote));
   assert.equal(await evaluate('new URL(location.href).searchParams.get("place")'), "fellini-coffee");
   await screenshot("selected");
   await key("Escape");
@@ -108,6 +110,15 @@ try {
   assert.match(await evaluate('document.querySelector("#places-photo-source").href'), /\/notes\//);
   await key("Escape");
   assert.equal(await evaluate('document.querySelector("#places-photo-dialog").open'), false);
+  const standalonePhoto = catalog.find(place => place.photos?.length && !place.notes.length);
+  if (standalonePhoto) {
+    await click(`[data-photo="${standalonePhoto.id}"]`);
+    assert.equal(await evaluate('document.querySelector("#places-photo-dialog").open'), true);
+    await until('document.querySelector("#places-dialog-image").naturalWidth > 0');
+    assert.equal(await evaluate('document.querySelector("#places-photo-source").href'), standalonePhoto.mapsURL);
+    assert.match(await evaluate('document.querySelector("#places-photo-source").textContent'), /Open in Google Maps/);
+    await key("Escape");
+  }
 
   await click('.place-map-marker');
   assert.match(await evaluate('document.querySelector("#place-map-detail h3").textContent'), /Bello/);
@@ -144,7 +155,10 @@ try {
       const pin = marker.getBoundingClientRect();
       return pin.left >= bounds.left && pin.right <= bounds.right && pin.top >= bounds.top && pin.bottom <= bounds.bottom;
     });
-  })()`), true, "the mobile overview should fit every pin across all cities");
+  })()`), true, "the mobile overview should fit every pin across all cities: " + JSON.stringify(await evaluate(`(() => {
+    const map = document.querySelector("#places-map").getBoundingClientRect();
+    return { map: map.toJSON(), pins: [...document.querySelectorAll(".place-map-marker")].map(marker => ({ label: marker.getAttribute("aria-label"), bounds: marker.getBoundingClientRect().toJSON() })).filter(({ bounds }) => bounds.left < map.left || bounds.right > map.right || bounds.top < map.top || bounds.bottom > map.bottom) };
+  })()`)));
   await evaluate('document.body.classList.remove("dark"); window.scrollTo(0,0)');
   await screenshot("mobile");
   await evaluate('document.body.classList.add("dark"); window.scrollTo(0,0)');

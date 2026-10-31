@@ -42,7 +42,8 @@
     "website": "https://www.fellinicoffee.com/",
     "locationSource": "https://maps.app.goo.gl/61yBepyZCWivEt8b8",
     "mapsURL": "https://maps.app.goo.gl/61yBepyZCWivEt8b8",
-    "updatedAt": "2026-10-31T18:37:52.852Z"
+    "updatedAt": "2026-10-31T18:37:52.852Z",
+    "comment": "Good seating, not too crowded, decent flat white."
   },
   {
     "id": "neighbors-coffee",
@@ -64,7 +65,15 @@
     "precision": "address",
     "locationSource": "https://maps.app.goo.gl/XBXKn68W5E5S6Gs27",
     "mapsURL": "https://maps.app.goo.gl/XBXKn68W5E5S6Gs27",
-    "updatedAt": "2026-10-31T18:47:51.914Z"
+    "updatedAt": "2026-10-31T18:47:51.914Z",
+    "comment": "Neighbors coffee in SF has fantastic flat whites. It’s been my staple for a year.",
+    "photos": [
+      {
+        "url": "/notes-media/2026-10-31-f81243cb-ef9f-4e3a-b056-32174c3680c7.jpg",
+        "alt": "My photo from Neighbor's Corner",
+        "date": "2026-10-31T16:56:25.247Z"
+      }
+    ]
   },
   {
     "id": "kenyan-shibuya",
@@ -84,8 +93,15 @@
     "precision": "address",
     "mapsURL": "https://maps.app.goo.gl/6tkYdRQhpNqzxMXJ9",
     "locationSource": "https://maps.app.goo.gl/6tkYdRQhpNqzxMXJ9",
-    "comment": "get cheese cake and tea",
-    "updatedAt": "2026-10-31T18:41:08.538Z"
+    "comment": "Get the cheesecake and royal tea. Beautiful seating.",
+    "updatedAt": "2026-10-31T18:41:08.538Z",
+    "photos": [
+      {
+        "url": "/notes-media/2026-10-31-81322e6a-6814-47bb-a33e-f8bef5d81c27.jpg",
+        "alt": "My photo from Kenyan Shibuya",
+        "date": "2026-10-31T18:41:08.538Z"
+      }
+    ]
   },
   {
     "id": "lades-menemen",
@@ -185,7 +201,14 @@
     "precision": "address",
     "mapsURL": "https://maps.app.goo.gl/vKroZVfsTtcuXv4Q8",
     "locationSource": "https://maps.app.goo.gl/vKroZVfsTtcuXv4Q8",
-    "updatedAt": "2026-10-31T18:42:06.671Z"
+    "updatedAt": "2026-10-31T18:42:06.671Z",
+    "photos": [
+      {
+        "url": "/notes-media/2026-10-31-fc96edd7-0579-4f83-8f21-fcc15da8ec6f.jpg",
+        "alt": "My photo from MAREN Shinsaibashi",
+        "date": "2026-10-31T18:42:06.671Z"
+      }
+    ]
   },
   {
     "id": "foodine-restaurant",
@@ -225,7 +248,8 @@
     "aliases": [
       "Gjusta"
     ],
-    "updatedAt": "2026-10-31T18:36:27.400Z"
+    "updatedAt": "2026-10-31T18:36:27.400Z",
+    "comment": "Lovely seating inside. Good croissant."
   },
   {
     "name": "Sightglass Coffee",
@@ -245,7 +269,15 @@
     "aliases": [
       "Sightglass Coffee"
     ],
-    "updatedAt": "2026-10-31T19:24:49.262Z"
+    "updatedAt": "2026-10-31T19:24:49.262Z",
+    "comment": "Lovely espresso",
+    "photos": [
+      {
+        "url": "/notes-media/2026-10-31-384d8b5f-dfad-428b-9849-ac6848604c17.jpg",
+        "alt": "My photo from Sightglass Coffee",
+        "date": "2026-10-31T18:46:12.514Z"
+      }
+    ]
   },
   {
     "name": "Samayra Coffee Co.",
@@ -265,7 +297,8 @@
     "aliases": [
       "Samayra Coffee Co."
     ],
-    "updatedAt": "2026-10-31T19:29:53.649Z"
+    "updatedAt": "2026-10-31T19:29:53.649Z",
+    "comment": "Had two Americanos back to back, loved it so much"
   },
   {
     "name": "Biscuit Bitch Belltown",
@@ -285,7 +318,8 @@
     "aliases": [
       "Biscuit Bitch Belltown"
     ],
-    "updatedAt": "2026-10-31T19:31:06.679Z"
+    "updatedAt": "2026-10-31T19:31:06.679Z",
+    "comment": "Always a line but delicious sandwiches"
   },
   {
     "name": "The 5 Point Cafe",
@@ -305,7 +339,8 @@
     "aliases": [
       "The 5 Point Cafe"
     ],
-    "updatedAt": "2026-10-31T19:31:49.543Z"
+    "updatedAt": "2026-10-31T19:31:49.543Z",
+    "comment": "Old school, good breakfast"
   },
   {
     "name": "OEB Breakfast Co.",

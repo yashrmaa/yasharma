@@ -61,6 +61,9 @@ Saved places can exist without notes. `draft: true` hides a catalog entry.
 
 An optional `comment` stores a short personal remark directly on a place card
 without creating a notebook post. It appears in the map details and text search.
+An optional `photos` array stores original photos directly on the place, with
+`url`, `alt`, and optional `date` fields. These work in cards and the photo viewer
+without a notebook entry. Existing notes can still contribute additional photos.
 An optional `mapsURL` preserves a specific Google Maps venue link instead of
 generating a name-and-address search URL.
 

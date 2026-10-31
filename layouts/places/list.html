@@ -49,7 +49,7 @@
               <h3>{{ .name }} <span aria-hidden="true">↗</span></h3>
               <p>{{ with .neighborhood }}{{ . }} · {{ end }}{{ .city }}</p>
             </button>
-            {{ $photos := slice }}
+            {{ $photos := .photos | default slice }}
             {{ range .notes }}{{ range .photos }}{{ $photos = $photos | append . }}{{ end }}{{ end }}
             {{ with $photos }}
             <button type="button" class="place-photo" data-photo="{{ $place.id }}" aria-label="Enlarge my photo from {{ $place.name }}" disabled>
@@ -57,11 +57,11 @@
               <span>Through my lens <span aria-hidden="true">⤢</span></span>
             </button>
             {{ end }}
+            {{ with .comment }}<blockquote><p>{{ . }}</p></blockquote>{{ end }}
             {{ with .notes }}{{ with index . 0 }}
-            {{ with .text }}<blockquote><p>{{ . }}</p></blockquote>{{ end }}
+            {{ if not $place.comment }}{{ with .text }}<blockquote><p>{{ . }}</p></blockquote>{{ end }}{{ end }}
             <a class="place-note-link" href="{{ .url }}">From my notebook <span>· {{ .label }}</span> <span aria-hidden="true">↗</span></a>
             {{ end }}{{ end }}
-            {{ if and (not .notes) .comment }}<blockquote><p>{{ .comment }}</p></blockquote>{{ end }}
             {{ with .locationNote }}<p class="place-location-note">{{ . }}</p>{{ end }}
             <div class="place-card-actions"><a href="{{ .mapsURL }}" target="_blank" rel="noopener noreferrer">Open in Google Maps <span aria-hidden="true">↗</span></a><button type="button" data-select="{{ .id }}" data-js-control hidden>Find on map <span aria-hidden="true">⊙</span></button></div>
           </article>

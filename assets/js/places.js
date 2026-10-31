@@ -103,9 +103,13 @@
     get("places-map-label").textContent = state.city || "A few good places";
   }
 
+  function photoItems(place) {
+    return [...(place.photos || []).map(photo => ({ photo, place })), ...place.notes.flatMap(note => note.photos.map(photo => ({ photo, note, place })))];
+  }
+
   function renderDetail(place) {
     const imageBox = element("div", "place-detail-image");
-    const firstPhoto = place.notes.flatMap(note => note.photos)[0];
+    const firstPhoto = photoItems(place)[0]?.photo;
     if (firstPhoto) {
       const image = element("img");
       image.src = firstPhoto.url;
@@ -115,21 +119,22 @@
     const info = element("div", "place-detail-info");
     info.append(element("p", "", `${place.category} · ${place.neighborhood ? `${place.neighborhood}, ` : ""}${place.city}`));
     info.append(element("h3", "", place.name));
-    const comment = place.notes[0]?.text || place.comment;
+    const comment = place.comment || place.notes[0]?.text;
     if (comment) info.append(element("p", "place-detail-text", comment));
     if (place.locationNote) info.append(element("p", "place-detail-approximate", place.locationNote));
     const links = element("div", "place-detail-links");
     links.append(link("Open in Google Maps ↗", place.mapsURL, true));
-    if (place.notes[0]) links.append(link("Read my note ↗", place.notes[0].url));
+    if (place.notes[0] && !place.comment) links.append(link("Read my note ↗", place.notes[0].url));
     const share = element("button", "", "Share place ↗");
     share.type = "button";
     share.addEventListener("click", () => void shareURL(share));
     links.append(share);
     info.append(links);
-    if (place.notes.length > 1) {
+    const otherNotes = place.comment ? place.notes : place.notes.slice(1);
+    if (otherNotes.length) {
       const more = element("details", "place-detail-notes");
-      more.append(element("summary", "", `${place.notes.length - 1} more from my notebook`));
-      for (const note of place.notes.slice(1)) {
+      more.append(element("summary", "", `${otherNotes.length} ${place.comment ? "from" : "more from"} my notebook`));
+      for (const note of otherNotes) {
         more.append(element("p", "", note.text), link(`Read note · ${note.label} ↗`, note.url));
       }
       info.append(more);
@@ -224,9 +229,12 @@
     get("places-dialog-image").src = item.photo.url;
     get("places-dialog-image").alt = item.photo.alt;
     get("places-photo-title").textContent = item.place.name;
-    get("places-photo-caption").textContent = `My photo · ${item.place.city} · ${item.note.label}`;
+    get("places-photo-caption").textContent = ["My photo", item.place.city, item.note?.label || item.photo.label].filter(Boolean).join(" · ");
     get("places-photo-counter").textContent = `${galleryIndex + 1} / ${gallery.length}`;
-    get("places-photo-source").href = item.note.url;
+    get("places-photo-source").href = item.note?.url || item.place.mapsURL;
+    get("places-photo-source").textContent = item.note ? "Read my note ↗" : "Open in Google Maps ↗";
+    get("places-photo-source").target = item.note ? "_self" : "_blank";
+    get("places-photo-source").rel = "noopener noreferrer";
     root.querySelector("[data-previous-photo]").disabled = galleryIndex === 0;
     root.querySelector("[data-next-photo]").disabled = galleryIndex === gallery.length - 1;
   }
@@ -256,7 +264,7 @@
     if (button.hasAttribute("data-share")) void shareURL(button);
     if (button.hasAttribute("data-photo")) {
       const place = byId.get(button.dataset.photo);
-      gallery = place.notes.flatMap(note => note.photos.map(photo => ({ photo, note, place })));
+      gallery = photoItems(place);
       if (gallery.length) { galleryIndex = 0; showPhoto(); dialog.showModal(); }
     }
     if (button.hasAttribute("data-close-photo")) dialog.close();
@@ -321,7 +329,7 @@
       markers.set(place.id, marker);
     });
     message.hidden = true;
-    new ResizeObserver(() => { map.invalidateSize({ pan: false }); }).observe(get("places-map"));
+    new ResizeObserver(() => { map.invalidateSize({ pan: false }); if (!state.place) fitPlaces(false); }).observe(get("places-map"));
     map.on("click", () => { if (state.place) { state.place = ""; clearSelection(); writeURL(); } });
     map.setView([39.5, -98.5], 4);
   } else {

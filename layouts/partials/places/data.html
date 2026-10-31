@@ -7,6 +7,22 @@
       {{- errorf "Place %q needs a status (liked/saved/mentioned) and [latitude, longitude] coordinates" .id -}}
     {{- end -}}
     {{- $entries := slice -}}
+    {{- $placePhotos := slice -}}
+    {{- range .photos -}}
+      {{- $url := .url -}}
+      {{- if hasPrefix $url "https://yasharma.com/notes-media/" -}}
+        {{- $url = strings.TrimPrefix "https://yasharma.com" $url | relURL -}}
+      {{- end -}}
+      {{- if or (hasPrefix $url "/") (hasPrefix $url "https://") (hasPrefix $url "http://") -}}
+        {{- $photo := dict "url" $url "alt" (.alt | default (printf "My photo from %s" $place.name)) -}}
+        {{- with .date -}}
+          {{- $date := time.AsTime . -}}
+          {{- $local := partial "notes/local-date.html" (dict "Date" $date) -}}
+          {{- $photo = merge $photo (dict "date" . "label" ($local.Format "Jan 2, 2006")) -}}
+        {{- end -}}
+        {{- $placePhotos = $placePhotos | append $photo -}}
+      {{- end -}}
+    {{- end -}}
     {{- range $notes.ByDate.Reverse -}}
       {{- if and (not .Draft) (not (.Date.After now)) (not (.PublishDate.After now)) (or .ExpiryDate.IsZero (.ExpiryDate.After now)) -}}
         {{- if in (partial "places/ids.html" .) $place.id -}}
@@ -33,7 +49,7 @@
       {{- end -}}
       {{- $mapsURL = . -}}
     {{- end -}}
-    {{- $places = $places | append (merge $place (dict "notes" $entries "mapsURL" $mapsURL)) -}}
+    {{- $places = $places | append (merge $place (dict "notes" $entries "photos" $placePhotos "mapsURL" $mapsURL)) -}}
   {{- end -}}
 {{- end -}}
 {{- return $places -}}
