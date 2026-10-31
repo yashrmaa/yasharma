@@ -833,5 +833,26 @@
       "Bee's Bakery Cafe"
     ],
     "updatedAt": "2026-10-31T23:45:17.325Z"
+  },
+  {
+    "name": "Mammoth Brewing Company",
+    "category": "Bar",
+    "status": "saved",
+    "city": "Mammoth Lakes",
+    "neighborhood": "",
+    "address": "Minaret Road Mammoth Lakes United States",
+    "coordinates": [
+      37.6486693,
+      -118.9835158
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/fzGzrcws1QLwZRys7",
+    "mapsURL": "https://maps.app.goo.gl/fzGzrcws1QLwZRys7",
+    "comment": "Solid",
+    "id": "mammoth-brewing-company-a3d09be5",
+    "aliases": [
+      "Mammoth Brewing Company"
+    ],
+    "updatedAt": "2026-10-31T23:46:15.539Z"
   }
 ]
