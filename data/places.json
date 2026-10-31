@@ -431,5 +431,38 @@
       "Churchill Cocktail Bar"
     ],
     "updatedAt": "2026-10-31T20:29:43.496Z"
+  },
+  {
+    "name": "Cafe La Flore Irving",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "1340 Irving St, San Francisco, CA 94122",
+    "coordinates": [
+      37.7639389,
+      -122.4724139
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/fqUJKfNxSZAQ5aEU8?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/fqUJKfNxSZAQ5aEU8?g_st=ic",
+    "comment": "",
+    "id": "cafe-la-flore-irving-603556f1",
+    "aliases": [
+      "Cafe La Flore Irving"
+    ],
+    "updatedAt": "2026-10-31T20:43:59.851Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-e0b6c39c-2353-4785-8ac5-51334fadc919.jpg",
+        "alt": "My photo from Cafe La Flore Irving",
+        "date": "2026-10-31T20:43:59.851Z"
+      },
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-b3acecb3-c46d-4399-8608-b4c264fda96e.jpg",
+        "alt": "My photo from Cafe La Flore Irving",
+        "date": "2026-10-31T20:43:59.851Z"
+      }
+    ]
   }
 ]
