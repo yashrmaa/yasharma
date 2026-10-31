@@ -221,5 +221,25 @@
       "Gjusta"
     ],
     "updatedAt": "2026-10-31T18:36:27.400Z"
+  },
+  {
+    "name": "Sightglass Coffee",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "South of Market",
+    "address": "270 7th Street 94103 San Francisco United States",
+    "coordinates": [
+      37.7770339,
+      -122.4084399
+    ],
+    "precision": "address",
+    "locationSource": "https://www.openstreetmap.org/node/1700641974",
+    "mapsURL": "",
+    "id": "sightglass-coffee-d828988d",
+    "aliases": [
+      "Sightglass Coffee"
+    ],
+    "updatedAt": "2026-10-31T18:46:12.514Z"
   }
 ]
