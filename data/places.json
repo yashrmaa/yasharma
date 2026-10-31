@@ -917,5 +917,26 @@
       "Live Coffee"
     ],
     "updatedAt": "2026-10-31T23:54:04.589Z"
+  },
+  {
+    "name": "MATSUYA Roppongi 4-Chome Branch",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Tokyo",
+    "neighborhood": "Roppongi 4",
+    "address": "Gaien Higashi Street Tokyo Japan",
+    "coordinates": [
+      35.664214,
+      139.731524
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/WTeSNwBU8sxTQx3z8",
+    "mapsURL": "https://maps.app.goo.gl/WTeSNwBU8sxTQx3z8",
+    "comment": "Cheap and delicious. Get the curry",
+    "id": "matsuya-roppongi-4-chome-branch-3312cd9e",
+    "aliases": [
+      "MATSUYA Roppongi 4-Chome Branch"
+    ],
+    "updatedAt": "2026-10-31T23:55:15.094Z"
   }
 ]
