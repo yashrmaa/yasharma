@@ -197,5 +197,25 @@
     "mapsURL": "https://maps.app.goo.gl/ji5CzDeDkm1iuTSQ9",
     "locationSource": "https://maps.app.goo.gl/ji5CzDeDkm1iuTSQ9",
     "comment": "authentic Gujarati food"
+  },
+  {
+    "name": "Gjusta",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Los Angeles",
+    "neighborhood": "",
+    "address": "Sunset Avenue Los Angeles United States",
+    "coordinates": [
+      33.9952076,
+      -118.4744823
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/DPmtvsDroBxovfNR7",
+    "mapsURL": "https://maps.app.goo.gl/DPmtvsDroBxovfNR7",
+    "id": "gjusta-cd463211",
+    "aliases": [
+      "Gjusta"
+    ],
+    "updatedAt": "2026-10-31T18:36:27.400Z"
   }
 ]
