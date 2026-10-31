@@ -44,22 +44,25 @@
   },
   {
     "id": "neighbors-coffee",
-    "name": "Neighbors Coffee",
+    "name": "Neighbor's Corner",
     "aliases": [
       "Neighbors coffee",
-      "Neighbors Coffee"
+      "Neighbors Coffee",
+      "Neighbor's Corner"
     ],
     "category": "Coffee",
     "status": "liked",
     "city": "San Francisco",
-    "neighborhood": "",
-    "address": "San Francisco, CA",
+    "neighborhood": "Castro District",
+    "address": "Douglass Street San Francisco United States",
     "coordinates": [
-      37.7749,
-      -122.4194
+      37.7555735,
+      -122.4387557
     ],
-    "precision": "city",
-    "locationNote": "City-level pin until I confirm the café's exact address."
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/XBXKn68W5E5S6Gs27",
+    "mapsURL": "https://maps.app.goo.gl/XBXKn68W5E5S6Gs27",
+    "updatedAt": "2026-10-31T18:47:23.250Z"
   },
   {
     "id": "kenyan-shibuya",
