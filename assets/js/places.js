@@ -8,9 +8,9 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let places;
   try {
-    const response = await fetch(root.querySelector("[data-source]").dataset.source);
-    if (!response.ok) throw new Error("Places unavailable");
-    places = await response.json();
+    // Keep pins and filters on the same snapshot as the rendered cards/counts.
+    // A separately cached JSON request can be from a different deployment.
+    places = JSON.parse(get("places-data").textContent);
     if (!Array.isArray(places)) throw new Error("Invalid places");
   } catch {
     message.querySelector("p").textContent = "The map couldn't open this time.";

@@ -7,6 +7,7 @@
   {{ $categories = $categories | append .category }}
 {{ end }}
 <div class="places-page" data-places-page>
+  <script id="places-data" type="application/json">{{ $places | jsonify | safeJS }}</script>
   <header class="places-intro">
     <div>
       <p class="places-eyebrow"><span aria-hidden="true">↗</span> A personal atlas</p>
@@ -19,7 +20,7 @@
     </div>
   </header>
 
-  <section class="places-explorer" aria-label="Explore my places" data-source="{{ (.OutputFormats.Get "JSON").RelPermalink }}">
+  <section class="places-explorer" aria-label="Explore my places">
     <div class="places-toolbar" data-js-control hidden>
       <div class="places-city-tabs" role="group" aria-label="Filter by city">
         <button type="button" data-city="" aria-pressed="true">Everywhere <span>{{ len $places }}</span></button>

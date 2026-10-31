@@ -127,6 +127,12 @@ Photo dialogs support Escape and arrow keys. Shared URLs retain selected places
 and filters, and browser Back/Forward restores a view. Scrolling over the map
 doesn't capture ordinary page scrolling; zoom buttons and touch zoom work.
 
+The HTML embeds the map's JSON snapshot alongside its cards and city counts.
+Filters and pins read that snapshot rather than fetching a separately cached
+catalog. This prevents a newer city count from being paired with older map pins
+when a deployment reaches different browser/CDN caches at different times.
+`/places/index.json` remains available as a standalone export.
+
 Without JavaScript, the list, notes, photos, and Google Maps links remain usable.
 If map tiles fail, filters and pins continue to work with an explanatory message.
 

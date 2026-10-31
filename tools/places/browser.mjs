@@ -62,11 +62,20 @@ try {
   await send("Network.enable");
   await send("Page.enable");
   await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1100, deviceScaleFactor: 1, mobile: false });
-  await navigate(preview);
-  const catalog = await evaluate('fetch(document.querySelector("[data-source]").dataset.source).then(response => response.json())');
+  // A stale or unavailable JSON endpoint must not change the page's map/list.
+  await send("Network.setBlockedURLs", { urls: ["*/places/index.json*"] });
+  const newYorkURL = new URL(preview); newYorkURL.searchParams.set("city", "New York");
+  await navigate(newYorkURL.href);
+  const catalog = await evaluate('JSON.parse(document.querySelector("#places-data").textContent)');
   const initialPlaceIDs = catalog.map(place => place.id);
   const sanFranciscoIDs = catalog.filter(place => place.city === "San Francisco").map(place => place.id);
   const newYorkIDs = catalog.filter(place => place.city === "New York").map(place => place.id);
+  assert.deepEqual(await visibleCards(), newYorkIDs, "a direct New York URL must show every place counted for New York");
+  assert.equal(await evaluate('document.querySelectorAll(".place-map-marker").length'), newYorkIDs.length);
+  assert.equal(await evaluate('Number(document.querySelector("#places-count").textContent.split(" ")[0])'), newYorkIDs.length);
+  assert.equal(await evaluate('Number(document.querySelector(\'[data-city="New York"] span\').textContent)'), newYorkIDs.length);
+  assert.equal([...requests.values()].some(url => /\/places\/index\.json(?:\?|$)/.test(url)), false, "map rendering must not depend on a separately cached catalog request");
+  await navigate(preview);
   await evaluate('[...document.querySelectorAll(".place-photo img")].forEach(image => { image.loading = "eager"; })');
   await until('[...document.querySelectorAll(".place-photo img")].every(image => image.naturalWidth > 0)');
   assert.deepEqual(await visibleCards(), initialPlaceIDs);

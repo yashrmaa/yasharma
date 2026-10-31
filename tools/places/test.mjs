@@ -14,7 +14,7 @@ try {
   const catalog = JSON.parse(await readFile(join(temp, "data/places.json"), "utf8"));
   const expectedPublicPlaces = catalog.filter(place => !place.draft).length + 1;
   catalog.push(
-    { id: "fixture-saved", name: "A saved restaurant", city: "San Francisco", category: "Restaurants", status: "saved", address: "San Francisco", coordinates: [37.77, -122.42], precision: "city", comment: "Cheesecake & tea — <script>not markup</script>", photos: [{ url: "https://yasharma.com/notes-media/place-photo.jpg", alt: "My own place photo", date: "2026-10-31T18:00:00Z" }], mapsURL: "https://maps.google.co.jp/?q=35.0002,135.7583" },
+    { id: "fixture-saved", name: "A saved restaurant", aliases: ["JSON </script><script>alert(1)</script> injection"], city: "San Francisco", category: "Restaurants", status: "saved", address: "San Francisco", coordinates: [37.77, -122.42], precision: "city", comment: "Cheesecake & tea — <script>not markup</script>", photos: [{ url: "https://yasharma.com/notes-media/place-photo.jpg", alt: "My own place photo", date: "2026-10-31T18:00:00Z" }], mapsURL: "https://maps.google.co.jp/?q=35.0002,135.7583" },
     { id: "fixture-hidden", name: "PRIVATE_PLACE_FIXTURE", city: "San Francisco", category: "Coffee", status: "saved", coordinates: [37.77, -122.42], draft: true },
   );
   await writeFile(join(temp, "data/places.json"), JSON.stringify(catalog));
@@ -32,6 +32,10 @@ try {
     const json = await readFile(join(temp, "public/places/index.json"), "utf8");
     const html = await readFile(join(temp, "public/places/index.html"), "utf8");
     const data = JSON.parse(json);
+    const snapshot = html.match(/<script\b(?=[^>]*\bid=["']?places-data["'\s>])[^>]*>([\s\S]*?)<\/script>/)?.[1];
+    assert.ok(snapshot, "the map data must travel with its HTML cards and city counts");
+    assert.deepEqual(JSON.parse(snapshot), data, "embedded map data must match the rendered page's catalog");
+    assert.ok(!html.includes("</script><script>alert(1)</script>"), "embedded data must not escape its non-executable JSON script");
     assert.equal(data.length, expectedPublicPlaces, "draft places must stay out of the public map, even in a preview");
     assert.ok(!/PRIVATE_PLACE_FIXTURE|DRAFT_PLACE_NOTE_FIXTURE|SCHEDULED_PLACE_NOTE_FIXTURE|EXPIRED_PLACE_NOTE_FIXTURE/.test(json + html));
     const bello = data.find(place => place.id === "bello-coffee");
