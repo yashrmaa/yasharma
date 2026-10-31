@@ -728,5 +728,26 @@
       "Blind Tiger"
     ],
     "updatedAt": "2026-10-31T23:39:18.161Z"
+  },
+  {
+    "name": "John's of Bleecker Street",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "West Village",
+    "address": "278 Bleecker Street New York United States",
+    "coordinates": [
+      40.7316187,
+      -74.0034468
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/gNiijm2bisXd8uEH7",
+    "mapsURL": "https://maps.app.goo.gl/gNiijm2bisXd8uEH7",
+    "comment": "One of the best pizzas!",
+    "id": "john-s-of-bleecker-street-b1ae9238",
+    "aliases": [
+      "John's of Bleecker Street"
+    ],
+    "updatedAt": "2026-10-31T23:39:49.631Z"
   }
 ]
