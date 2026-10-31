@@ -246,5 +246,25 @@
       "Sightglass Coffee"
     ],
     "updatedAt": "2026-10-31T19:24:49.262Z"
+  },
+  {
+    "name": "Samayra Coffee Co.",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Olympia",
+    "neighborhood": "",
+    "address": "1600 Cooper Point Road Southwest Olympia United States",
+    "coordinates": [
+      47.0338021,
+      -122.9358324
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/cR7uu4jcqB2eTH626",
+    "mapsURL": "https://maps.app.goo.gl/cR7uu4jcqB2eTH626",
+    "id": "samayra-coffee-co-e285d21f",
+    "aliases": [
+      "Samayra Coffee Co."
+    ],
+    "updatedAt": "2026-10-31T19:29:53.649Z"
   }
 ]
