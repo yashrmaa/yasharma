@@ -266,5 +266,25 @@
       "Samayra Coffee Co."
     ],
     "updatedAt": "2026-10-31T19:29:53.649Z"
+  },
+  {
+    "name": "Biscuit Bitch Belltown",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Seattle",
+    "neighborhood": "",
+    "address": "2305 3rd Avenue Seattle United States",
+    "coordinates": [
+      47.6147642,
+      -122.345279
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/NWDFSv9dhTi7fy359",
+    "mapsURL": "https://maps.app.goo.gl/NWDFSv9dhTi7fy359",
+    "id": "biscuit-bitch-belltown-0b568f07",
+    "aliases": [
+      "Biscuit Bitch Belltown"
+    ],
+    "updatedAt": "2026-10-31T19:31:06.679Z"
   }
 ]
