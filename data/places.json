@@ -637,5 +637,26 @@
       "Celeste"
     ],
     "updatedAt": "2026-10-31T23:31:23.911Z"
+  },
+  {
+    "name": "Bottega",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "1132 Valencia St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7547152,
+      -122.4211945
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/KiG3temUJaAoMXz38?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/KiG3temUJaAoMXz38?g_st=ic",
+    "comment": "The table bread is half the reason to go",
+    "id": "bottega-f19e57e6",
+    "aliases": [
+      "Bottega"
+    ],
+    "updatedAt": "2026-10-31T23:33:00.071Z"
   }
 ]
