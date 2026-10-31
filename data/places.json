@@ -525,5 +525,26 @@
         "date": "2026-10-31T20:47:09.470Z"
       }
     ]
+  },
+  {
+    "name": "Stoa",
+    "category": "Bar",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "Lower Haight",
+    "address": "701 Haight St, San Francisco, CA 94117",
+    "coordinates": [
+      37.771455,
+      -122.433855
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/MWm7HkCqM5asKwmq8?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/MWm7HkCqM5asKwmq8?g_st=ic",
+    "comment": "",
+    "id": "stoa-b5c1c41e",
+    "aliases": [
+      "Stoa"
+    ],
+    "updatedAt": "2026-10-31T20:48:02.026Z"
   }
 ]
