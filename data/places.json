@@ -679,5 +679,33 @@
       "Lost Resort"
     ],
     "updatedAt": "2026-10-31T23:33:40.208Z"
+  },
+  {
+    "name": "Vive La Tarte",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "Noe Valley",
+    "address": "4026 24th St, San Francisco, CA 94114",
+    "coordinates": [
+      37.751498,
+      -122.4325551
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/cmrLzEJCwihx3j8QA?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/cmrLzEJCwihx3j8QA?g_st=ic",
+    "comment": "My other regular cafe. Great croissant, flat white’s hit or miss",
+    "id": "vive-la-tarte-028796cf",
+    "aliases": [
+      "Vive La Tarte"
+    ],
+    "updatedAt": "2026-10-31T23:35:32.708Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-d4815836-bae7-4f0c-b0d1-a57f74c0b0cb.jpg",
+        "alt": "My photo from Vive La Tarte",
+        "date": "2026-10-31T23:35:32.708Z"
+      }
+    ]
   }
 ]
