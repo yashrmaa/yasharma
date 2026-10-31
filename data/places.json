@@ -306,5 +306,25 @@
       "The 5 Point Cafe"
     ],
     "updatedAt": "2026-10-31T19:31:49.543Z"
+  },
+  {
+    "name": "OEB Breakfast Co.",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Vancouver",
+    "neighborhood": "Yaletown",
+    "address": "1137 Marinaside Crescent Vancouver Canada",
+    "coordinates": [
+      49.2734565,
+      -123.119265
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/m3PPuHpYx8KsyLoE8",
+    "mapsURL": "https://maps.app.goo.gl/m3PPuHpYx8KsyLoE8",
+    "id": "oeb-breakfast-co-63bb434f",
+    "aliases": [
+      "OEB Breakfast Co."
+    ],
+    "updatedAt": "2026-10-31T19:35:19.556Z"
   }
 ]
