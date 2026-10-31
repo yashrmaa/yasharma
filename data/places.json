@@ -875,5 +875,26 @@
       "Al Toke Pez"
     ],
     "updatedAt": "2026-10-31T23:47:18.459Z"
+  },
+  {
+    "name": "Downtown B's Indian Kitchen roppongi",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "Tokyo",
+    "neighborhood": "Roppongi 3",
+    "address": "2 3 Tokyo Japan",
+    "coordinates": [
+      35.6650193,
+      139.7366868
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/DfUFFEBKPhYhCVms5",
+    "mapsURL": "https://maps.app.goo.gl/DfUFFEBKPhYhCVms5",
+    "comment": "Food's okay, hospitality is unforgettable",
+    "id": "downtown-b-s-indian-kitchen-roppongi-196477e3",
+    "aliases": [
+      "Downtown B's Indian Kitchen roppongi"
+    ],
+    "updatedAt": "2026-10-31T23:53:21.135Z"
   }
 ]
