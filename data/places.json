@@ -595,5 +595,26 @@
       "Bagel Shop"
     ],
     "updatedAt": "2026-10-31T23:29:01.412Z"
+  },
+  {
+    "name": "Michaeli Bakery",
+    "category": "Bakeries",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "Yorkville",
+    "address": "401 E 90th St, New York, NY 10128",
+    "coordinates": [
+      40.7794051,
+      -73.9471464
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/rUabftcStgxqF1W76?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/rUabftcStgxqF1W76?g_st=ic",
+    "comment": "Croissants to die for",
+    "id": "michaeli-bakery-12672c66",
+    "aliases": [
+      "Michaeli Bakery"
+    ],
+    "updatedAt": "2026-10-31T23:29:55.255Z"
   }
 ]
