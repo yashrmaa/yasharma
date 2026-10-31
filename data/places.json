@@ -389,5 +389,26 @@
         "date": "2026-10-31T20:27:10.268Z"
       }
     ]
+  },
+  {
+    "name": "Wildhawk",
+    "category": "Bar",
+    "status": "liked",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "3464 19th St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7602333,
+      -122.4207706
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/pRAeRfe6VDw8kDDi9?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/pRAeRfe6VDw8kDDi9?g_st=ic",
+    "comment": "Interesting menu. Couch!!",
+    "id": "wildhawk-1b9d8e72",
+    "aliases": [
+      "Wildhawk"
+    ],
+    "updatedAt": "2026-10-31T20:28:29.533Z"
   }
 ]
