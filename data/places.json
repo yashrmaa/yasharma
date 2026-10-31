@@ -658,5 +658,26 @@
       "Bottega"
     ],
     "updatedAt": "2026-10-31T23:33:00.071Z"
+  },
+  {
+    "name": "Lost Resort",
+    "category": "Bar",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "Potrero Hill",
+    "address": "2736 20th St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7594028,
+      -122.4087544
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/Si2SDeTj5UHtZEKcA?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/Si2SDeTj5UHtZEKcA?g_st=ic",
+    "comment": "Stiff drinks",
+    "id": "lost-resort-005b8d93",
+    "aliases": [
+      "Lost Resort"
+    ],
+    "updatedAt": "2026-10-31T23:33:40.208Z"
   }
 ]
