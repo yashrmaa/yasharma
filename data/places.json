@@ -707,5 +707,26 @@
         "date": "2026-10-31T23:35:32.708Z"
       }
     ]
+  },
+  {
+    "name": "Blind Tiger",
+    "category": "Coffee",
+    "status": "liked",
+    "city": "New York",
+    "neighborhood": "West Village",
+    "address": "33 Jones Street New York United States",
+    "coordinates": [
+      40.7318858,
+      -74.0032253
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/ACQ4HgsP4bZwcKsEA",
+    "mapsURL": "https://maps.app.goo.gl/ACQ4HgsP4bZwcKsEA",
+    "comment": "Good dive bar",
+    "id": "blind-tiger-37774945",
+    "aliases": [
+      "Blind Tiger"
+    ],
+    "updatedAt": "2026-10-31T23:39:18.161Z"
   }
 ]
