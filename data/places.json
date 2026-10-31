@@ -574,5 +574,26 @@
         "date": "2026-10-31T23:15:53.842Z"
       }
     ]
+  },
+  {
+    "name": "Bagel Shop",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "Carnegie Hill",
+    "address": "1659 3rd Ave, New York, NY 10128",
+    "coordinates": [
+      40.7830387,
+      -73.95064599999999
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/4e3BzmboCWtuz8gB7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/4e3BzmboCWtuz8gB7?g_st=ic",
+    "comment": "Great bagel",
+    "id": "bagel-shop-7a404ae9",
+    "aliases": [
+      "Bagel Shop"
+    ],
+    "updatedAt": "2026-10-31T23:29:01.412Z"
   }
 ]
