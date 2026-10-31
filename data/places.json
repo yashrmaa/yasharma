@@ -492,5 +492,38 @@
         "date": "2026-10-31T20:46:01.403Z"
       }
     ]
+  },
+  {
+    "name": "Loló",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "974 Valencia St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7573817,
+      -122.4213624
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/msdrTT7Ttgk4f2hM7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/msdrTT7Ttgk4f2hM7?g_st=ic",
+    "comment": "Mezcal drink",
+    "id": "lolo-232d2757",
+    "aliases": [
+      "Loló"
+    ],
+    "updatedAt": "2026-10-31T20:47:09.470Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-67cb55fb-239a-496c-a90c-ad594edd315c.jpg",
+        "alt": "My photo from Loló",
+        "date": "2026-10-31T20:47:09.470Z"
+      },
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-bf8518b3-4966-4562-9c88-7699965e6c00.jpg",
+        "alt": "My photo from Loló",
+        "date": "2026-10-31T20:47:09.470Z"
+      }
+    ]
   }
 ]
