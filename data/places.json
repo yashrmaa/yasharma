@@ -749,5 +749,26 @@
       "John's of Bleecker Street"
     ],
     "updatedAt": "2026-10-31T23:39:49.631Z"
+  },
+  {
+    "name": "L’industrie Pizzeria - West Village",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "West Village",
+    "address": "102 Christopher Street New York United States",
+    "coordinates": [
+      40.7332224,
+      -74.0049081
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/x2PsCiT94MJ9cvf39",
+    "mapsURL": "https://maps.app.goo.gl/x2PsCiT94MJ9cvf39",
+    "comment": "Worth the line but use your judgement.",
+    "id": "l-industrie-pizzeria-west-village-449cd51e",
+    "aliases": [
+      "L’industrie Pizzeria - West Village"
+    ],
+    "updatedAt": "2026-10-31T23:40:31.622Z"
   }
 ]
