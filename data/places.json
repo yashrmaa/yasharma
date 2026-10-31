@@ -616,5 +616,26 @@
       "Michaeli Bakery"
     ],
     "updatedAt": "2026-10-31T23:29:55.255Z"
+  },
+  {
+    "name": "Celeste",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "Upper West Side",
+    "address": "502 Amsterdam Ave, New York, NY 10024",
+    "coordinates": [
+      40.7866992,
+      -73.9760929
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/x9xHNUJXBqdG9R6b7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/x9xHNUJXBqdG9R6b7?g_st=ic",
+    "comment": "Cash only; great food",
+    "id": "celeste-f5f07958",
+    "aliases": [
+      "Celeste"
+    ],
+    "updatedAt": "2026-10-31T23:31:23.911Z"
   }
 ]
