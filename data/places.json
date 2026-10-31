@@ -791,5 +791,26 @@
       "Punjabi Deli"
     ],
     "updatedAt": "2026-10-31T23:41:03.917Z"
+  },
+  {
+    "name": "Tacombi",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "NoHo",
+    "address": "265 Elizabeth Street New York United States",
+    "coordinates": [
+      40.7240229,
+      -73.9938545
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/EB1E26AqSz5Yqtiu5",
+    "mapsURL": "https://maps.app.goo.gl/EB1E26AqSz5Yqtiu5",
+    "comment": "Rice and beans!",
+    "id": "tacombi-4edf9efa",
+    "aliases": [
+      "Tacombi"
+    ],
+    "updatedAt": "2026-10-31T23:44:07.779Z"
   }
 ]
