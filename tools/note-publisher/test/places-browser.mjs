@@ -42,172 +42,158 @@ await ctx.route("**/*", async route => {
   await route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });
 });
 const noteFiles = () => [...repo.files().keys()].filter(path => path.startsWith("content/notes/"));
-const changed = async (page, selector, value) => { await page.locator(selector).fill(value); };
-const success = page => page.waitForFunction(() => !document.querySelector("#feedback").hidden && document.querySelector("#feedback").dataset.state === "success" && document.querySelector("#composer").getAttribute("aria-busy") === "false");
+const success = page => page.waitForFunction(() => !document.querySelector("#place-feedback").hidden && document.querySelector("#place-feedback").dataset.state === "success" && document.querySelector("#place-composer").getAttribute("aria-busy") === "false");
+const noteSuccess = page => page.waitForFunction(() => !document.querySelector("#feedback").hidden && document.querySelector("#feedback").dataset.state === "success" && document.querySelector("#composer").getAttribute("aria-busy") === "false");
+const show = (page, mode) => page.locator(`[data-compose-mode="${mode}"]`).click();
+const openExtras = page => page.locator("#extras").evaluate(node => { node.open = true; });
 try {
   const page = await ctx.newPage();
   page.on("pageerror", error => errors.push(error.message));
   await page.goto(origin);
   await page.locator("#secret").fill(secret);
   await page.locator("#sign-in-button").click();
-  await page.locator("#composer").waitFor({ state: "visible" });
-  await page.locator('[data-compose-mode="place"]').click();
+  await page.locator("#workspace").waitFor({ state: "visible" });
   await page.waitForFunction(count => document.querySelector("#place-existing").options.length === count + 1, initialPlaceCount);
-  await page.locator("#place-existing").selectOption("bello-coffee");
-  assert.equal(await page.locator("#place-name").inputValue(), "Bello Coffee & Tea");
-  await page.locator("#place-status").selectOption("saved");
-  await page.locator("#publish").click();
-  await success(page);
-  assert.equal(repo.catalog().find(place => place.id === "bello-coffee").status, "saved");
-  assert.equal(noteFiles().length, 0, "saving only a place must not create an empty note");
-  assert.match(await page.locator("#message").textContent(), /No note was created/);
-  assert.match(await page.locator("#note-link").getAttribute("href"), /\/places\/\?place=bello-coffee/);
+  assert.equal(await page.locator("#composer").isVisible(), true);
+  assert.equal(await page.locator("#place-composer").isHidden(), true);
 
-  await changed(page, "#thought", "Great coffee, and my own photo 🪴");
-  await page.locator("#extras").evaluate(node => { node.open = true; });
+  // A real note draft (including photo, categories, and association) must never
+  // hitch a ride on a place save, and a place save must not clear that draft.
+  await page.locator("#thought").fill("Keep this note draft and my photo 🪴");
+  await openExtras(page);
+  await page.locator("#categories").fill("Places, Life");
+  await page.locator("#note-place").selectOption("bello-coffee");
   await page.locator("#photo-picker").setInputFiles(new URL("./fixtures/photo.jpg", import.meta.url).pathname);
   await page.waitForFunction(() => document.querySelectorAll(".photo-preview").length === 1 && !document.querySelector("#publish").disabled);
-  await page.locator("#place-status").selectOption("liked");
-  await page.locator("#publish").click();
+  await show(page, "place");
+  assert.equal(await page.locator("#composer").isHidden(), true);
+  assert.equal(await page.locator("#place-composer textarea, #place-composer input[type=file]").count(), 0);
+  await page.locator("#place-existing").selectOption("bello-coffee");
+  await page.locator("#place-status").selectOption("saved");
+  assert.equal(await page.locator("#place-save").textContent(), "Save changes");
+  await page.locator("#place-save").click();
   await success(page);
+  assert.equal(repo.catalog().find(place => place.id === "bello-coffee").status, "saved");
+  assert.equal(noteFiles().length, 0, "place save must never publish the note draft");
+  assert.equal([...repo.files().keys()].some(path => path.startsWith("static/notes-media/")), false);
+  const firstSave = repo.calls.find(call => call.path === "/git/trees" && call.method === "POST");
+  assert.deepEqual(firstSave.body.tree.map(item => item.path), ["data/places.json"]);
+  await show(page, "note");
+  assert.equal(await page.locator("#thought").inputValue(), "Keep this note draft and my photo 🪴");
+  assert.equal(await page.locator("#categories").inputValue(), "Places, Life");
+  assert.equal(await page.locator("#note-place").inputValue(), "bello-coffee");
+  assert.equal(await page.locator(".photo-preview").count(), 1);
+
+  // Keep an unsaved place edit alongside the note. Publishing the associated
+  // note writes only note/photo files and leaves both the catalog and place draft.
+  await show(page, "place");
+  await page.locator("#place-existing").selectOption("fellini-coffee");
+  await page.locator("#place-location-details").evaluate(node => { node.open = true; });
+  await page.locator("#place-city").fill("An unsaved city edit");
+  await page.reload();
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#place-city").inputValue(), "An unsaved city edit");
+  assert.equal(await page.locator("#thought").inputValue(), "Keep this note draft and my photo 🪴");
+  const beforeNote = JSON.stringify(repo.catalog());
+  await show(page, "note");
+  await page.locator("#publish").click();
+  await noteSuccess(page);
   assert.equal(noteFiles().length, 1);
+  assert.equal(JSON.stringify(repo.catalog()), beforeNote, "publishing a note never updates a place");
   assert.match(String(repo.file(noteFiles()[0])), /places: \["bello-coffee"\]/);
-  assert.match(String(repo.file(noteFiles()[0])), /Great coffee, and my own photo 🪴/);
+  assert.match(String(repo.file(noteFiles()[0])), /Keep this note draft and my photo 🪴/);
+  assert.match(String(repo.file(noteFiles()[0])), /!\[/);
   assert.equal(await page.locator("#thought").inputValue(), "");
+  await show(page, "place");
+  assert.equal(await page.locator("#place-city").inputValue(), "An unsaved city edit");
 
   await page.locator("#place-existing").selectOption("");
   await page.locator("#place-lookup").evaluate(node => { node.open = true; });
   await page.locator("#place-query").fill("Browser Cafe San Francisco");
   await page.locator("#place-search-button").click();
   await page.locator("#place-results button").first().click();
-  assert.equal(await page.locator("#place-name").inputValue(), "Browser Cafe");
-  await page.locator("#publish").click();
+  await page.locator("#place-save").click();
   await success(page);
   assert.equal(repo.catalog().length, initialPlaceCount + 1);
   assert.equal(noteFiles().length, 1);
-  assert.match(await page.locator("#place-load-status").textContent(), /Saved/);
 
-  // Picking a more precise location updates the existing pin, not a duplicate.
-  await page.locator("#place-existing").selectOption("fellini-coffee");
-  await page.locator("#place-query").fill("confirmed Fellini location");
-  await page.locator("#place-search-button").click();
-  await page.locator("#place-results button").first().click();
-  assert.equal(await page.locator("#place-existing").inputValue(), "fellini-coffee");
-  await page.locator("#publish").click();
-  await success(page);
-  assert.equal(repo.catalog().length, initialPlaceCount + 1);
-  assert.deepEqual(repo.catalog().find(place => place.id === "fellini-coffee").coordinates, [40.7347, -74.0012]);
-  assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").locationNote, undefined);
-
-  // In-progress place edits survive reload, including mode and coordinates.
-  await page.locator("#place-existing").selectOption("fellini-coffee");
-  await changed(page, "#thought", "A draft about Fellini");
-  await page.locator("#place-location-details").evaluate(node => { node.open = true; });
-  await changed(page, "#place-city", "New York City");
-  await page.reload();
-  await page.locator("#composer").waitFor({ state: "visible" });
-  assert.equal(await page.locator("#place-fields").isVisible(), true);
-  assert.equal(await page.locator("#thought").inputValue(), "A draft about Fellini");
-  assert.equal(await page.locator("#place-city").inputValue(), "New York City");
-  assert.equal(await page.locator("#place-latitude").inputValue(), "40.7347");
-
-  // A stale tab must not overwrite a newer save. Reload explicitly resolves it.
-  const other = await ctx.newPage();
-  await other.goto(origin);
-  await other.locator("#composer").waitFor({ state: "visible" });
-  await other.locator("#place-existing").selectOption("fellini-coffee");
-  await changed(other, "#thought", "");
-  await other.locator("#place-status").selectOption("saved");
-  await other.locator("#publish").click();
-  await success(other);
-  await page.locator("#publish").click();
-  await page.waitForFunction(() => document.querySelector("#message").textContent.includes("changed in another window"));
-  assert.equal(await page.locator("#thought").inputValue(), "A draft about Fellini");
-  await page.locator("#place-refresh").click();
-  await page.waitForFunction(() => document.querySelector("#place-city").value === "New York");
-  assert.equal(await page.locator("#thought").inputValue(), "A draft about Fellini");
-  await page.screenshot({ path: "/private/tmp/notebook-places-mobile.png", fullPage: true });
-  for (const width of [320, 390, 768, 1440]) {
-    await page.setViewportSize({ width, height: 950 });
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `overflow at ${width}px`);
-  }
-  await page.emulateMedia({ colorScheme: "dark" });
-  await page.screenshot({ path: "/private/tmp/notebook-places-dark.png", fullPage: true });
-  await page.locator('[data-compose-mode="note"]').click();
-  assert.equal(await page.locator("#place-fields").isHidden(), true);
-  assert.equal(await page.locator("#thought").inputValue(), "A draft about Fellini");
-  await page.locator("#place-latitude").evaluate(node => { node.value = "999"; });
-  await page.locator("#publish").click();
-  await success(page);
-  assert.equal(await page.locator("#thought").inputValue(), "", "hidden place fields must not block ordinary notes");
-
-  // A Maps link pasted into the normal note field can become a new place, while
-  // keeping the accompanying thought and leaving the previously edited pin alone.
-  const noteCount = noteFiles().length;
-  await page.locator("#thought").fill(`${mapsLink}\n\nGood espresso.`);
-  await page.locator("#save-link-as-place").waitFor({ state: "visible" });
+  // Pasting a link in Notes offers a separate place save. The entire note and
+  // photo remain untouched; saving the place cannot turn them into a post.
+  await show(page, "note");
+  const linkDraft = `${mapsLink}\n\nGood espresso.`;
+  await page.locator("#thought").fill(linkDraft);
+  await openExtras(page);
+  await page.locator("#photo-picker").setInputFiles(new URL("./fixtures/photo.jpg", import.meta.url).pathname);
+  await page.waitForFunction(() => document.querySelectorAll(".photo-preview").length === 1 && !document.querySelector("#publish").disabled);
   await page.locator("#save-link-as-place").click();
-  assert.equal(await page.locator("#publish").isDisabled(), true);
-  assert.equal(await page.locator("#place-save-help").isVisible(), true);
-  assert.match(await page.locator("#place-save-help").textContent(), /Loading/);
-  await page.waitForFunction(() => document.querySelector("#place-name").value === "Maps Link Cafe" && !document.querySelector("#publish").disabled);
-  assert.equal(await page.locator("#thought").inputValue(), "Good espresso.");
-  assert.equal(await page.locator("#place-existing").inputValue(), "", "pasting a link in note mode must not overwrite the previous selection");
-  assert.equal(await page.locator("#place-latitude").inputValue(), "37.782");
-  await page.screenshot({ path: "/private/tmp/notebook-google-maps-link.png", fullPage: true });
-  await page.locator("#publish").click();
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  await page.waitForFunction(() => document.querySelector("#place-name").value === "Maps Link Cafe" && !document.querySelector("#place-save").disabled);
+  assert.equal(await page.locator("#place-existing").inputValue(), "");
+  assert.equal(await page.locator("#thought").inputValue(), linkDraft);
+  await page.locator("#place-save").click();
   await success(page);
   const imported = repo.catalog().find(place => place.name === "Maps Link Cafe");
   assert.equal(imported.mapsURL, mapsLink);
   assert.deepEqual(imported.coordinates, [37.782, -122.412]);
-  assert.equal(noteFiles().length, noteCount + 1);
-  // Both real share-link formats enable Save changes when updating a selected
-  // place. Reloading a resolved draft must keep that button usable as well.
-  reverseAvailable = true;
+  assert.equal(noteFiles().length, 1);
+  await show(page, "note");
+  assert.equal(await page.locator("#thought").inputValue(), linkDraft);
+  assert.equal(await page.locator(".photo-preview").count(), 1);
+  await page.locator("#note-place").selectOption(imported.id);
+  await page.locator("#publish").click();
+  await noteSuccess(page);
+  assert.equal(noteFiles().length, 2);
+  assert.ok(noteFiles().some(path => String(repo.file(path)).includes(`places: ["${imported.id}"]`)));
+
+  // Both reported share-link formats still enable Save changes and survive a
+  // draft reload now that Places has its own button and local-storage entry.
+  await show(page, "place");
   const sightglass = repo.catalog().find(place => place.name === "Sightglass Coffee");
   for (const [url, latitude] of [[sightglassPinLink, "37.7770356"], [sightglassFeatureLink, "37.7592345"]]) {
     await page.locator("#place-existing").selectOption(sightglass.id);
     await page.locator("#place-maps-url").fill(url);
-    assert.equal(await page.locator("#publish").isDisabled(), true);
+    assert.equal(await page.locator("#place-save").isDisabled(), true);
     await page.locator("#place-resolve").click();
-    await page.waitForFunction(lat => document.querySelector("#place-latitude").value === lat && !document.querySelector("#publish").disabled, latitude);
-    assert.equal(await page.locator("#publish").textContent(), "Save changes");
+    await page.waitForFunction(lat => document.querySelector("#place-latitude").value === lat && !document.querySelector("#place-save").disabled, latitude);
+    assert.equal(await page.locator("#place-save").textContent(), "Save changes");
     assert.equal(await page.locator("#place-save-help").isHidden(), true);
     await page.reload();
-    await page.locator("#composer").waitFor({ state: "visible" });
-    await page.waitForFunction(() => !document.querySelector("#publish").disabled);
-    await page.locator("#publish").click();
+    await page.locator("#place-composer").waitFor({ state: "visible" });
+    await page.waitForFunction(() => !document.querySelector("#place-save").disabled);
+    await page.locator("#place-save").click();
     await success(page);
     assert.equal(repo.catalog().find(place => place.id === sightglass.id).coordinates[0], Number(latitude));
     assert.equal(repo.catalog().find(place => place.id === sightglass.id).mapsURL, url);
   }
-  assert.equal(noteFiles().length, noteCount + 1);
-  assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").name, "Fellini Coffee");
+  assert.equal(noteFiles().length, 2);
 
-  // The dedicated link field also works without a note, and finds an existing
-  // imported venue instead of duplicating it.
   await page.locator("#place-existing").selectOption("");
   await page.locator("#place-maps-url").fill(mapsLink);
   await page.locator("#place-resolve").click();
-  await page.waitForFunction(id => document.querySelector("#place-existing").value === id && !document.querySelector("#publish").disabled, imported.id);
-  await page.locator("#publish").click();
+  await page.waitForFunction(id => document.querySelector("#place-existing").value === id && !document.querySelector("#place-save").disabled, imported.id);
+  await page.locator("#place-save").click();
   await success(page);
-  assert.equal(noteFiles().length, noteCount + 1);
   assert.equal(repo.catalog().filter(place => place.name === "Maps Link Cafe").length, 1);
 
+  // A bad link blocks only the Places save. Notes remains usable, and publishing
+  // a note must not erase or resolve the unfinished place draft.
   await page.locator("#place-existing").selectOption("");
   await page.locator("#place-maps-url").fill("https://maps.app.goo.gl/offline-fixture");
   await page.locator("#place-resolve").click();
   await page.waitForFunction(() => document.querySelector("#place-load-status").textContent.includes("couldn't be reached"));
-  assert.equal(await page.locator("#publish").isDisabled(), true);
+  assert.equal(await page.locator("#place-save").isDisabled(), true);
   assert.equal(await page.locator("#place-save-help").isVisible(), true);
-  assert.match(await page.locator("#place-save-help").textContent(), /Use link/);
+  await show(page, "note");
+  await page.locator("#thought").fill("A completely unrelated note");
+  await page.locator("#publish").click();
+  await noteSuccess(page);
+  assert.equal(noteFiles().length, 3);
+  await show(page, "place");
   await page.reload();
-  await page.locator("#composer").waitFor({ state: "visible" });
+  await page.locator("#place-composer").waitFor({ state: "visible" });
   assert.equal(await page.locator("#place-maps-url").inputValue(), "https://maps.app.goo.gl/offline-fixture");
-  assert.equal(await page.locator("#publish").isDisabled(), true, "unresolved links stay unresolved after draft reload");
+  assert.equal(await page.locator("#place-save").isDisabled(), true);
 
-  // Missing reverse-geocoder data doesn't prevent importing the real Maps pin.
   reverseAvailable = false;
   const manualLink = "https://www.google.com/maps/place/Manual+Address+Cafe/data=!8m2!3d37.8!4d-122.3";
   await page.locator("#place-maps-url").fill(manualLink);
@@ -216,11 +202,57 @@ try {
   assert.equal(await page.locator("#place-location-details").evaluate(node => node.open), true);
   await page.locator("#place-city").fill("San Francisco");
   await page.locator("#place-address").fill("An address I entered");
-  await page.locator("#publish").click();
+  await page.locator("#place-save").click();
   await success(page);
   assert.equal(repo.catalog().find(place => place.name === "Manual Address Cafe").mapsURL, manualLink);
-  assert.equal(noteFiles().length, noteCount + 1);
+
+  // Stale place edits still cannot overwrite a newer save in another tab.
+  await page.locator("#place-existing").selectOption("fellini-coffee");
+  await page.locator("#place-name").fill("My unsaved Fellini edit");
+  const other = await ctx.newPage();
+  await other.goto(origin);
+  await other.locator("#place-composer").waitFor({ state: "visible" });
+  await other.waitForFunction(() => document.querySelector("#place-existing").options.length > 1);
+  await other.locator("#place-existing").selectOption("fellini-coffee");
+  await other.locator("#place-status").selectOption("saved");
+  await other.locator("#place-save").click();
+  await success(other);
+  await page.locator("#place-save").click();
+  await page.waitForFunction(() => document.querySelector("#place-message").textContent.includes("changed in another window"));
+  assert.equal(await page.locator("#place-name").inputValue(), "My unsaved Fellini edit");
+  await page.locator("#place-refresh").click();
+  await page.waitForFunction(() => document.querySelector("#place-name").value !== "My unsaved Fellini edit");
+  await other.close();
+  for (const mode of ["note", "place"]) {
+    await show(page, mode);
+    for (const width of [320, 390, 768, 1440]) {
+      await page.setViewportSize({ width, height: 950 });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${mode} overflow at ${width}px`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.screenshot({ path: `/private/tmp/notebook-separate-${mode}.png`, fullPage: true });
+  }
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.screenshot({ path: "/private/tmp/notebook-separate-places-dark.png", fullPage: true });
+
+  // Upgrade an old shared draft without publishing, deleting, or transferring
+  // its text/photos into the place editor.
+  const legacyContext = await browser.newContext({ storageState: { cookies: await ctx.cookies(), origins: [{ origin, localStorage: [{ name: "notebook.draft.v1", value: JSON.stringify({ text: "My old draft stays a note", categories: "Life", photos: [], location: { mode: "place", query: "", resolvedURL: "", place: { name: "An old place draft", city: "Tokyo", coordinates: [35, 139], category: "Coffee", status: "saved", address: "An old address", precision: "address" } } }) }] }] } });
+  await legacyContext.route("**/*", async route => {
+    const req = route.request();
+    const response = await worker.fetch(new Request(req.url(), { method: req.method(), headers: req.headers() }), env);
+    await route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });
+  });
+  const legacy = await legacyContext.newPage();
+  await legacy.goto(origin);
+  await legacy.locator("#place-composer").waitFor({ state: "visible" });
+  assert.equal(await legacy.locator("#place-name").inputValue(), "An old place draft");
+  await show(legacy, "note");
+  assert.equal(await legacy.locator("#thought").inputValue(), "My old draft stays a note");
+  assert.equal(await legacy.locator("#categories").inputValue(), "Life");
+  assert.equal(noteFiles().length, 3);
+  await legacyContext.close();
   assert.deepEqual(errors, []);
-  console.log("PASS: mobile place-only saves, saved-place edits, note/photo association, location search, draft reload, stale-tab protection/reload, ordinary note mode, and four responsive widths. No real GitHub writes.");
-  console.log("PASS: Maps-link field, link detection in notes, optional text, exact pins, original links, deduplication, unresolved-draft recovery, and manual address fallback.");
+  console.log("PASS: independent place/note forms, buttons, drafts, photos, and saves; optional note-place association; link-copy shortcut keeps the note; legacy-draft migration; unresolved link never blocks Notes.");
+  console.log("PASS: both reported Maps links, place-only saves, deduplication, stale-edit protection, manual address fallback, draft reload, and four responsive widths. No real GitHub writes.");
 } finally { await browser.close(); }

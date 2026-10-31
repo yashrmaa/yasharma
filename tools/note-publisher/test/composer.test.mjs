@@ -96,7 +96,7 @@ test("composer assets get CSP and privacy headers; unknown routes never serve th
   const h = setup();
   let assetCalls = 0;
   const bindings = { ...env, ASSETS: { fetch: async () => { assetCalls++; return new Response("static app", { headers: { "Content-Type": "text/html" } }); } } };
-  for (const path of ["/", "/composer.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]) {
+  for (const path of ["/", "/composer.js", "/place-editor.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]) {
     const response = await h.send(path, {}, bindings);
     assert.equal(response.status, 200);
     assert.match(response.headers.get("Content-Security-Policy"), /frame-ancestors 'none'/);
@@ -105,11 +105,11 @@ test("composer assets get CSP and privacy headers; unknown routes never serve th
     assert.equal(response.headers.get("Cache-Control"), "no-store");
     assert.equal(response.headers.has("Access-Control-Allow-Origin"), false);
   }
-  assert.equal(assetCalls, 8);
+  assert.equal(assetCalls, 9);
   assert.equal((await h.send("/admin", {}, bindings)).status, 404);
   assert.equal((await h.send("/publish", {}, bindings)).status, 405);
   assert.equal((await h.worker.fetch(new Request("http://notebook.test/"), bindings)).status, 400);
-  assert.equal(assetCalls, 8);
+  assert.equal(assetCalls, 9);
 });
 
 test("one-field composer preserves note/link models without fetching URLs", () => {

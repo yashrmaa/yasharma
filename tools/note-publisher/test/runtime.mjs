@@ -106,6 +106,12 @@ try {
   assert.equal(noted.has_note, true);
   assert.match(String(repository.file(noted.path)), /places: \[/);
   assert.equal(repository.catalog()[0].status, "liked");
+  const catalogBeforeNote = repository.file("data/places.json");
+  const independentNote = await publish({ kind: "note", text: "A note linked to an existing place", places: [saved.place.id] });
+  assert.equal(independentNote.status, 201, await independentNote.clone().text());
+  const independentResult = await independentNote.json();
+  assert.ok(String(repository.file(independentResult.path)).includes(`places: ["${saved.place.id}"]`));
+  assert.equal(repository.file("data/places.json"), catalogBeforeNote, "notes must not update a place");
   const mapsURL = "https://maps.app.goo.gl/runtime-fixture";
   const imported = await runtime.dispatchFetch(`${origin}/places/resolve?url=${encodeURIComponent(mapsURL)}`, { headers: { Cookie: cookie } });
   assert.equal(imported.status, 200, await imported.clone().text());
@@ -125,6 +131,7 @@ try {
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
   console.log("workerd runtime passed: standalone place save and atomic place update with an associated note and photo.");
   console.log("workerd runtime passed: authenticated Google Maps redirects, exact pin import, address enrichment, and original-link saving.");
+  console.log("workerd runtime passed: note-place association publishes only the note, preserving the place catalog.");
 } finally {
   await runtime.dispose();
 }

@@ -2,7 +2,7 @@ import { cookie, newSession, hasSession, sameOrigin, SECURITY_HEADERS } from "./
 import { validatePhotos } from "./photos.mjs";
 import { PublishError, validatePlace, listPlaces, searchPlaces, savePlace, resolveGoogleMaps } from "./places.mjs";
 
-const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/place-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
+const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/place-input.js", "/place-editor.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
 const MAX_BYTES = 32 * 1024;
 const encoder = new TextEncoder();
 
@@ -81,7 +81,7 @@ function validate(input, siteURL) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     throw new PublishError(400, "invalid_input", "Send a JSON object.");
   }
-  if (Object.keys(input).some(key => !["kind", "url", "title", "text", "categories", "photos", "place"].includes(key))) {
+  if (Object.keys(input).some(key => !["kind", "url", "title", "text", "categories", "photos", "place", "places"].includes(key))) {
     throw new PublishError(400, "unknown_field", "Only note fields and an optional place are accepted.");
   }
   if (!["link", "note", "place"].includes(input.kind)) {
@@ -89,6 +89,8 @@ function validate(input, siteURL) {
   }
   const place = input.kind === "place" ? validatePlace(input.place) : undefined;
   if (input.kind !== "place" && input.place !== undefined) throw new PublishError(400, "invalid_place", "Use place mode to save a location with an optional note.");
+  const places = input.places === undefined ? [] : input.places;
+  if (!Array.isArray(places) || places.length > 8 || places.some(id => typeof id !== "string" || !/^[a-z0-9][a-z0-9-]{0,99}$/.test(id)) || (input.kind === "place" && input.places !== undefined)) throw new PublishError(400, "invalid_places", "Choose saved places to attach to a note.");
   const text = field(input, "text", 10000);
   let title = field(input, "title", 300);
   const rawURL = field(input, "url", 4096);
@@ -114,7 +116,7 @@ function validate(input, siteURL) {
   } else if ((!place && !text && !photos.length) || rawURL) {
     throw new PublishError(400, "invalid_note", "A note needs text or a photo and must not include a URL field. Put any links in the text.");
   }
-  return { kind: input.kind, text, title, url: url?.href, photos, place, categories: [...new Set(categories.map(value => value.trim().toLowerCase()))] };
+  return { kind: input.kind, text, title, url: url?.href, photos, place, places: [...new Set(places)], categories: [...new Set(categories.map(value => value.trim().toLowerCase()))] };
 }
 
 // JSON strings are valid YAML quoted scalars. Escape YAML's extra line breaks too.
@@ -219,6 +221,10 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
         if (entry.kind === "place") {
           const result = await savePlace({ entry, env: { ...env, SITE_URL: site }, fetch: githubFetch, date, uuid, sleep, noteDocument: id => markdown({ ...entry, kind: "note", places: [id] }, date) });
           return json(201, result);
+        }
+        if (entry.places.length) {
+          const savedPlaces = await listPlaces(env, githubFetch);
+          if (entry.places.some(id => !savedPlaces.some(place => place.id === id))) throw new PublishError(400, "place_not_found", "A selected place is no longer available. Choose a saved place again before publishing.");
         }
         const headers = {
           Authorization: `Bearer ${env.GITHUB_TOKEN}`,

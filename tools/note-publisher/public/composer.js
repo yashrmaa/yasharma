@@ -1,5 +1,6 @@
 import { preparePhoto } from "./photo-input.js";
-import { mountPlaceInput, googleMapsLink } from "./place-input.js";
+import { googleMapsLink } from "./place-input.js";
+import { mountPlaceEditor } from "./place-editor.js";
 const DRAFT_KEY = "notebook.draft.v1";
 
 export function entryFromText(value) {
@@ -41,8 +42,28 @@ export function mount() {
   let pending = false;
   let storageWorks = true;
   let siteURL = "https://yasharma.com";
-  const placeInput = mountPlaceInput({ api, onChange: () => { if (!pending) get("feedback").hidden = true; saveDraft(); controls(); } });
-  const draftValue = () => ({ text: thought.value, categories: categories.value, photos, location: placeInput.draft() });
+  let notePlaceID = "";
+  let places = [];
+  let view = "note";
+  const placeEditor = mountPlaceEditor({ api, validateEntry: entryError, onPlacesChange: values => { places = values; renderPlaces(); }, onStateChange: controls, onUnauthorized: () => auth(false) });
+  const draftValue = () => ({ text: thought.value, categories: categories.value, photos, placeId: notePlaceID });
+
+  function renderPlaces() {
+    const select = get("note-place");
+    select.replaceChildren(new Option("No place selected", ""));
+    for (const place of [...places].sort((a, b) => a.name.localeCompare(b.name))) select.add(new Option(`${place.name} · ${place.city}`, place.id));
+    if (notePlaceID && !places.some(place => place.id === notePlaceID)) select.add(new Option("Previously selected place", notePlaceID));
+    select.value = notePlaceID;
+  }
+  function showView(value) {
+    view = value === "place" ? "place" : "note";
+    get("composer").hidden = view !== "note";
+    get("place-composer").hidden = view !== "place";
+    document.querySelectorAll("[data-compose-mode]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.composeMode === view)));
+    try { localStorage.setItem("notebook.view", view); } catch { /* Draft storage reports availability separately. */ }
+    get("feedback").hidden = true;
+  }
+  document.querySelectorAll("[data-compose-mode]").forEach(button => button.addEventListener("click", () => showView(button.dataset.composeMode)));
 
   function feedback(message, state = "error", url = "") {
     get("feedback").hidden = false;
@@ -62,7 +83,7 @@ export function mount() {
   function draftStatus() {
     get("draft-status").textContent = !storageWorks
       ? "Draft saving is unavailable. Keep this window open or copy your text."
-      : thought.value || photos.length || categories.value || (placeInput.enabled && placeInput.value().name) ? "Draft saved on this device." : "Drafts stay on this device.";
+      : thought.value || photos.length || categories.value || notePlaceID ? "Draft saved on this device." : "Drafts stay on this device.";
   }
 
   function saveDraft() {
@@ -74,25 +95,23 @@ export function mount() {
   }
 
   function controls() {
-    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (placeInput.enabled && (placeInput.pending || placeInput.needsResolution)) || (!placeInput.enabled && !thought.value.trim() && !photos.length);
-    get("place-save-help").hidden = !placeInput.enabled || (!placeInput.pending && !placeInput.needsResolution);
-    get("place-save-help").textContent = placeInput.pending ? "Loading the location before saving…" : "Choose Use link to confirm this pin before saving. If the link fails, try again, use name search, or enter the pin manually under Edit address & pin.";
-    publish.textContent = busy ? "Saving…" : preparing ? "Preparing photos…" : placeInput.enabled ? thought.value.trim() || photos.length ? "Save place & note" : placeInput.value().id ? "Save changes" : "Save place" : "Publish";
-    placeInput.setBusy(busy || preparing);
+    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (!thought.value.trim() && !photos.length);
+    publish.textContent = busy ? "Saving…" : preparing ? "Preparing photos…" : "Publish note";
     thought.readOnly = busy;
     categories.readOnly = busy;
     picker.disabled = busy || preparing;
     get("photo-previews").querySelectorAll("input, button").forEach(control => { control.disabled = busy || preparing; });
-    get("sign-out").disabled = busy;
+    get("note-place").disabled = busy;
+    get("sign-out").disabled = busy || placeEditor.busy;
     get("composer").setAttribute("aria-busy", String(busy));
-    get("save-link-as-place").hidden = placeInput.enabled || !googleMapsLink(entryFromText(thought.value).url || "");
+    get("save-link-as-place").hidden = !googleMapsLink(entryFromText(thought.value).url || "");
   }
 
   function auth(authenticated) {
     signedIn = authenticated;
-    placeInput.setAuthenticated(authenticated);
+    placeEditor.setSession(authenticated, siteURL);
     get("sign-in").hidden = authenticated;
-    get("composer").hidden = !authenticated;
+    get("workspace").hidden = !authenticated;
     get("sign-out").hidden = !authenticated;
     controls();
   }
@@ -134,9 +153,13 @@ export function mount() {
   const draft = readDraft();
   thought.value = draft?.text || "";
   categories.value = typeof draft?.categories === "string" ? draft.categories : "";
-  placeInput.restore(draft?.location);
+  notePlaceID = typeof draft?.placeId === "string" ? draft.placeId : draft?.location?.mode === "place" ? draft.location.place?.id || "" : "";
+  renderPlaces();
+  let initialView = draft?.location?.mode;
+  try { initialView = localStorage.getItem("notebook.view") || initialView; } catch { /* Keep the default view when storage is unavailable. */ }
+  showView(initialView);
   photos = Array.isArray(draft?.photos) ? draft.photos.filter(photo => typeof photo?.data === "string" && /^[A-Za-z0-9+/]*={0,2}$/.test(photo.data) && photo.data.length < 683000 && typeof photo.alt === "string").slice(0, 3) : [];
-  if (photos.length || categories.value) get("extras").open = true;
+  if (photos.length || categories.value || notePlaceID) get("extras").open = true;
   renderPhotos();
   pending = draft?.pending === true;
   saveDraft(); // Also detects browsers that prohibit local storage.
@@ -148,9 +171,10 @@ export function mount() {
     const entry = entryFromText(thought.value);
     const url = googleMapsLink(entry.url || "");
     if (!url || busy) return;
-    thought.value = entry.text;
-    void placeInput.useLink(url);
+    showView("place");
+    void placeEditor.useLink(url);
   });
+  get("note-place").addEventListener("change", () => { notePlaceID = get("note-place").value; saveDraft(); controls(); });
   categories.addEventListener("input", () => { saveDraft(); renderCount(); });
   function renderCount() {
     const count = categories.value.split(",").filter(value => value.trim()).length;
@@ -212,7 +236,7 @@ export function mount() {
       await checkSession();
       if (signedIn) {
         if (!pending) get("feedback").hidden = true;
-        thought.focus();
+        (view === "note" ? thought : get("place-maps-url")).focus();
       }
     } catch (error) { feedback(error.message); }
     finally {
@@ -223,7 +247,7 @@ export function mount() {
   });
 
   get("sign-out").addEventListener("click", async () => {
-    if (busy) return;
+    if (busy || placeEditor.busy) return;
     try {
       await api("/session", { method: "DELETE" });
       auth(false);
@@ -235,7 +259,8 @@ export function mount() {
     event.preventDefault();
     if (busy || preparing || !signedIn) return;
     if (!navigator.onLine) { feedback("You’re offline. Reconnect before publishing; your draft is kept here."); return; }
-    const entry = placeInput.enabled ? { kind: "place", text: thought.value.trim(), place: placeInput.value() } : entryFromText(thought.value);
+    const entry = entryFromText(thought.value);
+    if (notePlaceID) entry.places = [notePlaceID];
     entry.categories = categories.value.split(",").map(value => value.trim()).filter(Boolean);
     entry.photos = photos;
     const validation = entryError(entry);
@@ -250,21 +275,20 @@ export function mount() {
       const data = await api("/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(entry) });
       const url = new URL(data.url);
       const noteURL = /^\/notes\/[^/]+\/$/.test(url.pathname);
-      const placeURL = entry.kind === "place" && url.pathname === "/places/" && url.searchParams.get("place") === data.place_id;
-      if (data.status !== "committed" || url.origin !== siteURL || !(noteURL || placeURL) || (entry.kind === "place" && (!data.place || data.place.id !== data.place_id || !/^[a-f0-9]{64}$/.test(data.place.revision)))) throw new Error("The publisher returned an incomplete confirmation.");
+      if (data.status !== "committed" || url.origin !== siteURL || !noteURL) throw new Error("The publisher returned an incomplete confirmation.");
       pending = false;
       // Preserve a newer draft written by another window while the request ran.
       const saved = readDraft();
-      const newer = saved && JSON.stringify({ text: saved.text, categories: saved.categories || "", photos: saved.photos || [], location: saved.location || null }) !== outgoing;
+      const newer = saved && JSON.stringify({ text: saved.text, categories: saved.categories || "", photos: saved.photos || [], placeId: saved.placeId || "" }) !== outgoing;
       thought.value = newer ? saved.text : "";
       categories.value = newer ? saved.categories || "" : "";
       photos = newer ? saved.photos || [] : [];
-      if (data.place) placeInput.saved(data.place);
-      if (newer) placeInput.restore(saved.location);
+      notePlaceID = newer ? saved.placeId || "" : "";
+      renderPlaces();
       renderPhotos();
       saveDraft();
-      get("note-link").textContent = placeURL ? "View place ↗" : "View note ↗";
-      feedback(entry.kind === "place" ? data.has_note ? "Saved. Your place, note, and photos will appear after the site finishes deploying." : "Saved. Your place will appear on the map after deployment. No note was created." : "Saved. Your note will appear after the site finishes deploying. The link may briefly show 404.", "success", url.href);
+      get("note-link").textContent = "View note ↗";
+      feedback("Saved. Your note will appear after the site finishes deploying. The link may briefly show 404.", "success", url.href);
     } catch (error) {
       pending = !error.known;
       saveDraft();

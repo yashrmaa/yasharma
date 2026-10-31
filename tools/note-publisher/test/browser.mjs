@@ -13,6 +13,7 @@ const commits = [];
 let githubMode = "success";
 let delay = 0;
 const worker = createPublisher({ fetch: async (url, options) => {
+  if (options.method === "GET") return new Response(null, { status: 404 });
   if (delay) await new Promise(resolve => setTimeout(resolve, delay));
   if (githubMode === "error") return new Response("Rejected", { status: 403 });
   if (githubMode === "unknown") throw new Error("Lost response");

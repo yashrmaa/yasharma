@@ -20,10 +20,9 @@ export function googleMapsKey(value) {
   return url.href;
 }
 
-export function mountPlaceInput({ api, onChange }) {
+export function mountPlaceInput({ api, onChange, onPlacesChange = () => {} }) {
   const get = id => document.getElementById(id);
   const fields = ["name", "city", "neighborhood", "address", "category", "status", "latitude", "longitude", "precision"];
-  let enabled = false;
   let authenticated = false;
   let busy = false;
   let loading = false;
@@ -68,13 +67,12 @@ export function mountPlaceInput({ api, onChange }) {
     renderLocation();
   }
   function controls() {
-    get("place-fields").querySelectorAll("input, select, button").forEach(control => { control.disabled = busy || resolving || !enabled; });
-    get("place-existing").disabled = busy || resolving || loading || !enabled;
-    get("place-refresh").disabled = busy || resolving || loading || !enabled;
-    get("place-search-button").disabled = busy || resolving || searching || !enabled || Date.now() < cooldown;
+    get("place-fields").querySelectorAll("input, select, button").forEach(control => { control.disabled = busy || resolving || !authenticated; });
+    get("place-existing").disabled = busy || resolving || loading || !authenticated;
+    get("place-refresh").disabled = busy || resolving || loading || !authenticated;
+    get("place-search-button").disabled = busy || resolving || searching || !authenticated || Date.now() < cooldown;
     get("place-search-button").textContent = searching ? "Searching…" : "Search";
     get("place-resolve").textContent = resolving ? "Opening…" : "Use link";
-    document.querySelectorAll("[data-compose-mode]").forEach(button => { button.disabled = busy; });
   }
   async function load(replaceSelection = false) {
     if (loading || !authenticated) return;
@@ -85,6 +83,7 @@ export function mountPlaceInput({ api, onChange }) {
       const result = await api("/places");
       if (!Array.isArray(result.places)) throw new Error("Your saved places couldn't be read.");
       saved = result.places;
+      onPlacesChange(saved);
       loaded = true;
       options();
       if (replaceSelection && id) { fill(saved.find(place => place.id === id)); onChange(); }
@@ -92,22 +91,6 @@ export function mountPlaceInput({ api, onChange }) {
     } catch (error) { status(error.message); }
     finally { loading = false; controls(); }
   }
-  function mode(value, notify = true) {
-    searchVersion++;
-    enabled = value === "place";
-    get("composer").dataset.mode = enabled ? "place" : "note";
-    get("place-fields").hidden = !enabled;
-    document.querySelectorAll("[data-compose-mode]").forEach(button => button.setAttribute("aria-pressed", String((button.dataset.composeMode === "place") === enabled)));
-    get("thought-label").textContent = enabled ? "A note about this place (optional)" : "What do you want to remember?";
-    get("thought").placeholder = enabled ? "What did you like? What should I order? Or just save the place for later…" : "A thought, a quote, something you learned…";
-    get("thought").rows = enabled ? 4 : 10;
-    get("writing-help").hidden = enabled;
-    get("day-help").textContent = enabled ? "Save just the place, or add a note and photos. A place-only save won't add an empty note." : "Each publish adds a new timed entry under today’s date.";
-    if (enabled && authenticated && !loaded) void load();
-    controls();
-    if (notify) onChange();
-  }
-  document.querySelectorAll("[data-compose-mode]").forEach(button => button.addEventListener("click", () => mode(button.dataset.composeMode)));
   get("place-existing").addEventListener("change", () => { searchVersion++; fill(saved.find(place => place.id === get("place-existing").value)); onChange(); });
   get("place-refresh").addEventListener("click", () => void load(true));
   for (const key of fields) get(`place-${key}`).addEventListener("input", () => {
@@ -138,7 +121,7 @@ export function mountPlaceInput({ api, onChange }) {
     controls(); onChange();
     try {
       const result = await api(`/places/resolve?url=${encodeURIComponent(url)}`);
-      if (version !== searchVersion || !enabled) return;
+      if (version !== searchVersion || !authenticated) return;
       if (!result.place?.coordinates) throw new Error("This link did not return a place pin.");
       const existing = choose(result.place);
       const incomplete = !get("place-name").value || !get("place-city").value || !get("place-address").value;
@@ -186,9 +169,8 @@ export function mountPlaceInput({ api, onChange }) {
     finally { searching = false; controls(); onChange(); setTimeout(controls, Math.max(0, cooldown - Date.now()) + 20); }
   });
   fill();
-  mode("note", false);
+  controls();
   return {
-    get enabled() { return enabled; },
     get pending() { return resolving || searching; },
     get needsResolution() { const url = get("place-maps-url").value.trim(); return Boolean(url && url !== resolvedURL); },
     value() {
@@ -199,23 +181,23 @@ export function mountPlaceInput({ api, onChange }) {
       place.coordinates = [lat === "" ? null : Number(lat), lon === "" ? null : Number(lon)];
       return place;
     },
-    draft() { return { mode: enabled ? "place" : "note", query: get("place-query").value, resolvedURL, place: this.value() }; },
+    draft() { return { query: get("place-query").value, resolvedURL, place: this.value() }; },
     restore(draft) {
       fill(draft?.place || {});
       get("place-query").value = typeof draft?.query === "string" ? draft.query : "";
       resolvedURL = typeof draft?.resolvedURL === "string" ? draft.resolvedURL : "";
       get("place-lookup").open = Boolean(get("place-query").value);
-      mode(draft?.mode === "place" ? "place" : "note", false);
     },
-    setAuthenticated(value) { authenticated = value; if (authenticated && enabled && !loaded) void load(); },
+    setAuthenticated(value) { authenticated = value; controls(); if (authenticated && !loaded) void load(); },
     setBusy(value) { busy = value; controls(); },
-    useLink(url) { fill(); get("place-query").value = ""; mode("place", false); get("place-maps-url").value = url; resolvedURL = ""; onChange(); return resolveLink(); },
+    useLink(url) { fill(); get("place-query").value = ""; get("place-maps-url").value = url; resolvedURL = ""; onChange(); return resolveLink(); },
     saved(place) {
       if (!place) return;
       saved = saved.filter(item => item.id !== place.id).concat(place);
       options(); fill(place);
+      onPlacesChange(saved);
       get("place-query").value = "";
-      status("Saved. You can add another note here, update this place, or choose somewhere new.");
+      status("Saved. Update this place or choose somewhere new.");
     },
   };
 }

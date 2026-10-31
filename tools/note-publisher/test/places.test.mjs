@@ -35,6 +35,29 @@ test("a place can be saved without text or photos, in one catalog commit and wit
   assert.equal(entryError({ kind: "place", place, text: "", photos: [] }), "");
 });
 
+test("a note can reference a saved place without changing its catalog entry or revision", async () => {
+  const h = setup([existing]);
+  const catalogBefore = h.repo.file("data/places.json");
+  const revision = await placeRevision(existing);
+  const response = await h.request("/publish", { method: "POST", body: { kind: "note", text: "I liked the flat white", places: [existing.id, existing.id], photos: [photo] } });
+  assert.equal(response.status, 201, await response.clone().text());
+  const result = await response.json();
+  assert.match(String(h.repo.file(result.path)), /places: \["existing-cafe"\]/);
+  assert.match(String(h.repo.file(result.path)), /I liked the flat white/);
+  assert.equal(h.repo.file("data/places.json"), catalogBefore);
+  assert.equal(await placeRevision(h.repo.catalog()[0]), revision);
+  assert.equal(h.repo.calls.some(call => call.path.startsWith("/git/")), false);
+});
+
+test("invalid, missing, and draft place references cannot publish a note or photos", async () => {
+  for (const places of [null, "existing-cafe", ["../private"], ["unknown-place"], ["hidden-place"], Array(9).fill("existing-cafe")]) {
+    const h = setup([existing, { ...existing, id: "hidden-place", draft: true }]);
+    const response = await h.request("/publish", { method: "POST", body: { kind: "note", text: "A note", places, photos: [photo] } });
+    assert.equal(response.status, 400, JSON.stringify(places));
+    assert.equal(h.repo.calls.some(call => call.method !== "GET"), false);
+  }
+});
+
 test("place, original note, and real photo publish atomically with an explicit note association", async () => {
   const h = setup();
   const response = await h.publish({ text: "Wonderful flat white 🪴", photos: [photo] });

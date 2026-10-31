@@ -30,13 +30,15 @@
       <p id="auth-help" class="muted">Sign in once on this device. Use your publishing secret, not your GitHub token.</p>
       <button id="sign-in-button" type="submit">Sign in</button>
     </form>
-    <form id="composer" hidden>
-      <div class="compose-modes" role="group" aria-label="What would you like to save?">
-        <button type="button" data-compose-mode="note" aria-pressed="true">Write a note</button>
-        <button type="button" data-compose-mode="place" aria-pressed="false">Save a place</button>
+    <div id="workspace" hidden>
+      <div class="compose-modes" role="group" aria-label="Notebook sections">
+        <button type="button" data-compose-mode="note" aria-pressed="true">Notes</button>
+        <button type="button" data-compose-mode="place" aria-pressed="false">Places</button>
       </div>
-      <section id="place-fields" aria-label="Place details" hidden>
+    <form id="place-composer" hidden aria-label="Save a place">
+      <section id="place-fields" aria-label="Place details">
         <div class="place-section-heading"><h2>Your places</h2><button id="place-refresh" type="button" class="quiet">Reload places</button></div>
+        <p class="muted">Save a pin to your map. Write about it separately in Notes whenever you like.</p>
         <label for="place-existing">Update a saved place, or add a new one</label>
         <select id="place-existing"><option value="">Add a new place…</option></select>
         <label for="place-maps-url">Google Maps link</label>
@@ -58,13 +60,27 @@
           <div class="place-form-row"><div><label for="place-latitude">Latitude</label><input id="place-latitude" inputmode="decimal" type="number" min="-90" max="90" step="any"></div><div><label for="place-longitude">Longitude</label><input id="place-longitude" inputmode="decimal" type="number" min="-180" max="180" step="any"></div></div><label for="place-precision">Pin accuracy</label><select id="place-precision"><option value="address">Exact location</option><option value="city">Approximate area</option></select>
         </details>
       </section>
+      <div class="publish-row">
+        <p id="place-draft-status" class="muted" role="status">Place drafts stay on this device.</p>
+        <button id="place-save" type="submit" disabled>Save place</button>
+      </div>
+      <p id="place-save-help" class="muted" role="status" hidden></p>
+      <section id="place-feedback" aria-live="polite" aria-atomic="true" hidden>
+        <p id="place-message"></p>
+        <p id="place-result-links" hidden><a id="place-result-link" target="_blank" rel="noopener noreferrer">View place ↗</a></p>
+      </section>
+    </form>
+    <form id="composer">
       <label for="thought" id="thought-label">What do you want to remember?</label>
       <textarea id="thought" name="thought" rows="10" maxlength="15000" placeholder="A thought, a quote, something you learned…" aria-describedby="writing-help draft-status"></textarea>
       <p id="writing-help" class="muted">For a link, paste its URL on the first line. Add a thought below it if you like.</p>
-      <button id="save-link-as-place" type="button" class="quiet" hidden>Add this Google Maps link to my places ↗</button>
+      <button id="save-link-as-place" type="button" class="quiet" hidden>Save this place separately ↗</button>
       <p id="day-help" class="muted">Each publish adds a new timed entry under today’s date.</p>
       <details id="extras">
-        <summary>Categories &amp; photos <span id="extras-count"></span></summary>
+        <summary>Photos, categories &amp; place <span id="extras-count"></span></summary>
+        <label for="note-place">About a saved place <span class="muted">(optional)</span></label>
+        <select id="note-place" aria-describedby="note-place-help"><option value="">No place selected</option></select>
+        <p id="note-place-help" class="muted">Show this note and its photos on that place’s map card.</p>
         <label for="categories">Categories <span class="muted">(optional, separated by commas)</span></label>
         <input id="categories" maxlength="330" placeholder="Life, Places, Technology" autocomplete="off" aria-describedby="category-help">
         <p id="category-help" class="muted">Up to 8 categories. Reuse a name to collect related posts.</p>
@@ -77,8 +93,8 @@
         <p id="draft-status" class="muted" role="status">Drafts stay on this device.</p>
         <button id="publish" type="submit" disabled>Publish</button>
       </div>
-      <p id="place-save-help" class="muted" role="status" hidden></p>
     </form>
+    </div>
     <section id="feedback" aria-live="polite" aria-atomic="true" hidden>
       <p id="message"></p>
       <p id="result-links" hidden><a id="note-link" target="_blank" rel="noopener noreferrer">View note ↗</a><span aria-hidden="true"> · </span><a id="deployment-link" target="_blank" rel="noopener noreferrer">Deployment status ↗</a></p>

@@ -7,7 +7,7 @@ license. The map background loads from OpenStreetMap with visible attribution.
 
 ## Add a place
 
-In the notebook composer, choose **Save a place** and paste a Google Maps link.
+In the notebook app, open **Places** and paste a Google Maps link.
 Tap **Use link**, review the place, choose **Liked** or **Saved for later**, and
 save. Short shared links and full Google Maps links are supported; the original
 link is kept for opening the exact venue. The pin comes from the Maps link.
@@ -15,21 +15,20 @@ Address lookup only adds city/address details, and an outage leaves the exact
 pin available for manual entry under **Edit address & pin / add manually**.
 
 **Or search by name and city** keeps the existing Photon/OpenStreetMap search
-available. Both paths support optional text and photos. A save without either
-updates the map without publishing an empty notebook entry.
+available. Places has its own form, save button, and draft. Saving or updating a
+place only updates the map; it never publishes note text or photos.
 
-Pasting a Maps link on the first line of an ordinary note also offers **Add this
-Google Maps link to my places**. Choosing it switches to place mode, keeps any
-text below the link and selected photos, and imports a new place or recognizes
-an existing one. It does not overwrite the previously selected place.
+Pasting a Maps link on the first line of a note offers **Save this place
+separately**. It copies the link into Places to import a new place or recognize
+an existing one. The full note, photos, and categories stay in the Notes draft.
 
 To update somewhere already saved, choose it from the saved-place selector.
-You can change its name, kind, status, address, and coordinates, or add a new note
-and photos. Selecting a new search result while editing an existing place updates
+You can change its name, kind, status, address, and coordinates. Selecting a new
+search result while editing an existing place updates
 that place's pin, keeping its ID and older note associations. **Reload places**
 reloads the selected place's latest details while keeping your note draft.
 
-The publisher saves the catalog and optional note/photos in one commit. Updates
+The Places form saves only the catalog in one commit. Updates
 check the selected place's revision; stale edits are rejected so another window's
 changes aren't silently overwritten. Unrelated repository changes are preserved.
 The same publishing secret and repository-scoped GitHub token are used. The
@@ -83,8 +82,14 @@ Alternatively, put IDs in a note's front matter:
 places: ["a-favorite-restaurant"]
 ```
 
-The composer's place mode adds this field automatically when you include text
-or photos. Ordinary note mode still works as before.
+In **Notes**, open **Photos, categories & place** and choose **About a saved
+place** to add this field. Publish the note using its own button. This publishes
+only the note and its photos, without changing the place or its revision. Notes
+and Places keep independent drafts across reloads and never clear or submit one
+another's text, photos, or edits. Old shared drafts migrate without losing content.
+
+The older API payload for an atomic place-plus-note save remains supported for
+already-open clients; the new forms do not use it.
 
 This can associate a note with several places. The public map automatically
 includes the original note text, its date and permalink, and its Markdown
