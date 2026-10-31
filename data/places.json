@@ -812,5 +812,26 @@
       "Tacombi"
     ],
     "updatedAt": "2026-10-31T23:44:07.779Z"
+  },
+  {
+    "name": "Bee's Bakery Cafe",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Oakhurst",
+    "neighborhood": "",
+    "address": "40250 Junction Drive Oakhurst United States",
+    "coordinates": [
+      37.3336506,
+      -119.6586373
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/TR5gZptrvAYXkYus8",
+    "mapsURL": "https://maps.app.goo.gl/TR5gZptrvAYXkYus8",
+    "comment": "Lovely place",
+    "id": "bee-s-bakery-cafe-574cff9c",
+    "aliases": [
+      "Bee's Bakery Cafe"
+    ],
+    "updatedAt": "2026-10-31T23:45:17.325Z"
   }
 ]
