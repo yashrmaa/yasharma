@@ -8,8 +8,8 @@ license. The map background loads from OpenStreetMap with visible attribution.
 ## Add a place
 
 In the notebook app, open **Places** and paste a Google Maps link.
-Tap **Use link**, review the place, choose **Liked** or **Saved for later**, and
-save. Short shared links and full Google Maps links are supported; the original
+Tap **Use link**, review the place, choose its category, and save.
+Short shared links and full Google Maps links are supported; the original
 link is kept for opening the exact venue. The pin comes from the Maps link.
 Address lookup only adds city/address details, and an outage leaves the exact
 pin available for manual entry under **Edit address & pin / add manually**.
@@ -20,13 +20,19 @@ available. Places has its own form, save button, and draft. Add an optional
 are stored directly on the place and shown on its map card; saving a place never
 creates a notebook post. Existing remarks load for editing and saved photos stay
 attached when you change the place's details or add more photos.
+After a confirmed save, the page refreshes to a fresh place form and shows a
+confirmation with the saved place's link. Failed or uncertain saves keep the
+draft and do not refresh. Notes drafts remain independent.
+
+Category is a native dropdown populated from the standard options and your
+existing categories. **Add a category…** lets you enter another category.
 
 Pasting a Maps link on the first line of a note offers **Save this place
 separately**. It copies the link into Places to import a new place or recognize
 an existing one. The full note, photos, and categories stay in the Notes draft.
 
 To update somewhere already saved, choose it from the saved-place selector.
-You can change its name, kind, status, address, and coordinates. Selecting a new
+You can change its name, category, address, and coordinates. Selecting a new
 search result while editing an existing place updates
 that place's pin, keeping its ID and older note associations. **Reload places**
 reloads the selected place's latest details while keeping your note draft.
@@ -58,8 +64,9 @@ and list status; comments and photos come from published notes.
 ```
 
 Use a stable, unique lowercase `id`. Coordinates are **latitude, longitude**.
-Choose `liked`, `saved`, or `mentioned` for the status. Category and city filters
-come from the catalog, so new kinds of places and cities appear automatically.
+Legacy status metadata stays in the catalog for compatibility, without status
+choices, filters, or badges in the UI. Category and city filters come from the
+catalog, so new kinds of places and cities appear automatically.
 Saved places can exist without notes. `draft: true` hides a catalog entry.
 
 An optional `comment` stores a short personal remark directly on a place card
@@ -113,7 +120,7 @@ import private Google Maps likes or saved lists.
 
 ## Interaction and verification
 
-City, category, status, and text filters update the list and pins together. Text
+City, category, and text filters update the list and pins together. Text
 search includes original notes. Click a pin or card for details; **Pick a place
 for me** chooses from the current results. **Show all pins** restores the overview.
 Photo dialogs support Escape and arrow keys. Shared URLs retain selected places

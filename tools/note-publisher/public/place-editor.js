@@ -2,6 +2,7 @@ import { mountPlaceInput } from "./place-input.js";
 import { preparePhoto } from "./photo-input.js";
 
 const DRAFT_KEY = "notebook.places.draft.v1";
+const SAVED_KEY = "notebook.places.saved";
 
 export function mountPlaceEditor({ api, validateEntry, onPlacesChange, onStateChange, onUnauthorized }) {
   const get = id => document.getElementById(id);
@@ -111,6 +112,14 @@ export function mountPlaceEditor({ api, validateEntry, onPlacesChange, onStateCh
   pending = draft?.pending === true;
   saveDraft();
   if (pending) feedback("Your previous place save was not confirmed. Check your map before saving again.");
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(SAVED_KEY) || "null");
+    sessionStorage.removeItem(SAVED_KEY);
+    if (saved && typeof saved.name === "string" && typeof saved.url === "string") {
+      const url = new URL(saved.url);
+      if (url.origin === siteURL && url.pathname === "/places/") feedback(`${saved.name} saved. Ready for another place.`, "success", url.href);
+    }
+  } catch { /* The cleared form still works when session storage is unavailable. */ }
   controls();
   comment.addEventListener("input", () => { contentInitialized = true; saveDraft(); controls(); });
   picker.addEventListener("change", async () => {
@@ -142,13 +151,17 @@ export function mountPlaceEditor({ api, validateEntry, onPlacesChange, onStateCh
       if (result.status !== "committed" || result.has_note !== false || url.origin !== siteURL || url.pathname !== "/places/" || url.searchParams.get("place") !== result.place_id || result.place?.id !== result.place_id || !/^[a-f0-9]{64}$/.test(result.place.revision)) throw new Error("The publisher returned an incomplete confirmation.");
       pending = false;
       const saved = readDraft();
-      const newer = saved && JSON.stringify({ query: saved.query, resolvedURL: saved.resolvedURL, place: saved.place, comment: saved.comment || "", photos: saved.photos || [], contentInitialized: saved.contentInitialized === true }) !== outgoing;
+      const savedValue = saved ? { ...saved } : null;
+      if (savedValue) delete savedValue.pending;
+      const newer = saved && JSON.stringify(savedValue) !== outgoing;
       input.saved(result.place);
       if (newer) { input.restore(saved); comment.value = saved.comment || ""; photos = saved.photos || []; contentInitialized = saved.contentInitialized !== false; savedPhotos = savedPlaces.find(place => place.id === saved.place?.id)?.photos || []; }
-      else { comment.value = result.place.comment || ""; photos = []; contentInitialized = true; savedPhotos = result.place.photos || []; }
+      else { input.restore({}); comment.value = ""; photos = []; contentInitialized = true; savedPhotos = []; }
       renderPhotos(); renderSavedPhotos();
       saveDraft();
       feedback("Place saved. Your map will update after deployment.", "success", url.href);
+      try { sessionStorage.setItem(SAVED_KEY, JSON.stringify({ name: result.place.name, url: url.href })); } catch { /* Reload still clears the confirmed upload. */ }
+      window.location.reload();
     } catch (error) {
       pending = !error.known;
       saveDraft();

@@ -37,14 +37,13 @@
           <label class="places-search"><span aria-hidden="true">⌕</span><span class="places-sr-only">Search places, notes, or neighborhoods</span><input type="search" id="places-search" placeholder="A place, a neighborhood, a craving…" autocomplete="off"></label>
           <div class="places-filter-row">
             <label><span class="places-sr-only">Kind of place</span><select id="places-category"><option value="">All kinds of places</option>{{ range sort (uniq $categories) }}<option value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
-            <label><span class="places-sr-only">Saved or liked</span><select id="places-status"><option value="">All statuses</option><option value="liked">Liked</option><option value="saved">Saved for later</option><option value="mentioned">In my notes</option></select></label>
           </div>
         </div>
         <div class="places-list-heading"><h2>The little list</h2><span id="places-count" role="status" aria-live="polite">{{ len $places }} places</span></div>
         <div class="places-list" id="places-list">
           {{ range $index, $place := $places }}
           <article class="place-card" id="place-{{ .id }}" data-place="{{ .id }}" aria-label="{{ .name }}">
-            <div class="place-card-topline"><span class="place-number">{{ printf "%02d" (add $index 1) }}</span><span class="place-kind">{{ .category }}</span><span class="place-status" data-status="{{ .status }}">{{ if eq .status "liked" }}<span aria-hidden="true">♥</span> Liked{{ else if eq .status "saved" }}Saved for later{{ else }}From my notes{{ end }}</span></div>
+            <div class="place-card-topline"><span class="place-number">{{ printf "%02d" (add $index 1) }}</span><span class="place-kind">{{ .category }}</span></div>
             <button type="button" class="place-select" data-select="{{ .id }}" aria-label="Show {{ .name }} on the map" aria-pressed="false" disabled>
               <h3>{{ .name }} <span aria-hidden="true">↗</span></h3>
               <p>{{ with .neighborhood }}{{ . }} · {{ end }}{{ .city }}</p>

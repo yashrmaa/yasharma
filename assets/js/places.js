@@ -22,14 +22,13 @@
   const cards = new Map([...root.querySelectorAll("[data-place]")].map(card => [card.dataset.place, card]));
   const search = get("places-search");
   const category = get("places-category");
-  const status = get("places-status");
   const detail = get("place-map-detail");
   const dialog = get("places-photo-dialog");
   const markers = new Map();
   let map;
   let markerLayer;
   let visible = places;
-  let state = { city: "", category: "", status: "", q: "", place: "" };
+  let state = { city: "", category: "", q: "", place: "" };
   let gallery = [];
   let galleryIndex = 0;
   let searchTimer;
@@ -54,15 +53,15 @@
 
   function readURL() {
     const params = new URL(location.href).searchParams;
-    state = { city: params.get("city") || "", category: params.get("category") || "", status: params.get("status") || "", q: params.get("q") || "", place: params.get("place") || "" };
+    state = { city: params.get("city") || "", category: params.get("category") || "", q: params.get("q") || "", place: params.get("place") || "" };
     if (!places.some(place => place.city === state.city)) state.city = "";
     if (!places.some(place => place.category === state.category)) state.category = "";
-    if (!["liked", "saved", "mentioned"].includes(state.status)) state.status = "";
     if (!byId.has(state.place)) state.place = "";
   }
 
   function writeURL(replace = false) {
     const url = new URL(location.href);
+    url.searchParams.delete("status");
     for (const [key, value] of Object.entries(state)) {
       if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
     }
@@ -75,7 +74,6 @@
     return places.filter(place => {
       if (state.city && place.city !== state.city) return false;
       if (state.category && place.category !== state.category) return false;
-      if (state.status && place.status !== state.status) return false;
       const text = [place.name, place.city, place.neighborhood, place.address, place.category, place.comment || "", ...(place.aliases || []), ...place.notes.map(note => note.text)].join(" ").toLocaleLowerCase();
       return words.every(word => text.includes(word));
     });
@@ -189,7 +187,6 @@
     visible = matchingPlaces();
     search.value = state.q;
     category.value = state.category;
-    status.value = state.status;
     for (const button of root.querySelectorAll("[data-city]")) button.setAttribute("aria-pressed", String(button.dataset.city === state.city));
     for (const [id, card] of cards) card.hidden = !visible.some(place => place.id === id);
     get("places-count").textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}${visible.length !== places.length ? ` of ${places.length}` : ""}`;
@@ -251,7 +248,7 @@
       applyFilters();
     }
     if (button.hasAttribute("data-reset")) {
-      state = { city: "", category: "", status: "", q: "", place: "" };
+      state = { city: "", category: "", q: "", place: "" };
       applyFilters();
       search.focus({ preventScroll: true });
     }
@@ -295,7 +292,6 @@
     searchTimer = setTimeout(() => { state.q = search.value; state.place = ""; applyFilters({ replace: true }); }, 130);
   });
   category.addEventListener("change", () => { state.category = category.value; state.place = ""; applyFilters(); });
-  status.addEventListener("change", () => { state.status = status.value; state.place = ""; applyFilters(); });
   window.addEventListener("popstate", () => { clearTimeout(searchTimer); readURL(); applyFilters({ updateURL: false }); });
 
   if (window.L) {

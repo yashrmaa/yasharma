@@ -22,7 +22,8 @@ export function googleMapsKey(value) {
 
 export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSelectionChange = () => {} }) {
   const get = id => document.getElementById(id);
-  const fields = ["name", "city", "neighborhood", "address", "category", "status", "latitude", "longitude", "precision"];
+  const fields = ["name", "city", "neighborhood", "address", "latitude", "longitude", "precision"];
+  const categories = ["Coffee", "Tea", "Bakeries", "Restaurants", "Drinks", "Outdoors", "Shops", "Culture", "Other"];
   let authenticated = false;
   let busy = false;
   let loading = false;
@@ -34,10 +35,20 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
   let id = "";
   let revision = "";
   let locationSource = "";
+  let listStatus = "saved";
   let searchVersion = 0;
   let cooldown = 0;
 
   function status(message) { get("place-load-status").textContent = message; }
+  function categoryValue() { return get("place-category").value === "__custom__" ? get("place-category-custom").value.trim() : get("place-category").value; }
+  function categoryOptions(value = categoryValue() || "Coffee") {
+    const select = get("place-category");
+    const custom = select.value === "__custom__";
+    const values = [...new Set([...categories, ...saved.map(place => place.category), ...(value && value !== "__custom__" ? [value] : [])].filter(Boolean))];
+    select.replaceChildren(...values.map(value => new Option(value, value)), new Option("Add a category…", "__custom__"));
+    select.value = custom ? "__custom__" : value;
+    get("place-custom-category").hidden = select.value !== "__custom__";
+  }
   function renderLocation() {
     const value = get("place-address").value;
     get("place-location").textContent = value ? `${get("place-precision").value === "city" ? "Approximate area: " : ""}${value}` : "Choose a search result, or enter the location details below.";
@@ -56,12 +67,16 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
     id = place.id || "";
     revision = place.revision || "";
     locationSource = place.locationSource || "";
+    listStatus = place.status || "saved";
     get("place-maps-url").value = place.mapsURL || "";
     resolvedURL = place.mapsURL || "";
     for (const key of fields) {
       const value = key === "latitude" ? place.coordinates?.[0] : key === "longitude" ? place.coordinates?.[1] : place[key];
-      get(`place-${key}`).value = value ?? (key === "status" ? "saved" : key === "category" ? "Coffee" : key === "precision" ? "address" : "");
+      get(`place-${key}`).value = value ?? (key === "precision" ? "address" : "");
     }
+    get("place-category").value = "";
+    get("place-category-custom").value = "";
+    categoryOptions(place.category || "Coffee");
     get("place-existing").value = id;
     get("place-results").replaceChildren();
     renderLocation();
@@ -83,6 +98,7 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
       const result = await api("/places");
       if (!Array.isArray(result.places)) throw new Error("Your saved places couldn't be read.");
       saved = result.places;
+      categoryOptions();
       onPlacesChange(saved);
       loaded = true;
       options();
@@ -93,6 +109,13 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
   }
   get("place-existing").addEventListener("change", () => { searchVersion++; const selected = saved.find(place => place.id === get("place-existing").value); fill(selected); onSelectionChange(selected); onChange(); });
   get("place-refresh").addEventListener("click", () => void load(true));
+  get("place-category").addEventListener("change", () => {
+    const custom = get("place-category").value === "__custom__";
+    get("place-custom-category").hidden = !custom;
+    if (custom) get("place-category-custom").focus();
+    onChange();
+  });
+  get("place-category-custom").addEventListener("input", onChange);
   for (const key of fields) get(`place-${key}`).addEventListener("input", () => {
     if (["latitude", "longitude"].includes(key)) { locationSource = ""; get("place-maps-url").value = ""; resolvedURL = ""; }
     renderLocation(); onChange();
@@ -100,7 +123,7 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
   function choose(place) {
     const existing = saved.find(item => (place.mapsURL && googleMapsKey(item.mapsURL) && googleMapsKey(item.mapsURL) === googleMapsKey(place.mapsURL)) || (place.locationSource && item.locationSource === place.locationSource) || (item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase() && item.coordinates?.every((value, index) => Math.abs(value - place.coordinates[index]) < .0001)));
     const editing = id ? { id, revision } : {};
-    const selected = existing ? { ...existing, ...place, id: existing.id, revision: existing.revision, status: existing.status, category: existing.category } : { ...place, ...editing, status: get("place-status").value, category: get("place-category").value };
+    const selected = existing ? { ...existing, ...place, id: existing.id, revision: existing.revision, status: existing.status, category: existing.category } : { ...place, ...editing, status: listStatus, category: categoryValue() };
     const preserve = id === (selected.id || "");
     fill(selected);
     onSelectionChange(selected, { preserve, lookup: true });
@@ -177,19 +200,20 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSe
     get pending() { return resolving || searching; },
     get needsResolution() { const url = get("place-maps-url").value.trim(); return Boolean(url && url !== resolvedURL); },
     value() {
-      const place = { id, revision, locationSource, mapsURL: get("place-maps-url").value.trim() };
+      const place = { id, revision, locationSource, status: listStatus, category: categoryValue(), mapsURL: get("place-maps-url").value.trim() };
       for (const key of fields.filter(key => !["latitude", "longitude"].includes(key))) place[key] = get(`place-${key}`).value.trim();
       const lat = get("place-latitude").value.trim();
       const lon = get("place-longitude").value.trim();
       place.coordinates = [lat === "" ? null : Number(lat), lon === "" ? null : Number(lon)];
       return place;
     },
-    draft() { return { query: get("place-query").value, resolvedURL, place: this.value() }; },
+    draft() { return { query: get("place-query").value, resolvedURL, place: this.value(), customCategory: get("place-category").value === "__custom__" ? get("place-category-custom").value : null }; },
     restore(draft) {
       fill(draft?.place || {});
       get("place-query").value = typeof draft?.query === "string" ? draft.query : "";
       resolvedURL = typeof draft?.resolvedURL === "string" ? draft.resolvedURL : "";
       get("place-lookup").open = Boolean(get("place-query").value);
+      if (typeof draft?.customCategory === "string") { get("place-category").value = "__custom__"; get("place-category-custom").value = draft.customCategory; get("place-custom-category").hidden = false; }
     },
     setAuthenticated(value) { authenticated = value; controls(); if (authenticated && !loaded) void load(); },
     setBusy(value) { busy = value; controls(); },

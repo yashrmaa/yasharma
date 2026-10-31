@@ -50,9 +50,6 @@
 .place-card-topline { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; font-size: 9px; letter-spacing: .6px; }
 .place-number { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 9px; letter-spacing: 0; }
 .place-kind { color: var(--muted); text-transform: uppercase; }
-.place-status { margin-left: auto; color: #68764f; font-size: 10px; letter-spacing: 0; }
-.place-status > span { margin-right: 3px; color: var(--accent); }
-.place-status[data-status="saved"] { color: #8c6c37; }
 .place-select { display: block; text-align: left; width: 100%; color: var(--ink); }
 .place-select h3 { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 0; font: 400 23px/1.3 Georgia, serif; letter-spacing: -.4px; }
 .place-select h3 > span { color: #acaa96; font: 17px sans-serif; transition: transform .18s; }
@@ -151,8 +148,6 @@
 .dark.places-body { background: #222722; }
 .dark .places-page { --paper: #2b302a; --ink: #e4e5d9; --muted: #abb09f; --line: #43493e; --accent: #dfa584; --soft: #363d32; }
 .dark .place-card[data-selected="true"] { background: #363b2f; border-color: #a3815f; }
-.dark .place-status { color: #b6c19b; }
-.dark .place-status[data-status="saved"] { color: #d3b581; }
 .dark .places-stamp { color: #afb694; border-color: #828c70; }
 .dark .places-stamp::before { border-color: #828c70; }
 .dark .places-map .leaflet-tile-pane { filter: brightness(.69) saturate(.5); }

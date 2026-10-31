@@ -42,7 +42,13 @@ await ctx.route("**/*", async route => {
   await route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });
 });
 const noteFiles = () => [...repo.files().keys()].filter(path => path.startsWith("content/notes/"));
-const success = page => page.waitForFunction(() => !document.querySelector("#place-feedback").hidden && document.querySelector("#place-feedback").dataset.state === "success" && document.querySelector("#place-composer").getAttribute("aria-busy") === "false");
+async function savePlace(page) {
+  const navigation = page.waitForEvent("framenavigated", { predicate: frame => frame === page.mainFrame() });
+  await page.locator("#place-save").click();
+  await navigation;
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  await page.waitForFunction(() => !document.querySelector("#place-feedback").hidden && document.querySelector("#place-feedback").dataset.state === "success" && document.querySelector("#place-existing").options.length > 1);
+}
 const noteSuccess = page => page.waitForFunction(() => !document.querySelector("#feedback").hidden && document.querySelector("#feedback").dataset.state === "success" && document.querySelector("#composer").getAttribute("aria-busy") === "false");
 const show = (page, mode) => page.locator(`[data-compose-mode="${mode}"]`).click();
 const openExtras = page => page.locator("#extras").evaluate(node => { node.open = true; });
@@ -69,11 +75,19 @@ try {
   assert.equal(await page.locator("#composer").isHidden(), true);
   assert.equal(await page.locator("#place-composer textarea, #place-composer input[type=file]").count(), 2);
   await page.locator("#place-existing").selectOption("bello-coffee");
-  await page.locator("#place-status").selectOption("saved");
+  assert.equal(await page.locator("#place-status").count(), 0);
+  assert.equal(await page.locator("#place-category").evaluate(node => node.tagName), "SELECT");
+  await page.locator("#place-category").selectOption("Tea");
   assert.equal(await page.locator("#place-save").textContent(), "Save changes");
-  await page.locator("#place-save").click();
-  await success(page);
-  assert.equal(repo.catalog().find(place => place.id === "bello-coffee").status, "saved");
+  await savePlace(page);
+  assert.equal(repo.catalog().find(place => place.id === "bello-coffee").category, "Tea");
+  assert.equal(await page.locator("#place-existing").inputValue(), "");
+  assert.equal(await page.locator("#place-name").inputValue(), "");
+  assert.equal(await page.locator("#place-maps-url").inputValue(), "");
+  assert.equal(await page.locator("#place-comment").inputValue(), "");
+  await page.reload();
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#place-name").inputValue(), "", "a manual refresh must not restore the just-saved place draft");
   assert.equal(noteFiles().length, 0, "place save must never publish the note draft");
   assert.equal([...repo.files().keys()].some(path => path.startsWith("static/notes-media/")), false);
   const firstSave = repo.calls.find(call => call.path === "/git/trees" && call.method === "POST");
@@ -120,22 +134,21 @@ try {
   await page.locator("#place-composer").waitFor({ state: "visible" });
   assert.equal(await page.locator("#place-comment").inputValue(), "A place-only remark — great espresso 🪴");
   assert.equal(await page.locator("#place-photo-alt-0").inputValue(), "My place photo");
-  await page.locator("#place-save").click();
-  await success(page);
+  await savePlace(page);
   const placeWithPhoto = repo.catalog().find(place => place.id === "fellini-coffee");
   assert.equal(placeWithPhoto.comment, "A place-only remark — great espresso 🪴");
   assert.equal(placeWithPhoto.photos.at(-1).alt, "My place photo");
   assert.equal(noteFiles().length, 1, "place text/photos must never create a notebook post");
   assert.equal(await page.locator(".place-photo-preview").count(), 0, "confirmed uploads must clear from the pending queue");
-  assert.ok(await page.locator("#place-saved-photos img").count());
+  assert.equal(await page.locator("#place-saved-photos img").count(), 0);
+  assert.equal(await page.locator("#place-comment").inputValue(), "");
   await show(page, "note");
   assert.equal(await page.locator("#thought").inputValue(), "Another notebook draft that must stay here");
   await page.locator("#thought").fill("");
   await show(page, "place");
   await page.locator("#place-existing").selectOption("fellini-coffee");
   assert.equal(await page.locator("#place-comment").inputValue(), placeWithPhoto.comment);
-  await page.locator("#place-save").click();
-  await success(page);
+  await savePlace(page);
   assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").photos.length, placeWithPhoto.photos.length, "saving metadata must not upload the same photos twice");
 
 
@@ -144,8 +157,14 @@ try {
   await page.locator("#place-query").fill("Browser Cafe San Francisco");
   await page.locator("#place-search-button").click();
   await page.locator("#place-results button").first().click();
-  await page.locator("#place-save").click();
-  await success(page);
+  await page.locator("#place-category").selectOption("__custom__");
+  await page.locator("#place-category-custom").fill("Breakfast spots");
+  await page.reload();
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#place-category-custom").inputValue(), "Breakfast spots");
+  await savePlace(page);
+  assert.equal(repo.catalog().find(place => place.name === "Browser Cafe").category, "Breakfast spots");
+  assert.ok(await page.locator('#place-category option[value="Breakfast spots"]').count());
   assert.equal(repo.catalog().length, initialPlaceCount + 1);
   assert.equal(noteFiles().length, 1);
 
@@ -162,8 +181,7 @@ try {
   await page.waitForFunction(() => document.querySelector("#place-name").value === "Maps Link Cafe" && !document.querySelector("#place-save").disabled);
   assert.equal(await page.locator("#place-existing").inputValue(), "");
   assert.equal(await page.locator("#thought").inputValue(), linkDraft);
-  await page.locator("#place-save").click();
-  await success(page);
+  await savePlace(page);
   const imported = repo.catalog().find(place => place.name === "Maps Link Cafe");
   assert.equal(imported.mapsURL, mapsLink);
   assert.deepEqual(imported.coordinates, [37.782, -122.412]);
@@ -192,8 +210,7 @@ try {
     await page.reload();
     await page.locator("#place-composer").waitFor({ state: "visible" });
     await page.waitForFunction(() => !document.querySelector("#place-save").disabled);
-    await page.locator("#place-save").click();
-    await success(page);
+    await savePlace(page);
     assert.equal(repo.catalog().find(place => place.id === sightglass.id).coordinates[0], Number(latitude));
     assert.equal(repo.catalog().find(place => place.id === sightglass.id).mapsURL, url);
   }
@@ -206,8 +223,7 @@ try {
   await page.locator("#place-maps-url").fill(mapsLink);
   await page.locator("#place-resolve").click();
   await page.waitForFunction(id => document.querySelector("#place-existing").value === id && !document.querySelector("#place-save").disabled, imported.id);
-  await page.locator("#place-save").click();
-  await success(page);
+  await savePlace(page);
   assert.equal(repo.catalog().filter(place => place.name === "Maps Link Cafe").length, 1);
   assert.equal(repo.catalog().find(place => place.id === imported.id).comment, "A remark entered before opening the Maps link");
   assert.equal(repo.catalog().find(place => place.id === imported.id).photos.length, 1);
@@ -239,8 +255,7 @@ try {
   assert.equal(await page.locator("#place-location-details").evaluate(node => node.open), true);
   await page.locator("#place-city").fill("San Francisco");
   await page.locator("#place-address").fill("An address I entered");
-  await page.locator("#place-save").click();
-  await success(page);
+  await savePlace(page);
   assert.equal(repo.catalog().find(place => place.name === "Manual Address Cafe").mapsURL, manualLink);
 
   // Stale place edits still cannot overwrite a newer save in another tab.
@@ -251,9 +266,8 @@ try {
   await other.locator("#place-composer").waitFor({ state: "visible" });
   await other.waitForFunction(() => document.querySelector("#place-existing").options.length > 1);
   await other.locator("#place-existing").selectOption("fellini-coffee");
-  await other.locator("#place-status").selectOption("saved");
-  await other.locator("#place-save").click();
-  await success(other);
+  await other.locator("#place-category").selectOption("Restaurants");
+  await savePlace(other);
   await page.locator("#place-save").click();
   await page.waitForFunction(() => document.querySelector("#place-message").textContent.includes("changed in another window"));
   assert.equal(await page.locator("#place-name").inputValue(), "My unsaved Fellini edit");

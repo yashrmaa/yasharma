@@ -51,6 +51,7 @@ try {
     assert.equal(saved.mapsURL, "https://maps.google.co.jp/?q=35.0002,135.7583", "regional Maps links should keep the exact venue");
     assert.ok(/Cheesecake (?:&amp;|&) tea/.test(html), "standalone comments should render on place cards");
     assert.ok(!html.includes("<script>not markup</script>"), "place comments must render as text");
+    assert.ok(!/places-status|place-status|Saved for later|All statuses/.test(html), "status choices and badges must not appear on the public map");
     const maps = new URL(bello.mapsURL);
     assert.equal(maps.origin, "https://www.google.com");
     assert.equal(maps.searchParams.get("api"), "1");

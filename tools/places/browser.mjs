@@ -84,8 +84,9 @@ try {
   await evaluate("history.back()");
   await until(`document.querySelector('[data-city="San Francisco"]').getAttribute("aria-pressed") === "true"`);
   assert.deepEqual(await visibleCards(), sanFranciscoIDs);
-  await evaluate('document.querySelector("#places-status").value = "saved"; document.querySelector("#places-status").dispatchEvent(new Event("change", {bubbles:true}))');
-  assert.deepEqual(await visibleCards(), catalog.filter(place => place.city === "San Francisco" && place.status === "saved").map(place => place.id));
+  assert.equal(await evaluate('document.querySelectorAll("#places-status, .place-status").length'), 0);
+  await evaluate('document.querySelector("#places-category").value = "Coffee"; document.querySelector("#places-category").dispatchEvent(new Event("change", {bubbles:true}))');
+  assert.deepEqual(await visibleCards(), catalog.filter(place => place.city === "San Francisco" && place.category === "Coffee").map(place => place.id));
   await evaluate('document.querySelector("#places-search").value = "no-such-place-browser-fixture"; document.querySelector("#places-search").dispatchEvent(new Event("input", {bubbles:true}))');
   await until('!document.querySelector("#places-empty").hidden');
   assert.deepEqual(await visibleCards(), []);
