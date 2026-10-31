@@ -896,5 +896,26 @@
       "Downtown B's Indian Kitchen roppongi"
     ],
     "updatedAt": "2026-10-31T23:53:21.135Z"
+  },
+  {
+    "name": "Live Coffee",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Tokyo",
+    "neighborhood": "Tsukiji 3",
+    "address": "Seiruka-dori Street Tokyo Japan",
+    "coordinates": [
+      35.6681862,
+      139.7738143
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/qyLiuzb5kDkGae119",
+    "mapsURL": "https://maps.app.goo.gl/qyLiuzb5kDkGae119",
+    "comment": "Calm and serene",
+    "id": "live-coffee-79ac7e10",
+    "aliases": [
+      "Live Coffee"
+    ],
+    "updatedAt": "2026-10-31T23:54:04.589Z"
   }
 ]
