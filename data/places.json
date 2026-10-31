@@ -286,5 +286,25 @@
       "Biscuit Bitch Belltown"
     ],
     "updatedAt": "2026-10-31T19:31:06.679Z"
+  },
+  {
+    "name": "The 5 Point Cafe",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Seattle",
+    "neighborhood": "",
+    "address": "415 Cedar Street Seattle United States",
+    "coordinates": [
+      47.6180712,
+      -122.3473786
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/L19RZAXP2VGjxLhPA",
+    "mapsURL": "https://maps.app.goo.gl/L19RZAXP2VGjxLhPA",
+    "id": "the-5-point-cafe-02cf6715",
+    "aliases": [
+      "The 5 Point Cafe"
+    ],
+    "updatedAt": "2026-10-31T19:31:49.543Z"
   }
 ]
