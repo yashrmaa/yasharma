@@ -410,5 +410,26 @@
       "Wildhawk"
     ],
     "updatedAt": "2026-10-31T20:28:29.533Z"
+  },
+  {
+    "name": "Churchill Cocktail Bar",
+    "category": "Bar",
+    "status": "liked",
+    "city": "San Francisco",
+    "neighborhood": "Duboce Triangle",
+    "address": "198 Church St, San Francisco, CA 94114",
+    "coordinates": [
+      37.7678909,
+      -122.4291776
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/S3TspY8vkyhXdYdU7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/S3TspY8vkyhXdYdU7?g_st=ic",
+    "comment": "Couch!! Happy hour",
+    "id": "churchill-cocktail-bar-ef4ef242",
+    "aliases": [
+      "Churchill Cocktail Bar"
+    ],
+    "updatedAt": "2026-10-31T20:29:43.496Z"
   }
 ]
