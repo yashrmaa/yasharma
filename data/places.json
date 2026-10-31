@@ -938,5 +938,26 @@
       "MATSUYA Roppongi 4-Chome Branch"
     ],
     "updatedAt": "2026-10-31T23:55:15.094Z"
+  },
+  {
+    "name": "GLITCH COFFEE OSAKA",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "Osaka",
+    "neighborhood": "Nakanoshima 3-chōme",
+    "address": "白子島町通 Osaka Japan",
+    "coordinates": [
+      34.6934048,
+      135.4955867
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/8Uedk45rYUUgqX52A",
+    "mapsURL": "https://maps.app.goo.gl/8Uedk45rYUUgqX52A",
+    "comment": "HIgh end coffee; good ambience; they have a couch and vinyl player",
+    "id": "glitch-coffee-osaka-b3d7304b",
+    "aliases": [
+      "GLITCH COFFEE OSAKA"
+    ],
+    "updatedAt": "2026-10-31T23:57:54.209Z"
   }
 ]
