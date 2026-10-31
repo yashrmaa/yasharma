@@ -12,6 +12,7 @@ try {
   for (const name of ["static", "themes"]) await symlink(new URL(name, root).pathname, join(temp, name), "dir");
   await cp(new URL("config.yml", root), join(temp, "config.yml"));
   const catalog = JSON.parse(await readFile(join(temp, "data/places.json"), "utf8"));
+  const expectedPublicPlaces = catalog.filter(place => !place.draft).length + 1;
   catalog.push(
     { id: "fixture-saved", name: "A saved restaurant", city: "San Francisco", category: "Restaurants", status: "saved", address: "San Francisco", coordinates: [37.77, -122.42], precision: "city" },
     { id: "fixture-hidden", name: "PRIVATE_PLACE_FIXTURE", city: "San Francisco", category: "Coffee", status: "saved", coordinates: [37.77, -122.42], draft: true },
@@ -31,7 +32,7 @@ try {
     const json = await readFile(join(temp, "public/places/index.json"), "utf8");
     const html = await readFile(join(temp, "public/places/index.html"), "utf8");
     const data = JSON.parse(json);
-    assert.equal(data.length, 3, "draft places must stay out of the public map, even in a preview");
+    assert.equal(data.length, expectedPublicPlaces, "draft places must stay out of the public map, even in a preview");
     assert.ok(!/PRIVATE_PLACE_FIXTURE|DRAFT_PLACE_NOTE_FIXTURE|SCHEDULED_PLACE_NOTE_FIXTURE|EXPIRED_PLACE_NOTE_FIXTURE/.test(json + html));
     const bello = data.find(place => place.id === "bello-coffee");
     assert.equal(bello.notes.filter(note => note.url.includes("fixture-place-alias")).length, 1, "explicit ID plus matching alias must not duplicate notes");

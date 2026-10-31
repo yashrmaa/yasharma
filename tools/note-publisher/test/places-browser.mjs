@@ -9,6 +9,7 @@ const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath
 const origin = "https://notebook.test";
 const secret = "p".repeat(64);
 const repo = placeRepository(JSON.parse(await readFile(new URL("../../../data/places.json", import.meta.url))));
+const initialPlaceCount = repo.catalog().length;
 const worker = createPublisher({ fetch: repo.fetch, geocodeFetch: async url => {
   const updating = new URL(url).searchParams.get("q").includes("confirmed Fellini");
   return Response.json({ features: [{ properties: { name: updating ? "Fellini Coffee" : "Browser Cafe", city: updating ? "New York" : "San Francisco", street: updating ? "Waverly Place" : "Market Street", housenumber: "100", osm_type: "N", osm_id: updating ? 100000002 : 100000001, osm_key: "amenity", osm_value: "cafe" }, geometry: { coordinates: updating ? [-74.0012, 40.7347] : [-122.4, 37.79] } }] });
@@ -38,7 +39,7 @@ try {
   await page.locator("#sign-in-button").click();
   await page.locator("#composer").waitFor({ state: "visible" });
   await page.locator('[data-compose-mode="place"]').click();
-  await page.waitForFunction(() => document.querySelector("#place-existing").options.length === 3);
+  await page.waitForFunction(count => document.querySelector("#place-existing").options.length === count + 1, initialPlaceCount);
   await page.locator("#place-existing").selectOption("bello-coffee");
   assert.equal(await page.locator("#place-name").inputValue(), "Bello Coffee & Tea");
   await page.locator("#place-status").selectOption("saved");
@@ -68,7 +69,7 @@ try {
   assert.equal(await page.locator("#place-name").inputValue(), "Browser Cafe");
   await page.locator("#publish").click();
   await success(page);
-  assert.equal(repo.catalog().length, 3);
+  assert.equal(repo.catalog().length, initialPlaceCount + 1);
   assert.equal(noteFiles().length, 1);
   assert.match(await page.locator("#place-load-status").textContent(), /Saved/);
 
@@ -80,7 +81,7 @@ try {
   assert.equal(await page.locator("#place-existing").inputValue(), "fellini-coffee");
   await page.locator("#publish").click();
   await success(page);
-  assert.equal(repo.catalog().length, 3);
+  assert.equal(repo.catalog().length, initialPlaceCount + 1);
   assert.deepEqual(repo.catalog().find(place => place.id === "fellini-coffee").coordinates, [40.7347, -74.0012]);
   assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").locationNote, undefined);
 

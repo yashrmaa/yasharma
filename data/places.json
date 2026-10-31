@@ -27,5 +27,18 @@
     "locationNote": "City-level pin. I haven't recorded which Fellini location this was.",
     "website": "https://www.fellinicoffee.com/",
     "locationSource": "https://www.fellinicoffee.com/"
+  },
+  {
+    "id": "neighbors-coffee",
+    "name": "Neighbors Coffee",
+    "aliases": ["Neighbors coffee", "Neighbors Coffee"],
+    "category": "Coffee",
+    "status": "liked",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "San Francisco, CA",
+    "coordinates": [37.7749, -122.4194],
+    "precision": "city",
+    "locationNote": "City-level pin until I confirm the café's exact address."
   }
 ]
