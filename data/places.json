@@ -464,5 +464,33 @@
         "date": "2026-10-31T20:43:59.851Z"
       }
     ]
+  },
+  {
+    "name": "Arizmendi Valencia Bakery",
+    "category": "Bakeries",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "",
+    "address": "1268 Valencia St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7525761,
+      -122.4209225
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/Vneyq2MAo4tuGexD7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/Vneyq2MAo4tuGexD7?g_st=ic",
+    "comment": "",
+    "id": "arizmendi-valencia-bakery-c26ab2dd",
+    "aliases": [
+      "Arizmendi Valencia Bakery"
+    ],
+    "updatedAt": "2026-10-31T20:46:01.403Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-a5d26eb7-4f1d-4478-81a4-27a33c5db486.jpg",
+        "alt": "My photo from Arizmendi Valencia Bakery",
+        "date": "2026-10-31T20:46:01.403Z"
+      }
+    ]
   }
 ]
