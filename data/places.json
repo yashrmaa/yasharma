@@ -361,5 +361,33 @@
       "OEB Breakfast Co."
     ],
     "updatedAt": "2026-10-31T19:35:19.556Z"
+  },
+  {
+    "name": "Della Fattoria Downtown Café",
+    "category": "Coffee",
+    "status": "liked",
+    "city": "Petaluma",
+    "neighborhood": "",
+    "address": "143 Petaluma Blvd N, Petaluma, CA 94952",
+    "coordinates": [
+      38.2349806,
+      -122.6409444
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/aKNu6ebBkJ5oRvBy7?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/aKNu6ebBkJ5oRvBy7?g_st=ic",
+    "comment": "Flatwhite",
+    "id": "della-fattoria-downtown-cafe-254690d8",
+    "aliases": [
+      "Della Fattoria Downtown Café"
+    ],
+    "updatedAt": "2026-10-31T20:27:10.268Z",
+    "photos": [
+      {
+        "url": "https://yasharma.com/notes-media/2026-10-31-eb78e905-1ea5-4c19-8b95-8feafed2335b.jpg",
+        "alt": "My photo from Della Fattoria Downtown Café",
+        "date": "2026-10-31T20:27:10.268Z"
+      }
+    ]
   }
 ]
