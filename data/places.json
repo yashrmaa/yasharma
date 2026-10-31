@@ -854,5 +854,26 @@
       "Mammoth Brewing Company"
     ],
     "updatedAt": "2026-10-31T23:46:15.539Z"
+  },
+  {
+    "name": "Al Toke Pez",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "Miraflores",
+    "neighborhood": "",
+    "address": "Calle Manuel Bonilla Miraflores Peru",
+    "coordinates": [
+      -12.1198105,
+      -77.0283461
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/oy1GxyNyU25HFHbY9",
+    "mapsURL": "https://maps.app.goo.gl/oy1GxyNyU25HFHbY9",
+    "comment": "Don't miss it",
+    "id": "al-toke-pez-9d68fa81",
+    "aliases": [
+      "Al Toke Pez"
+    ],
+    "updatedAt": "2026-10-31T23:47:18.459Z"
   }
 ]
