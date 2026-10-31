@@ -20,7 +20,7 @@ export function googleMapsKey(value) {
   return url.href;
 }
 
-export function mountPlaceInput({ api, onChange, onPlacesChange = () => {} }) {
+export function mountPlaceInput({ api, onChange, onPlacesChange = () => {}, onSelectionChange = () => {} }) {
   const get = id => document.getElementById(id);
   const fields = ["name", "city", "neighborhood", "address", "category", "status", "latitude", "longitude", "precision"];
   let authenticated = false;
@@ -86,12 +86,12 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {} }) {
       onPlacesChange(saved);
       loaded = true;
       options();
-      if (replaceSelection && id) { fill(saved.find(place => place.id === id)); onChange(); }
+      if (replaceSelection && id) { const selected = saved.find(place => place.id === id); fill(selected); onSelectionChange(selected); onChange(); }
       if (!resolving && !searching) status(`${saved.length} saved ${saved.length === 1 ? "place" : "places"}. Choose one, paste a Maps link, or use name search.`);
     } catch (error) { status(error.message); }
     finally { loading = false; controls(); }
   }
-  get("place-existing").addEventListener("change", () => { searchVersion++; fill(saved.find(place => place.id === get("place-existing").value)); onChange(); });
+  get("place-existing").addEventListener("change", () => { searchVersion++; const selected = saved.find(place => place.id === get("place-existing").value); fill(selected); onSelectionChange(selected); onChange(); });
   get("place-refresh").addEventListener("click", () => void load(true));
   for (const key of fields) get(`place-${key}`).addEventListener("input", () => {
     if (["latitude", "longitude"].includes(key)) { locationSource = ""; get("place-maps-url").value = ""; resolvedURL = ""; }
@@ -100,7 +100,10 @@ export function mountPlaceInput({ api, onChange, onPlacesChange = () => {} }) {
   function choose(place) {
     const existing = saved.find(item => (place.mapsURL && googleMapsKey(item.mapsURL) && googleMapsKey(item.mapsURL) === googleMapsKey(place.mapsURL)) || (place.locationSource && item.locationSource === place.locationSource) || (item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase() && item.coordinates?.every((value, index) => Math.abs(value - place.coordinates[index]) < .0001)));
     const editing = id ? { id, revision } : {};
-    fill(existing ? { ...existing, ...place, id: existing.id, revision: existing.revision, status: existing.status, category: existing.category } : { ...place, ...editing, status: get("place-status").value, category: get("place-category").value });
+    const selected = existing ? { ...existing, ...place, id: existing.id, revision: existing.revision, status: existing.status, category: existing.category } : { ...place, ...editing, status: get("place-status").value, category: get("place-category").value };
+    const preserve = id === (selected.id || "");
+    fill(selected);
+    onSelectionChange(selected, { preserve, lookup: true });
     return existing;
   }
   get("place-maps-url").addEventListener("input", () => {

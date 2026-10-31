@@ -29,8 +29,12 @@ details { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .75r
 summary { cursor: pointer; min-height: 44px; font-size: .9rem; }
 details label { margin-top: .75rem; margin-bottom: .4rem; font-size: .9rem; }
 input[type="file"] { padding: .75rem; font-size: .85rem; }
-.photo-preview { margin: 1rem 0; padding-top: 1rem; border-top: 1px solid var(--line); }
-.photo-preview img { max-width: 100%; max-height: 300px; display: block; border-radius: 4px; }
+:is(.photo-preview, .place-photo-preview) { margin: 1rem 0; padding-top: 1rem; border-top: 1px solid var(--line); }
+:is(.photo-preview, .place-photo-preview) img { max-width: 100%; max-height: 300px; display: block; border-radius: 4px; }
+#place-comment { min-height: 130px; }
+#place-photo-picker { margin-top: .5rem; }
+#place-saved-photos { display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0; }
+#place-saved-photos img { width: 96px; height: 96px; object-fit: cover; border-radius: 4px; }
 @media (min-width: 700px) { main { padding-top: 72px; } }
 .compose-modes { display: flex; gap: 6px; margin-bottom: 1.5rem; padding: 5px; background: var(--line); border-radius: 8px; }
 .compose-modes button { flex: 1; border: 0; background: transparent; color: var(--muted); font-size: .9rem; padding: .5rem; }

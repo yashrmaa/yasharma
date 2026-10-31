@@ -15,8 +15,11 @@ Address lookup only adds city/address details, and an outage leaves the exact
 pin available for manual entry under **Edit address & pin / add manually**.
 
 **Or search by name and city** keeps the existing Photon/OpenStreetMap search
-available. Places has its own form, save button, and draft. Saving or updating a
-place only updates the map; it never publishes note text or photos.
+available. Places has its own form, save button, and draft. Add an optional
+**A note about this place** and up to three new photos per save. Text and photos
+are stored directly on the place and shown on its map card; saving a place never
+creates a notebook post. Existing remarks load for editing and saved photos stay
+attached when you change the place's details or add more photos.
 
 Pasting a Maps link on the first line of a note offers **Save this place
 separately**. It copies the link into Places to import a new place or recognize
@@ -28,7 +31,7 @@ search result while editing an existing place updates
 that place's pin, keeping its ID and older note associations. **Reload places**
 reloads the selected place's latest details while keeping your note draft.
 
-The Places form saves only the catalog in one commit. Updates
+The Places form saves the catalog and any new photos in one atomic commit. Updates
 check the selected place's revision; stale edits are rejected so another window's
 changes aren't silently overwritten. Unrelated repository changes are preserved.
 The same publishing secret and repository-scoped GitHub token are used. The
@@ -91,8 +94,8 @@ only the note and its photos, without changing the place or its revision. Notes
 and Places keep independent drafts across reloads and never clear or submit one
 another's text, photos, or edits. Old shared drafts migrate without losing content.
 
-The older API payload for an atomic place-plus-note save remains supported for
-already-open clients; the new forms do not use it.
+Older place API payloads that send a remark in top-level `text` also save it
+directly on the place. Only an explicit note/link publish creates a notebook post.
 
 This can associate a note with several places. The public map automatically
 includes the original note text, its date and permalink, and its Markdown

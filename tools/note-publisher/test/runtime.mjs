@@ -103,8 +103,10 @@ try {
   const savedNote = await publish({ kind: "place", place: { ...location, id: saved.place.id, revision: saved.place.revision, status: "liked" }, text: "Great coffee 🪴", photos: [{ data: readFileSync(new URL("./fixtures/photo.jpg", import.meta.url)).toString("base64"), alt: "Coffee" }] });
   assert.equal(savedNote.status, 201, await savedNote.clone().text());
   const noted = await savedNote.json();
-  assert.equal(noted.has_note, true);
-  assert.match(String(repository.file(noted.path)), /places: \[/);
+  assert.equal(noted.has_note, false);
+  assert.equal(noted.place.comment, "Great coffee 🪴");
+  assert.equal(noted.place.photos.length, 1);
+  assert.equal([...repository.files().keys()].some(path => path.startsWith("content/notes/")), false);
   assert.equal(repository.catalog()[0].status, "liked");
   const catalogBeforeNote = repository.file("data/places.json");
   const independentNote = await publish({ kind: "note", text: "A note linked to an existing place", places: [saved.place.id] });
@@ -129,7 +131,7 @@ try {
   assert.equal(featurePlace.address, "3014 20th St, San Francisco, CA 94110");
   assert.equal(featurePlace.mapsURL, featureURL);
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
-  console.log("workerd runtime passed: standalone place save and atomic place update with an associated note and photo.");
+  console.log("workerd runtime passed: place remarks and photos save atomically without notebook posts.");
   console.log("workerd runtime passed: authenticated Google Maps redirects, exact pin import, address enrichment, and original-link saving.");
   console.log("workerd runtime passed: note-place association publishes only the note, preserving the place catalog.");
 } finally {

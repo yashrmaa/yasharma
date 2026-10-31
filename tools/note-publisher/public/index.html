@@ -38,7 +38,7 @@
     <form id="place-composer" hidden aria-label="Save a place">
       <section id="place-fields" aria-label="Place details">
         <div class="place-section-heading"><h2>Your places</h2><button id="place-refresh" type="button" class="quiet">Reload places</button></div>
-        <p class="muted">Save a pin to your map. Write about it separately in Notes whenever you like.</p>
+        <p class="muted">Save a place, a few words, and your photos to your map.</p>
         <label for="place-existing">Update a saved place, or add a new one</label>
         <select id="place-existing"><option value="">Add a new place…</option></select>
         <label for="place-maps-url">Google Maps link</label>
@@ -60,6 +60,14 @@
           <div class="place-form-row"><div><label for="place-latitude">Latitude</label><input id="place-latitude" inputmode="decimal" type="number" min="-90" max="90" step="any"></div><div><label for="place-longitude">Longitude</label><input id="place-longitude" inputmode="decimal" type="number" min="-180" max="180" step="any"></div></div><label for="place-precision">Pin accuracy</label><select id="place-precision"><option value="address">Exact location</option><option value="city">Approximate area</option></select>
         </details>
       </section>
+      <label for="place-comment">A note about this place <span class="muted">(optional)</span></label>
+      <textarea id="place-comment" rows="4" maxlength="10000" placeholder="What did you like? What should I order?" aria-describedby="place-content-help place-draft-status"></textarea>
+      <p id="place-content-help" class="muted">Saved on this place’s map card. It won’t publish a notebook post.</p>
+      <div id="place-saved-photos" aria-label="Photos already saved on this place"></div>
+      <label for="place-photo-picker">Add photos <span class="muted">(up to 3 at a time)</span></label>
+      <input id="place-photo-picker" type="file" accept="image/*" multiple aria-describedby="place-photo-help">
+      <p id="place-photo-help" class="muted">Photos are resized on this device and saved with the place.</p>
+      <div id="place-photo-previews"></div>
       <div class="publish-row">
         <p id="place-draft-status" class="muted" role="status">Place drafts stay on this device.</p>
         <button id="place-save" type="submit" disabled>Save place</button>

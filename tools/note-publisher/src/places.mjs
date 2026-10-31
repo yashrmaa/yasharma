@@ -19,7 +19,7 @@ function text(input, key, max, required = false) {
 
 export function validatePlace(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new PublishError(400, "invalid_place", "Choose a place or add its location first.");
-  const allowed = ["id", "revision", "name", "category", "status", "city", "neighborhood", "address", "coordinates", "precision", "locationSource", "mapsURL"];
+  const allowed = ["id", "revision", "name", "category", "status", "city", "neighborhood", "address", "coordinates", "precision", "locationSource", "mapsURL", "comment"];
   if (Object.keys(input).some(key => !allowed.includes(key))) throw new PublishError(400, "invalid_place", "Unknown place field.");
   const id = text(input, "id", 100);
   const revision = text(input, "revision", 64);
@@ -34,7 +34,9 @@ export function validatePlace(input) {
   }
   const rawMapsURL = input.mapsURL === undefined ? undefined : text(input, "mapsURL", 4096);
   const mapsURL = rawMapsURL ? googleMapsURL(rawMapsURL).href : rawMapsURL;
-  return { id, revision, name: text(input, "name", 200, true), category: text(input, "category", 60, true), status: input.status, city: text(input, "city", 120, true), neighborhood: text(input, "neighborhood", 120), address: text(input, "address", 400, true), coordinates: input.coordinates, precision: input.precision, locationSource, ...(mapsURL === undefined ? {} : { mapsURL }) };
+  const comment = input.comment;
+  if (comment !== undefined && (typeof comment !== "string" || comment.length > 10000 || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\uD800-\uDFFF]/u.test(comment))) throw new PublishError(400, "invalid_place", "Keep the place note under 10,000 characters.");
+  return { id, revision, name: text(input, "name", 200, true), category: text(input, "category", 60, true), status: input.status, city: text(input, "city", 120, true), neighborhood: text(input, "neighborhood", 120), address: text(input, "address", 400, true), coordinates: input.coordinates, precision: input.precision, locationSource, ...(mapsURL === undefined ? {} : { mapsURL }), ...(comment === undefined ? {} : { comment: comment.replace(/\r\n?/g, "\n").trim() }) };
 }
 
 const MAPS_HOSTS = new Set(["com", "ca", "co.jp", "co.uk", "com.tr", "fr", "de", "co.in", "com.au"].flatMap(domain => [`google.${domain}`, `www.google.${domain}`, `maps.google.${domain}`]));
@@ -292,15 +294,12 @@ export async function searchPlaces(query, geocodeFetch, endpoint = "https://phot
   });
 }
 
-export async function savePlace({ entry, env, fetch: githubFetch, date, uuid, sleep, noteDocument }) {
+export async function savePlace({ entry, env, fetch: githubFetch, date, uuid, sleep }) {
   const api = githubAPI(env, githubFetch);
   const input = entry.place;
   const slug = input.name.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "place";
   const id = input.id || `${slug}-${uuid().slice(0, 8)}`;
-  const hasNote = Boolean(entry.text || entry.photos.length);
-  const noteId = hasNote ? `${date.slice(0, 10)}-${uuid()}` : "";
-  const notePath = hasNote ? `content/notes/${noteId}.md` : "";
-  const url = hasNote ? `${env.SITE_URL}/notes/${noteId}/` : `${env.SITE_URL}/places/?place=${encodeURIComponent(id)}`;
+  const url = `${env.SITE_URL}/places/?place=${encodeURIComponent(id)}`;
   const photoTree = [];
   // Blobs don't become public until the final branch update publishes the tree.
   for (const photo of entry.photos) {
@@ -321,18 +320,18 @@ export async function savePlace({ entry, env, fetch: githubFetch, date, uuid, sl
     if ((!input.id && existing) || catalog.some(place => place.id !== id && ((input.locationSource && place.locationSource === input.locationSource) || (place.name?.toLowerCase() === input.name.toLowerCase() && place.coordinates?.every((n, i) => Math.abs(n - input.coordinates[i]) < .0001))))) throw new PublishError(409, "place_exists", "This place is already in your collection. Choose it under Saved places to update it.");
     const { revision, id: ignored, ...fields } = input;
     const place = { ...existing, ...fields, id, aliases: [...new Set([...(existing?.aliases || []), ...(existing ? [existing.name] : []), input.name])], updatedAt: date };
+    if (entry.photos.length) place.photos = [...(existing?.photos || []), ...entry.photos.map(photo => ({ url: photo.url, alt: photo.alt || `My photo from ${input.name}`, date }))];
     if (place.precision === "city") place.locationNote = "Approximate location. This pin marks the area, rather than a confirmed street address.";
     else delete place.locationNote;
     if (existing) catalog[catalog.indexOf(existing)] = place; else catalog.push(place);
     const tree = [{ path: CATALOG, mode: "100644", type: "blob", content: `${JSON.stringify(catalog, null, 2)}\n` }, ...photoTree];
-    if (hasNote) tree.push({ path: notePath, mode: "100644", type: "blob", content: noteDocument(id) });
     const created = await api("/git/trees", { method: "POST", body: { base_tree: parent.tree.sha, tree } });
     if (!created.sha) throw new PublishError(502, "github_error", "The save could not be prepared. No place was changed.");
-    const commit = await api("/git/commits", { method: "POST", body: { message: `${existing ? "Update" : "Save"} place: ${input.name}${hasNote ? " with a note" : ""}`, tree: created.sha, parents: [head.object.sha] } });
+    const commit = await api("/git/commits", { method: "POST", body: { message: `${existing ? "Update" : "Save"} place: ${input.name}`, tree: created.sha, parents: [head.object.sha] } });
     if (!commit.sha) throw new PublishError(502, "github_error", "The save could not be prepared. No place was changed.");
     const updated = await api(`/git/refs/heads/${encodeURIComponent(env.GITHUB_BRANCH)}`, { method: "PATCH", body: { sha: commit.sha, force: false }, allowConflict: true, committing: true });
     if (!updated) { if (attempt < 2) { await sleep(150 * (attempt + 1)); continue; } throw new PublishError(409, "place_changed", "Your collection is busy. Reload your places before saving again."); }
     if (updated.object?.sha !== commit.sha) throw new PublishError(502, "commit_unknown", "The save wasn't confirmed. Check your places before trying again.", { status: "unknown", url });
-    return { ok: true, status: "committed", live: false, url, path: notePath || CATALOG, commit_sha: commit.sha, place_id: id, has_note: hasNote, place: { ...place, revision: await placeRevision(place) }, message: "Saved to your repository. Your map will update after deployment." };
+    return { ok: true, status: "committed", live: false, url, path: CATALOG, commit_sha: commit.sha, place_id: id, has_note: false, place: { ...place, revision: await placeRevision(place) }, message: "Saved to your repository. Your map will update after deployment." };
   }
 }

@@ -67,7 +67,7 @@ try {
   await page.waitForFunction(() => document.querySelectorAll(".photo-preview").length === 1 && !document.querySelector("#publish").disabled);
   await show(page, "place");
   assert.equal(await page.locator("#composer").isHidden(), true);
-  assert.equal(await page.locator("#place-composer textarea, #place-composer input[type=file]").count(), 0);
+  assert.equal(await page.locator("#place-composer textarea, #place-composer input[type=file]").count(), 2);
   await page.locator("#place-existing").selectOption("bello-coffee");
   await page.locator("#place-status").selectOption("saved");
   assert.equal(await page.locator("#place-save").textContent(), "Save changes");
@@ -93,6 +93,7 @@ try {
   await page.reload();
   await page.locator("#place-composer").waitFor({ state: "visible" });
   assert.equal(await page.locator("#place-city").inputValue(), "An unsaved city edit");
+
   assert.equal(await page.locator("#thought").inputValue(), "Keep this note draft and my photo 🪴");
   const beforeNote = JSON.stringify(repo.catalog());
   await show(page, "note");
@@ -106,6 +107,37 @@ try {
   assert.equal(await page.locator("#thought").inputValue(), "");
   await show(page, "place");
   assert.equal(await page.locator("#place-city").inputValue(), "An unsaved city edit");
+
+  // Place text and photos have their own draft and publish on the place only.
+  await page.locator("#place-comment").fill("A place-only remark — great espresso 🪴");
+  await page.locator("#place-photo-picker").setInputFiles(new URL("./fixtures/photo.jpg", import.meta.url).pathname);
+  await page.waitForFunction(() => document.querySelectorAll(".place-photo-preview").length === 1 && !document.querySelector("#place-save").disabled);
+  await page.locator("#place-photo-alt-0").fill("My place photo");
+  await show(page, "note");
+  await page.locator("#thought").fill("Another notebook draft that must stay here");
+  await show(page, "place");
+  await page.reload();
+  await page.locator("#place-composer").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#place-comment").inputValue(), "A place-only remark — great espresso 🪴");
+  assert.equal(await page.locator("#place-photo-alt-0").inputValue(), "My place photo");
+  await page.locator("#place-save").click();
+  await success(page);
+  const placeWithPhoto = repo.catalog().find(place => place.id === "fellini-coffee");
+  assert.equal(placeWithPhoto.comment, "A place-only remark — great espresso 🪴");
+  assert.equal(placeWithPhoto.photos.at(-1).alt, "My place photo");
+  assert.equal(noteFiles().length, 1, "place text/photos must never create a notebook post");
+  assert.equal(await page.locator(".place-photo-preview").count(), 0, "confirmed uploads must clear from the pending queue");
+  assert.ok(await page.locator("#place-saved-photos img").count());
+  await show(page, "note");
+  assert.equal(await page.locator("#thought").inputValue(), "Another notebook draft that must stay here");
+  await page.locator("#thought").fill("");
+  await show(page, "place");
+  await page.locator("#place-existing").selectOption("fellini-coffee");
+  assert.equal(await page.locator("#place-comment").inputValue(), placeWithPhoto.comment);
+  await page.locator("#place-save").click();
+  await success(page);
+  assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").photos.length, placeWithPhoto.photos.length, "saving metadata must not upload the same photos twice");
+
 
   await page.locator("#place-existing").selectOption("");
   await page.locator("#place-lookup").evaluate(node => { node.open = true; });
@@ -168,12 +200,17 @@ try {
   assert.equal(noteFiles().length, 2);
 
   await page.locator("#place-existing").selectOption("");
+  await page.locator("#place-comment").fill("A remark entered before opening the Maps link");
+  await page.locator("#place-photo-picker").setInputFiles(new URL("./fixtures/photo.jpg", import.meta.url).pathname);
+  await page.waitForFunction(() => document.querySelectorAll(".place-photo-preview").length === 1 && !document.querySelector("#place-save").disabled);
   await page.locator("#place-maps-url").fill(mapsLink);
   await page.locator("#place-resolve").click();
   await page.waitForFunction(id => document.querySelector("#place-existing").value === id && !document.querySelector("#place-save").disabled, imported.id);
   await page.locator("#place-save").click();
   await success(page);
   assert.equal(repo.catalog().filter(place => place.name === "Maps Link Cafe").length, 1);
+  assert.equal(repo.catalog().find(place => place.id === imported.id).comment, "A remark entered before opening the Maps link");
+  assert.equal(repo.catalog().find(place => place.id === imported.id).photos.length, 1);
 
   // A bad link blocks only the Places save. Notes remains usable, and publishing
   // a note must not erase or resolve the unfinished place draft.

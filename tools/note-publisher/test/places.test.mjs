@@ -58,20 +58,38 @@ test("invalid, missing, and draft place references cannot publish a note or phot
   }
 });
 
-test("place, original note, and real photo publish atomically with an explicit note association", async () => {
+test("a place remark and real photo publish atomically on the map without creating a notebook post", async () => {
   const h = setup();
   const response = await h.publish({ text: "Wonderful flat white 🪴", photos: [photo] });
   const result = await response.json();
   assert.equal(response.status, 201, JSON.stringify(result));
-  assert.equal(result.has_note, true);
-  const document = String(h.repo.file(result.path));
-  assert.ok(document.includes(`places: ["${result.place_id}"]`));
-  assert.match(document, /kind: note/);
-  assert.match(document, /Wonderful flat white 🪴/);
-  assert.match(document, /!\[My own photo\]\(https:\/\/yasharma.com\/notes-media\//);
+  assert.equal(result.has_note, false);
+  assert.equal(result.path, "data/places.json");
+  assert.match(result.url, /\/places\/\?place=/);
+  assert.equal(result.place.comment, "Wonderful flat white 🪴");
+  assert.equal(result.place.photos[0].alt, "My own photo");
+  assert.match(result.place.photos[0].url, /^https:\/\/yasharma.com\/notes-media\//);
+  assert.equal([...h.repo.files().keys()].some(path => path.startsWith("content/notes/")), false);
   assert.ok([...h.repo.files().keys()].some(path => path.startsWith("static/notes-media/")));
   assert.equal(h.repo.calls.filter(call => call.method === "PATCH").length, 1);
   assert.equal(h.repo.calls.some(call => call.method === "PUT"), false);
+});
+
+test("place remarks can be edited or cleared while saved photos stay attached and new photos append", async () => {
+  const original = { ...existing, comment: "Old remark", photos: [{ url: "/notes-media/old.jpg", alt: "Old photo" }] };
+  const h = setup([original]);
+  const metadata = { ...place, id: original.id, revision: await placeRevision(original), comment: "New line\r\nAnd café 🪴" };
+  const first = await h.publish({ place: metadata, photos: [photo] });
+  assert.equal(first.status, 201, await first.clone().text());
+  const result = await first.json();
+  assert.equal(result.place.comment, "New line\nAnd café 🪴");
+  assert.equal(result.place.photos.length, 2);
+  assert.deepEqual(result.place.photos[0], original.photos[0]);
+  const second = await h.publish({ place: { ...metadata, revision: result.place.revision, comment: "" } });
+  assert.equal(second.status, 201, await second.clone().text());
+  assert.equal(h.repo.catalog()[0].comment, "");
+  assert.equal(h.repo.catalog()[0].photos.length, 2);
+  assert.equal([...h.repo.files().keys()].some(path => path.startsWith("content/notes/")), false);
 });
 
 test("existing places keep stable IDs, old aliases, and unrelated metadata while status and location update", async () => {
@@ -141,7 +159,7 @@ test("malformed catalogs fail closed and draft catalog entries stay out of the e
 
 test("invalid coordinates, unsafe metadata, missing names, and caller-controlled fields never reach GitHub", async () => {
   const h = setup();
-  for (const bad of [{ coordinates: [91, 0] }, { coordinates: [0, 181] }, { coordinates: [null, 0] }, { coordinates: ["37", 0] }, { name: "" }, { city: "" }, { status: "public" }, { precision: "unknown" }, { locationSource: "javascript:alert(1)" }, { id: "../../secrets" }, { path: "somewhere" }]) {
+  for (const bad of [{ coordinates: [91, 0] }, { coordinates: [0, 181] }, { coordinates: [null, 0] }, { coordinates: ["37", 0] }, { name: "" }, { city: "" }, { status: "public" }, { precision: "unknown" }, { locationSource: "javascript:alert(1)" }, { id: "../../secrets" }, { path: "somewhere" }, { comment: null }, { comment: "x".repeat(10001) }, { comment: "bad\u0000" }]) {
     assert.equal((await h.publish({ place: { ...place, ...bad } })).status, 400, JSON.stringify(bad));
   }
   assert.equal(h.repo.calls.length, 0);

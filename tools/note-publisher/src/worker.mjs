@@ -92,6 +92,9 @@ function validate(input, siteURL) {
   const places = input.places === undefined ? [] : input.places;
   if (!Array.isArray(places) || places.length > 8 || places.some(id => typeof id !== "string" || !/^[a-z0-9][a-z0-9-]{0,99}$/.test(id)) || (input.kind === "place" && input.places !== undefined)) throw new PublishError(400, "invalid_places", "Choose saved places to attach to a note.");
   const text = field(input, "text", 10000);
+  // Older place forms sent their remark as top-level text. Keep it on the
+  // place too; place saves must never create a notebook post.
+  if (place && place.comment === undefined && text) place.comment = text;
   let title = field(input, "title", 300);
   const rawURL = field(input, "url", 4096);
   const categories = input.categories === undefined ? [] : input.categories;
@@ -219,7 +222,7 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
         const entry = validate(await readJSON(request, 2 * 1024 * 1024), site);
         const date = now().toISOString();
         if (entry.kind === "place") {
-          const result = await savePlace({ entry, env: { ...env, SITE_URL: site }, fetch: githubFetch, date, uuid, sleep, noteDocument: id => markdown({ ...entry, kind: "note", places: [id] }, date) });
+          const result = await savePlace({ entry, env: { ...env, SITE_URL: site }, fetch: githubFetch, date, uuid, sleep });
           return json(201, result);
         }
         if (entry.places.length) {
