@@ -770,5 +770,26 @@
       "L’industrie Pizzeria - West Village"
     ],
     "updatedAt": "2026-10-31T23:40:31.622Z"
+  },
+  {
+    "name": "Punjabi Deli",
+    "category": "Coffee",
+    "status": "saved",
+    "city": "New York",
+    "neighborhood": "Manhattan Community Board 3",
+    "address": "114 East 1st Street New York United States",
+    "coordinates": [
+      40.7226468,
+      -73.9867099
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/3nPddam9Q45rseAe6",
+    "mapsURL": "https://maps.app.goo.gl/3nPddam9Q45rseAe6",
+    "comment": "The OG",
+    "id": "punjabi-deli-edb1c04c",
+    "aliases": [
+      "Punjabi Deli"
+    ],
+    "updatedAt": "2026-10-31T23:41:03.917Z"
   }
 ]
