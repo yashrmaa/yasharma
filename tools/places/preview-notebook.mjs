@@ -40,7 +40,7 @@ let sync = Promise.resolve();
 const server = createServer(async (incoming, outgoing) => {
   try {
     const url = new URL(incoming.url, origin);
-    const app = ["/", "/session", "/publish", "/places", "/places/search", "/composer.js", "/place-input.js", "/photo-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"].includes(url.pathname);
+    const app = ["/", "/session", "/publish", "/places", "/places/search", "/places/resolve", "/composer.js", "/place-input.js", "/photo-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"].includes(url.pathname);
     if (app) {
       const chunks = [];
       let length = 0;

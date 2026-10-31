@@ -14,7 +14,7 @@ try {
   const catalog = JSON.parse(await readFile(join(temp, "data/places.json"), "utf8"));
   const expectedPublicPlaces = catalog.filter(place => !place.draft).length + 1;
   catalog.push(
-    { id: "fixture-saved", name: "A saved restaurant", city: "San Francisco", category: "Restaurants", status: "saved", address: "San Francisco", coordinates: [37.77, -122.42], precision: "city", comment: "Cheesecake & tea — <script>not markup</script>", mapsURL: "https://maps.app.goo.gl/fixture-literal-map" },
+    { id: "fixture-saved", name: "A saved restaurant", city: "San Francisco", category: "Restaurants", status: "saved", address: "San Francisco", coordinates: [37.77, -122.42], precision: "city", comment: "Cheesecake & tea — <script>not markup</script>", mapsURL: "https://maps.google.co.jp/?q=35.0002,135.7583" },
     { id: "fixture-hidden", name: "PRIVATE_PLACE_FIXTURE", city: "San Francisco", category: "Coffee", status: "saved", coordinates: [37.77, -122.42], draft: true },
   );
   await writeFile(join(temp, "data/places.json"), JSON.stringify(catalog));
@@ -44,7 +44,7 @@ try {
     assert.deepEqual(data.find(place => place.id === "fixture-saved").notes, [], "saved places must work without a published note");
     const saved = data.find(place => place.id === "fixture-saved");
     assert.equal(saved.comment, "Cheesecake & tea — <script>not markup</script>");
-    assert.equal(saved.mapsURL, "https://maps.app.goo.gl/fixture-literal-map", "curated Maps links should keep the exact venue");
+    assert.equal(saved.mapsURL, "https://maps.google.co.jp/?q=35.0002,135.7583", "regional Maps links should keep the exact venue");
     assert.ok(/Cheesecake (?:&amp;|&) tea/.test(html), "standalone comments should render on place cards");
     assert.ok(!html.includes("<script>not markup</script>"), "place comments must render as text");
     const maps = new URL(bello.mapsURL);

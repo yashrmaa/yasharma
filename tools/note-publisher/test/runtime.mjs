@@ -32,6 +32,14 @@ const options = {
   },
   outboundService: async request => {
     const url = new URL(request.url);
+    if (url.hostname === "maps.app.goo.gl") {
+      assert.equal(request.headers.has("Authorization"), false);
+      return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Runtime+Maps+Cafe/@0,0,2z/data=!8m2!3d35.6638151!4d139.6999153" } });
+    }
+    if (url.hostname === "photon.komoot.io") {
+      assert.equal(request.headers.has("Authorization"), false);
+      return Response.json({ features: [{ properties: { city: "Tokyo", street: "Jinnan", country: "Japan" } }] });
+    }
     assert.equal(url.origin, "https://api.github.com", "Never forward credentials to redirects");
     assert.equal(request.headers.get("Authorization"), "Bearer fake-runtime-token");
     if (placesMode) return repository.fetch(request.url, { method: request.method, headers: Object.fromEntries(request.headers), ...(!["GET", "HEAD"].includes(request.method) ? { body: await request.text() } : {}) });
@@ -91,8 +99,18 @@ try {
   assert.equal(noted.has_note, true);
   assert.match(String(repository.file(noted.path)), /places: \[/);
   assert.equal(repository.catalog()[0].status, "liked");
+  const mapsURL = "https://maps.app.goo.gl/runtime-fixture";
+  const imported = await runtime.dispatchFetch(`${origin}/places/resolve?url=${encodeURIComponent(mapsURL)}`, { headers: { Cookie: cookie } });
+  assert.equal(imported.status, 200, await imported.clone().text());
+  const importedPlace = (await imported.json()).place;
+  assert.deepEqual(importedPlace.coordinates, [35.6638151, 139.6999153]);
+  assert.equal(importedPlace.name, "Runtime Maps Cafe");
+  const importedSave = await publish({ kind: "place", place: { ...importedPlace, category: "Coffee", status: "saved" } });
+  assert.equal(importedSave.status, 201, await importedSave.clone().text());
+  assert.equal(repository.catalog().at(-1).mapsURL, mapsURL);
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
   console.log("workerd runtime passed: standalone place save and atomic place update with an associated note and photo.");
+  console.log("workerd runtime passed: authenticated Google Maps redirects, exact pin import, address enrichment, and original-link saving.");
 } finally {
   await runtime.dispose();
 }

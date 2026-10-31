@@ -19,7 +19,7 @@ function text(input, key, max, required = false) {
 
 export function validatePlace(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new PublishError(400, "invalid_place", "Choose a place or add its location first.");
-  const allowed = ["id", "revision", "name", "category", "status", "city", "neighborhood", "address", "coordinates", "precision", "locationSource"];
+  const allowed = ["id", "revision", "name", "category", "status", "city", "neighborhood", "address", "coordinates", "precision", "locationSource", "mapsURL"];
   if (Object.keys(input).some(key => !allowed.includes(key))) throw new PublishError(400, "invalid_place", "Unknown place field.");
   const id = text(input, "id", 100);
   const revision = text(input, "revision", 64);
@@ -27,12 +27,129 @@ export function validatePlace(input) {
   if (!["liked", "saved", "mentioned"].includes(input.status)) throw new PublishError(400, "invalid_place", "Choose liked, saved for later, or mentioned.");
   if (!Array.isArray(input.coordinates) || input.coordinates.length !== 2 || !input.coordinates.every(Number.isFinite) || Math.abs(input.coordinates[0]) > 90 || Math.abs(input.coordinates[1]) > 180) throw new PublishError(400, "invalid_place", "Choose a location from search or enter valid latitude and longitude.");
   if (!["address", "city"].includes(input.precision)) throw new PublishError(400, "invalid_place", "Choose an exact or approximate location.");
-  const locationSource = text(input, "locationSource", 2048);
+  const locationSource = text(input, "locationSource", 4096);
   if (locationSource) {
     try { const source = new URL(locationSource); if (source.protocol !== "https:" || source.username || source.password) throw new Error(); }
     catch { throw new PublishError(400, "invalid_place", "Use a valid HTTPS location source."); }
   }
-  return { id, revision, name: text(input, "name", 200, true), category: text(input, "category", 60, true), status: input.status, city: text(input, "city", 120, true), neighborhood: text(input, "neighborhood", 120), address: text(input, "address", 400, true), coordinates: input.coordinates, precision: input.precision, locationSource };
+  const rawMapsURL = input.mapsURL === undefined ? undefined : text(input, "mapsURL", 4096);
+  const mapsURL = rawMapsURL ? googleMapsURL(rawMapsURL).href : rawMapsURL;
+  return { id, revision, name: text(input, "name", 200, true), category: text(input, "category", 60, true), status: input.status, city: text(input, "city", 120, true), neighborhood: text(input, "neighborhood", 120), address: text(input, "address", 400, true), coordinates: input.coordinates, precision: input.precision, locationSource, ...(mapsURL === undefined ? {} : { mapsURL }) };
+}
+
+const MAPS_HOSTS = new Set(["com", "ca", "co.jp", "co.uk", "com.tr", "fr", "de", "co.in", "com.au"].flatMap(domain => [`google.${domain}`, `www.google.${domain}`, `maps.google.${domain}`]));
+
+export function googleMapsURL(value) {
+  try {
+    if (typeof value !== "string" || value.length > 4096 || /[\s\u0000-\u001f\u007f]/.test(value.trim())) throw new Error();
+    const url = new URL(value.trim());
+    if (url.protocol !== "https:" || url.username || url.password || url.port) throw new Error();
+    if (url.hostname === "maps.app.goo.gl" && /^\/[a-zA-Z0-9_-]+\/?$/.test(url.pathname)) return url;
+    if (url.hostname === "goo.gl" && url.pathname.startsWith("/maps/")) return url;
+    if (MAPS_HOSTS.has(url.hostname) && (url.pathname === "/maps" || url.pathname.startsWith("/maps/") || (url.hostname.startsWith("maps.") && url.pathname === "/"))) return url;
+  } catch { /* Every redirect is checked against the same bounded allowlist. */ }
+  throw new PublishError(400, "invalid_maps_link", "Paste a Google Maps place link, such as maps.app.goo.gl/… or google.com/maps/….");
+}
+
+export function googleMapsPin(value) {
+  const url = googleMapsURL(value);
+  let decoded;
+  try { decoded = decodeURIComponent(url.href); } catch { decoded = url.href; }
+  const point = decoded.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+  const query = url.searchParams.get("query") || url.searchParams.get("q") || "";
+  const coordinateQuery = query.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+  const pair = point || coordinateQuery;
+  // The @latitude,longitude pair is the viewport, and can be far from the venue.
+  if (!pair) return null;
+  const coordinates = [Number(pair[1]), Number(pair[2])];
+  if (Math.abs(coordinates[0]) > 90 || Math.abs(coordinates[1]) > 180) return null;
+  const segment = url.pathname.match(/\/place\/([^/]+)/)?.[1];
+  let name = "";
+  try { name = segment ? decodeURIComponent(segment.replace(/\+/g, " ")) : coordinateQuery ? "" : query; } catch { /* Leave the name editable. */ }
+  return { name: name.replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 200), coordinates };
+}
+
+async function readMapsHTML(response) {
+  const reader = response.body?.getReader();
+  if (!reader) return "";
+  const parts = [];
+  let size = 0;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    size += value.length;
+    if (size > 1024 * 1024) { await reader.cancel(); return ""; }
+    parts.push(value);
+  }
+  const result = new Uint8Array(size);
+  let offset = 0;
+  for (const part of parts) { result.set(part, offset); offset += part.length; }
+  return new TextDecoder().decode(result);
+}
+
+export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEndpoint = "https://photon.komoot.io/api/") {
+  const original = googleMapsURL(value);
+  let current = original;
+  let pin;
+  const visited = new Set();
+  const request = async (url, method) => {
+    try { return await mapsFetch(url.href, { method, redirect: "manual", headers: { Accept: "text/html", "User-Agent": "YasharmaNotebook/1.0 (+https://yasharma.com/places/)" }, signal: AbortSignal.timeout(8000) }); }
+    catch { throw new PublishError(502, "maps_unavailable", "Google Maps couldn't be reached. Your draft is kept; try the link again or use name search."); }
+  };
+  for (let attempt = 0; attempt < 6; attempt++) {
+    if ((pin = googleMapsPin(current.href))) break;
+    if (visited.has(current.href)) break;
+    visited.add(current.href);
+    const response = await request(current, "HEAD");
+    const location = response.headers.get("Location");
+    if (response.status >= 300 && response.status < 400 && location) {
+      current = googleMapsURL(new URL(location, current).href);
+      continue;
+    }
+    if (!response.ok && response.status !== 405) break;
+    const page = await request(current, "GET");
+    if (page.status >= 300 && page.status < 400 && page.headers.get("Location")) {
+      current = googleMapsURL(new URL(page.headers.get("Location"), current).href);
+      continue;
+    }
+    if (!page.ok) break;
+    let html;
+    try { html = await readMapsHTML(page); } catch { break; }
+    // Only canonical metadata is used; unrelated coordinates in the page are ignored.
+    for (const match of html.matchAll(/<(?:meta|link)\b[^>]*>/gi)) {
+      if (!/(?:rel|itemprop|property)=["'](?:canonical|url|og:url)["']/i.test(match[0])) continue;
+      const candidate = match[0].match(/(?:href|content)=["']([^"']+)["']/i)?.[1]?.replace(/&amp;/g, "&");
+      if (!candidate) continue;
+      try { pin = googleMapsPin(candidate); } catch { continue; }
+      if (pin) break;
+    }
+    break;
+  }
+  if (!pin) throw new PublishError(400, "maps_unresolved", "This link doesn't include an exact place pin. Open the place in Google Maps, choose Share → Copy link, or use name search.");
+  let city = "";
+  let neighborhood = "";
+  let address = "";
+  // Reverse lookup enriches the address; it never changes the Google Maps pin.
+  // A lookup failure still returns the exact pin and lets the owner enter a city.
+  try {
+    const reverse = new URL(searchEndpoint);
+    if (reverse.protocol !== "https:" || reverse.username || reverse.password) throw new Error();
+    reverse.pathname = reverse.pathname.replace(/\/api\/?$/, "/reverse");
+    reverse.search = "";
+    reverse.searchParams.set("lat", String(pin.coordinates[0]));
+    reverse.searchParams.set("lon", String(pin.coordinates[1]));
+    reverse.searchParams.set("limit", "1");
+    reverse.searchParams.set("lang", "en");
+    const response = await geocodeFetch(reverse.href, { redirect: "manual", headers: { Accept: "application/json", "User-Agent": "YasharmaNotebook/1.0 (+https://yasharma.com/places/)" }, signal: AbortSignal.timeout(5000), cf: { cacheTtl: 86400, cacheEverything: true } });
+    if (response.ok) {
+      const result = await readResponse(response);
+      const p = result.features?.[0]?.properties || {};
+      city = String(p.city || p.town || p.village || p.district || p.state || "").slice(0, 120);
+      neighborhood = String(p.suburb || p.locality || "").slice(0, 120);
+      address = [p.housenumber, p.street, city, p.country].filter(Boolean).join(" ").slice(0, 400);
+    }
+  } catch { /* Exact link import does not depend on the optional address service. */ }
+  return { ...pin, city, neighborhood, address, precision: "address", mapsURL: original.href, locationSource: original.href };
 }
 
 // Bound upstream bodies as well as browser inputs; never expose their contents

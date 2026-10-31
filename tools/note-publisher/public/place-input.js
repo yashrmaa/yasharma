@@ -1,3 +1,25 @@
+export function googleMapsLink(value) {
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== "https:" || url.username || url.password || url.port) return "";
+    if (url.hostname === "maps.app.goo.gl" && /^\/[a-zA-Z0-9_-]+\/?$/.test(url.pathname)) return url.href;
+    if (url.hostname === "goo.gl" && url.pathname.startsWith("/maps/")) return url.href;
+    if (/^(?:(?:www|maps)\.)?google\.(?:com|ca|co\.jp|co\.uk|com\.tr|fr|de|co\.in|com\.au)$/.test(url.hostname) && (url.pathname === "/maps" || url.pathname.startsWith("/maps/") || (url.hostname.startsWith("maps.") && url.pathname === "/"))) return url.href;
+  } catch { /* Ordinary notes and links keep their existing behavior. */ }
+  return "";
+}
+
+export function googleMapsKey(value) {
+  const normalized = googleMapsLink(value || "");
+  if (!normalized) return "";
+  const url = new URL(normalized);
+  for (const key of [...url.searchParams.keys()]) {
+    if (/^utm_/i.test(key) || ["g_st", "g_ep", "entry", "skid"].includes(key)) url.searchParams.delete(key);
+  }
+  url.hash = "";
+  return url.href;
+}
+
 export function mountPlaceInput({ api, onChange }) {
   const get = id => document.getElementById(id);
   const fields = ["name", "city", "neighborhood", "address", "category", "status", "latitude", "longitude", "precision"];
@@ -6,6 +28,8 @@ export function mountPlaceInput({ api, onChange }) {
   let busy = false;
   let loading = false;
   let searching = false;
+  let resolving = false;
+  let resolvedURL = "";
   let loaded = false;
   let saved = [];
   let id = "";
@@ -33,6 +57,8 @@ export function mountPlaceInput({ api, onChange }) {
     id = place.id || "";
     revision = place.revision || "";
     locationSource = place.locationSource || "";
+    get("place-maps-url").value = place.mapsURL || "";
+    resolvedURL = place.mapsURL || "";
     for (const key of fields) {
       const value = key === "latitude" ? place.coordinates?.[0] : key === "longitude" ? place.coordinates?.[1] : place[key];
       get(`place-${key}`).value = value ?? (key === "status" ? "saved" : key === "category" ? "Coffee" : key === "precision" ? "address" : "");
@@ -42,11 +68,12 @@ export function mountPlaceInput({ api, onChange }) {
     renderLocation();
   }
   function controls() {
-    get("place-fields").querySelectorAll("input, select, button").forEach(control => { control.disabled = busy || !enabled; });
-    get("place-existing").disabled = busy || loading || !enabled;
-    get("place-refresh").disabled = busy || loading || !enabled;
-    get("place-search-button").disabled = busy || searching || !enabled || Date.now() < cooldown;
+    get("place-fields").querySelectorAll("input, select, button").forEach(control => { control.disabled = busy || resolving || !enabled; });
+    get("place-existing").disabled = busy || resolving || loading || !enabled;
+    get("place-refresh").disabled = busy || resolving || loading || !enabled;
+    get("place-search-button").disabled = busy || resolving || searching || !enabled || Date.now() < cooldown;
     get("place-search-button").textContent = searching ? "Searching…" : "Search";
+    get("place-resolve").textContent = resolving ? "Opening…" : "Use link";
     document.querySelectorAll("[data-compose-mode]").forEach(button => { button.disabled = busy; });
   }
   async function load(replaceSelection = false) {
@@ -61,11 +88,12 @@ export function mountPlaceInput({ api, onChange }) {
       loaded = true;
       options();
       if (replaceSelection && id) { fill(saved.find(place => place.id === id)); onChange(); }
-      status(`${saved.length} saved ${saved.length === 1 ? "place" : "places"}. Select one to update it, or search for somewhere new.`);
+      if (!resolving && !searching) status(`${saved.length} saved ${saved.length === 1 ? "place" : "places"}. Choose one, paste a Maps link, or use name search.`);
     } catch (error) { status(error.message); }
     finally { loading = false; controls(); }
   }
   function mode(value, notify = true) {
+    searchVersion++;
     enabled = value === "place";
     get("composer").dataset.mode = enabled ? "place" : "note";
     get("place-fields").hidden = !enabled;
@@ -83,9 +111,44 @@ export function mountPlaceInput({ api, onChange }) {
   get("place-existing").addEventListener("change", () => { searchVersion++; fill(saved.find(place => place.id === get("place-existing").value)); onChange(); });
   get("place-refresh").addEventListener("click", () => void load(true));
   for (const key of fields) get(`place-${key}`).addEventListener("input", () => {
-    if (["latitude", "longitude"].includes(key)) locationSource = "";
+    if (["latitude", "longitude"].includes(key)) { locationSource = ""; get("place-maps-url").value = ""; resolvedURL = ""; }
     renderLocation(); onChange();
   });
+  function choose(place) {
+    const existing = saved.find(item => (place.mapsURL && googleMapsKey(item.mapsURL) && googleMapsKey(item.mapsURL) === googleMapsKey(place.mapsURL)) || (place.locationSource && item.locationSource === place.locationSource) || (item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase() && item.coordinates?.every((value, index) => Math.abs(value - place.coordinates[index]) < .0001)));
+    const editing = id ? { id, revision } : {};
+    fill(existing || { ...place, ...editing, status: get("place-status").value, category: get("place-category").value });
+    return existing;
+  }
+  get("place-maps-url").addEventListener("input", () => {
+    searchVersion++;
+    status(get("place-maps-url").value.trim() ? "Choose Use link to load this place's pin before saving." : "Paste a Maps link or use name search below.");
+    onChange();
+  });
+  get("place-maps-url").addEventListener("keydown", event => {
+    if (event.key === "Enter") { event.preventDefault(); get("place-resolve").click(); }
+  });
+  async function resolveLink() {
+    if (busy || resolving) return;
+    const url = googleMapsLink(get("place-maps-url").value);
+    if (!url) { status("Paste a Google Maps place link, such as maps.app.goo.gl/… or google.com/maps/…."); get("place-maps-url").focus(); return; }
+    const version = ++searchVersion;
+    resolving = true;
+    status("Opening the Google Maps place…");
+    controls(); onChange();
+    try {
+      const result = await api(`/places/resolve?url=${encodeURIComponent(url)}`);
+      if (version !== searchVersion || !enabled) return;
+      if (!result.place?.coordinates) throw new Error("This link did not return a place pin.");
+      const existing = choose(result.place);
+      const incomplete = !get("place-name").value || !get("place-city").value || !get("place-address").value;
+      get("place-location-details").open = incomplete;
+      get("place-lookup").open = false;
+      status(incomplete ? "Exact pin loaded. Add the missing name, city, or address below, then save." : existing ? "Already in your collection. Review its details below to update it." : "Exact pin loaded from your link. Review the details below, then save.");
+    } catch (error) { if (version === searchVersion) status(error.message); }
+    finally { resolving = false; controls(); onChange(); }
+  }
+  get("place-resolve").addEventListener("click", () => void resolveLink());
   get("place-query").addEventListener("input", () => { searchVersion++; get("place-results").replaceChildren(); onChange(); });
   get("place-query").addEventListener("keydown", event => {
     if (event.key === "Enter") { event.preventDefault(); get("place-search-button").click(); }
@@ -98,7 +161,7 @@ export function mountPlaceInput({ api, onChange }) {
     searching = true;
     cooldown = Date.now() + 1500;
     status("Looking for that place…");
-    controls();
+    controls(); onChange();
     try {
       const result = await api(`/places/search?q=${encodeURIComponent(query)}`);
       if (version !== searchVersion) return;
@@ -112,11 +175,7 @@ export function mountPlaceInput({ api, onChange }) {
         button.addEventListener("click", () => {
           if (busy) return;
           searchVersion++;
-          const existing = saved.find(item => place.locationSource && item.locationSource === place.locationSource);
-          const chosenStatus = get("place-status").value;
-          const chosenCategory = get("place-category").value;
-          const editing = id ? { id, revision } : {};
-          fill(existing || { ...place, ...editing, status: chosenStatus, category: chosenCategory });
+          const existing = choose(place);
           status(existing ? "Already in your collection. You can update it below." : "Location selected. Check the details below, then save.");
           onChange();
         });
@@ -124,28 +183,33 @@ export function mountPlaceInput({ api, onChange }) {
       }
       status(result.places?.length ? "Choose the right location below." : "No matches. Try the street address or a nearby landmark, or add location details manually.");
     } catch (error) { if (version === searchVersion) status(error.message); }
-    finally { searching = false; controls(); setTimeout(controls, Math.max(0, cooldown - Date.now()) + 20); }
+    finally { searching = false; controls(); onChange(); setTimeout(controls, Math.max(0, cooldown - Date.now()) + 20); }
   });
   fill();
   mode("note", false);
   return {
     get enabled() { return enabled; },
+    get pending() { return resolving || searching; },
+    get needsResolution() { const url = get("place-maps-url").value.trim(); return Boolean(url && url !== resolvedURL); },
     value() {
-      const place = { id, revision, locationSource };
+      const place = { id, revision, locationSource, mapsURL: get("place-maps-url").value.trim() };
       for (const key of fields.filter(key => !["latitude", "longitude"].includes(key))) place[key] = get(`place-${key}`).value.trim();
       const lat = get("place-latitude").value.trim();
       const lon = get("place-longitude").value.trim();
       place.coordinates = [lat === "" ? null : Number(lat), lon === "" ? null : Number(lon)];
       return place;
     },
-    draft() { return { mode: enabled ? "place" : "note", query: get("place-query").value, place: this.value() }; },
+    draft() { return { mode: enabled ? "place" : "note", query: get("place-query").value, resolvedURL, place: this.value() }; },
     restore(draft) {
       fill(draft?.place || {});
       get("place-query").value = typeof draft?.query === "string" ? draft.query : "";
+      resolvedURL = typeof draft?.resolvedURL === "string" ? draft.resolvedURL : "";
+      get("place-lookup").open = Boolean(get("place-query").value);
       mode(draft?.mode === "place" ? "place" : "note", false);
     },
     setAuthenticated(value) { authenticated = value; if (authenticated && enabled && !loaded) void load(); },
     setBusy(value) { busy = value; controls(); },
+    useLink(url) { fill(); get("place-query").value = ""; mode("place", false); get("place-maps-url").value = url; resolvedURL = ""; onChange(); return resolveLink(); },
     saved(place) {
       if (!place) return;
       saved = saved.filter(item => item.id !== place.id).concat(place);

@@ -7,12 +7,21 @@ license. The map background loads from OpenStreetMap with visible attribution.
 
 ## Add a place
 
-In the notebook composer, choose **Save a place**. Search by place name and city,
-pick the right result, choose **Liked** or **Saved for later**, and save. Text and
-photos are optional. A save without either updates the map without publishing
-an empty notebook entry. Location search uses Photon/OpenStreetMap; the source
-is attributed in the form. Address and pin fields are available under **Edit
-address & pin / add manually** if search misses a venue.
+In the notebook composer, choose **Save a place** and paste a Google Maps link.
+Tap **Use link**, review the place, choose **Liked** or **Saved for later**, and
+save. Short shared links and full Google Maps links are supported; the original
+link is kept for opening the exact venue. The pin comes from the Maps link.
+Address lookup only adds city/address details, and an outage leaves the exact
+pin available for manual entry under **Edit address & pin / add manually**.
+
+**Or search by name and city** keeps the existing Photon/OpenStreetMap search
+available. Both paths support optional text and photos. A save without either
+updates the map without publishing an empty notebook entry.
+
+Pasting a Maps link on the first line of an ordinary note also offers **Add this
+Google Maps link to my places**. Choosing it switches to place mode, keeps any
+text below the link and selected photos, and imports a new place or recognizes
+an existing one. It does not overwrite the previously selected place.
 
 To update somewhere already saved, choose it from the saved-place selector.
 You can change its name, kind, status, address, and coordinates, or add a new note
@@ -24,7 +33,7 @@ The publisher saves the catalog and optional note/photos in one commit. Updates
 check the selected place's revision; stale edits are rejected so another window's
 changes aren't silently overwritten. Unrelated repository changes are preserved.
 The same publishing secret and repository-scoped GitHub token are used. The
-`/places` and `/places/search` publisher APIs require authentication. An optional
+`/places`, `/places/search`, and `/places/resolve` publisher APIs require authentication. An optional
 server-side `PLACES_SEARCH_URL` can point to another compatible Photon instance.
 
 You can also edit `data/places.json` directly. The catalog records the location
@@ -130,6 +139,11 @@ Set `PLAYWRIGHT_MODULE` to an installed Playwright module and optionally set
 `CHROME_PATH` to an installed Chrome executable. The places suite covers saves
 without notes, updates, photos, location search, draft restoration, stale edits,
 and mobile layouts.
+
+The Maps resolver follows at most six redirects, checks each destination against
+known HTTPS Google Maps hosts, and sends no publishing credentials to Maps or
+the optional reverse-geocoding service. It reads venue coordinates rather than
+the map viewport; links without an exact pin fail clearly instead of guessing.
 
 During initial QA on this Mac, headless Chrome's external image requests returned
 `ERR_INVALID_HANDLE`. The interaction suite passed with the tile-failure fallback;

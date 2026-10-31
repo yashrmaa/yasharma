@@ -10,8 +10,15 @@ const origin = "https://notebook.test";
 const secret = "p".repeat(64);
 const repo = placeRepository(JSON.parse(await readFile(new URL("../../../data/places.json", import.meta.url))));
 const initialPlaceCount = repo.catalog().length;
-const worker = createPublisher({ fetch: repo.fetch, geocodeFetch: async url => {
-  const updating = new URL(url).searchParams.get("q").includes("confirmed Fellini");
+let reverseAvailable = true;
+const mapsLink = "https://maps.app.goo.gl/notebook-direct-fixture";
+const worker = createPublisher({ fetch: repo.fetch, mapsFetch: async url => {
+  if (url.includes("offline-fixture")) throw new Error("Offline");
+  await new Promise(resolve => setTimeout(resolve, 80));
+  return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Maps+Link+Cafe/@0,0,2z/data=!8m2!3d37.782!4d-122.412" } });
+}, geocodeFetch: async url => {
+  if (new URL(url).pathname.includes("reverse") && !reverseAvailable) throw new Error("Address service unavailable");
+  const updating = (new URL(url).searchParams.get("q") || "").includes("confirmed Fellini");
   return Response.json({ features: [{ properties: { name: updating ? "Fellini Coffee" : "Browser Cafe", city: updating ? "New York" : "San Francisco", street: updating ? "Waverly Place" : "Market Street", housenumber: "100", osm_type: "N", osm_id: updating ? 100000002 : 100000001, osm_key: "amenity", osm_value: "cafe" }, geometry: { coordinates: updating ? [-74.0012, 40.7347] : [-122.4, 37.79] } }] });
 } });
 const env = { GITHUB_TOKEN: "fake-token", PUBLISH_SECRET: secret, GITHUB_OWNER: "preview", GITHUB_REPO: "preview", GITHUB_BRANCH: "main", SITE_URL: "https://yasharma.com", ASSETS: { fetch: async request => {
@@ -63,6 +70,7 @@ try {
   assert.equal(await page.locator("#thought").inputValue(), "");
 
   await page.locator("#place-existing").selectOption("");
+  await page.locator("#place-lookup").evaluate(node => { node.open = true; });
   await page.locator("#place-query").fill("Browser Cafe San Francisco");
   await page.locator("#place-search-button").click();
   await page.locator("#place-results button").first().click();
@@ -126,6 +134,62 @@ try {
   await page.locator("#publish").click();
   await success(page);
   assert.equal(await page.locator("#thought").inputValue(), "", "hidden place fields must not block ordinary notes");
+
+  // A Maps link pasted into the normal note field can become a new place, while
+  // keeping the accompanying thought and leaving the previously edited pin alone.
+  const noteCount = noteFiles().length;
+  await page.locator("#thought").fill(`${mapsLink}\n\nGood espresso.`);
+  await page.locator("#save-link-as-place").waitFor({ state: "visible" });
+  await page.locator("#save-link-as-place").click();
+  assert.equal(await page.locator("#publish").isDisabled(), true);
+  await page.waitForFunction(() => document.querySelector("#place-name").value === "Maps Link Cafe" && !document.querySelector("#publish").disabled);
+  assert.equal(await page.locator("#thought").inputValue(), "Good espresso.");
+  assert.equal(await page.locator("#place-existing").inputValue(), "", "pasting a link in note mode must not overwrite the previous selection");
+  assert.equal(await page.locator("#place-latitude").inputValue(), "37.782");
+  await page.screenshot({ path: "/private/tmp/notebook-google-maps-link.png", fullPage: true });
+  await page.locator("#publish").click();
+  await success(page);
+  const imported = repo.catalog().find(place => place.name === "Maps Link Cafe");
+  assert.equal(imported.mapsURL, mapsLink);
+  assert.deepEqual(imported.coordinates, [37.782, -122.412]);
+  assert.equal(noteFiles().length, noteCount + 1);
+  assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").name, "Fellini Coffee");
+
+  // The dedicated link field also works without a note, and finds an existing
+  // imported venue instead of duplicating it.
+  await page.locator("#place-existing").selectOption("");
+  await page.locator("#place-maps-url").fill(mapsLink);
+  await page.locator("#place-resolve").click();
+  await page.waitForFunction(id => document.querySelector("#place-existing").value === id && !document.querySelector("#publish").disabled, imported.id);
+  await page.locator("#publish").click();
+  await success(page);
+  assert.equal(noteFiles().length, noteCount + 1);
+  assert.equal(repo.catalog().filter(place => place.name === "Maps Link Cafe").length, 1);
+
+  await page.locator("#place-existing").selectOption("");
+  await page.locator("#place-maps-url").fill("https://maps.app.goo.gl/offline-fixture");
+  await page.locator("#place-resolve").click();
+  await page.waitForFunction(() => document.querySelector("#place-load-status").textContent.includes("couldn't be reached"));
+  assert.equal(await page.locator("#publish").isDisabled(), true);
+  await page.reload();
+  await page.locator("#composer").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#place-maps-url").inputValue(), "https://maps.app.goo.gl/offline-fixture");
+  assert.equal(await page.locator("#publish").isDisabled(), true, "unresolved links stay unresolved after draft reload");
+
+  // Missing reverse-geocoder data doesn't prevent importing the real Maps pin.
+  reverseAvailable = false;
+  const manualLink = "https://www.google.com/maps/place/Manual+Address+Cafe/data=!8m2!3d37.8!4d-122.3";
+  await page.locator("#place-maps-url").fill(manualLink);
+  await page.locator("#place-resolve").click();
+  await page.waitForFunction(() => document.querySelector("#place-name").value === "Manual Address Cafe");
+  assert.equal(await page.locator("#place-location-details").evaluate(node => node.open), true);
+  await page.locator("#place-city").fill("San Francisco");
+  await page.locator("#place-address").fill("An address I entered");
+  await page.locator("#publish").click();
+  await success(page);
+  assert.equal(repo.catalog().find(place => place.name === "Manual Address Cafe").mapsURL, manualLink);
+  assert.equal(noteFiles().length, noteCount + 1);
   assert.deepEqual(errors, []);
   console.log("PASS: mobile place-only saves, saved-place edits, note/photo association, location search, draft reload, stale-tab protection/reload, ordinary note mode, and four responsive widths. No real GitHub writes.");
+  console.log("PASS: Maps-link field, link detection in notes, optional text, exact pins, original links, deduplication, unresolved-draft recovery, and manual address fallback.");
 } finally { await browser.close(); }

@@ -39,11 +39,16 @@
         <div class="place-section-heading"><h2>Your places</h2><button id="place-refresh" type="button" class="quiet">Reload places</button></div>
         <label for="place-existing">Update a saved place, or add a new one</label>
         <select id="place-existing"><option value="">Add a new place…</option></select>
-        <label for="place-query">Find a place</label>
-        <div class="place-search-row"><input id="place-query" type="search" maxlength="200" placeholder="Cafe name or street address, and city" autocomplete="off"><button id="place-search-button" type="button">Search</button></div>
-        <p id="place-load-status" class="muted" role="status" aria-live="polite">Search for somewhere new or select a saved place.</p>
-        <div id="place-results" aria-label="Place search results"></div>
-        <p class="place-attribution muted">Search by <a href="https://photon.komoot.io/" target="_blank" rel="noopener noreferrer">Photon</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a></p>
+        <label for="place-maps-url">Google Maps link</label>
+        <div class="place-search-row"><input id="place-maps-url" type="url" maxlength="4096" placeholder="Paste the place’s shared link" autocomplete="off" inputmode="url"><button id="place-resolve" type="button">Use link</button></div>
+        <p class="muted">In Google Maps, open the place and choose Share → Copy link.</p>
+        <details id="place-lookup"><summary>Or search by name and city</summary>
+          <label for="place-query">Find a place</label>
+          <div class="place-search-row"><input id="place-query" type="search" maxlength="200" placeholder="Cafe name or street address, and city" autocomplete="off"><button id="place-search-button" type="button">Search</button></div>
+          <div id="place-results" aria-label="Place search results"></div>
+        </details>
+        <p id="place-load-status" class="muted" role="status" aria-live="polite">Paste a Maps link, use name search, or choose a saved place.</p>
+        <p class="place-attribution muted">Address details by <a href="https://photon.komoot.io/" target="_blank" rel="noopener noreferrer">Photon</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a></p>
         <label for="place-name">Place name</label><input id="place-name" maxlength="200" autocomplete="off">
         <div class="place-form-row"><div><label for="place-status">My list</label><select id="place-status"><option value="saved">Saved for later</option><option value="liked">Liked</option><option value="mentioned">Mentioned in my notes</option></select></div><div><label for="place-category">Kind of place</label><input id="place-category" maxlength="60" list="place-kinds"><datalist id="place-kinds"><option value="Coffee"><option value="Restaurants"><option value="Drinks"><option value="Outdoors"><option value="Shops"><option value="Culture"><option value="Other"></datalist></div></div>
         <p id="place-location" class="muted"></p><a id="place-map-check" class="muted" target="_blank" rel="noopener noreferrer" hidden>Check location in Google Maps ↗</a>
@@ -56,6 +61,7 @@
       <label for="thought" id="thought-label">What do you want to remember?</label>
       <textarea id="thought" name="thought" rows="10" maxlength="15000" placeholder="A thought, a quote, something you learned…" aria-describedby="writing-help draft-status"></textarea>
       <p id="writing-help" class="muted">For a link, paste its URL on the first line. Add a thought below it if you like.</p>
+      <button id="save-link-as-place" type="button" class="quiet" hidden>Add this Google Maps link to my places ↗</button>
       <p id="day-help" class="muted">Each publish adds a new timed entry under today’s date.</p>
       <details id="extras">
         <summary>Categories &amp; photos <span id="extras-count"></span></summary>

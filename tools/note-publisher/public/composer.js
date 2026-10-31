@@ -1,5 +1,5 @@
 import { preparePhoto } from "./photo-input.js";
-import { mountPlaceInput } from "./place-input.js";
+import { mountPlaceInput, googleMapsLink } from "./place-input.js";
 const DRAFT_KEY = "notebook.draft.v1";
 
 export function entryFromText(value) {
@@ -74,7 +74,7 @@ export function mount() {
   }
 
   function controls() {
-    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (!placeInput.enabled && !thought.value.trim() && !photos.length);
+    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (placeInput.enabled && (placeInput.pending || placeInput.needsResolution)) || (!placeInput.enabled && !thought.value.trim() && !photos.length);
     publish.textContent = busy ? "Saving…" : preparing ? "Preparing photos…" : placeInput.enabled ? thought.value.trim() || photos.length ? "Save place & note" : placeInput.value().id ? "Save changes" : "Save place" : "Publish";
     placeInput.setBusy(busy || preparing);
     thought.readOnly = busy;
@@ -83,6 +83,7 @@ export function mount() {
     get("photo-previews").querySelectorAll("input, button").forEach(control => { control.disabled = busy || preparing; });
     get("sign-out").disabled = busy;
     get("composer").setAttribute("aria-busy", String(busy));
+    get("save-link-as-place").hidden = placeInput.enabled || !googleMapsLink(entryFromText(thought.value).url || "");
   }
 
   function auth(authenticated) {
@@ -141,6 +142,13 @@ export function mount() {
   void checkSession();
 
   thought.addEventListener("input", () => { saveDraft(); controls(); });
+  get("save-link-as-place").addEventListener("click", () => {
+    const entry = entryFromText(thought.value);
+    const url = googleMapsLink(entry.url || "");
+    if (!url || busy) return;
+    thought.value = entry.text;
+    void placeInput.useLink(url);
+  });
   categories.addEventListener("input", () => { saveDraft(); renderCount(); });
   function renderCount() {
     const count = categories.value.split(",").filter(value => value.trim()).length;

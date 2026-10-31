@@ -1,6 +1,6 @@
 import { cookie, newSession, hasSession, sameOrigin, SECURITY_HEADERS } from "./session.mjs";
 import { validatePhotos } from "./photos.mjs";
-import { PublishError, validatePlace, listPlaces, searchPlaces, savePlace } from "./places.mjs";
+import { PublishError, validatePlace, listPlaces, searchPlaces, savePlace, resolveGoogleMaps } from "./places.mjs";
 
 const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/place-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
 const MAX_BYTES = 32 * 1024;
@@ -156,7 +156,7 @@ function config(env) {
 
 // workerd requires the global receiver for fetch; an extracted, unbound reference
 // throws "Illegal invocation" before sending anything to GitHub.
-export function createPublisher({ fetch: githubFetch = (url, options) => globalThis.fetch(url, options), geocodeFetch = (url, options) => globalThis.fetch(url, options), now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
+export function createPublisher({ fetch: githubFetch = (url, options) => globalThis.fetch(url, options), geocodeFetch = (url, options) => globalThis.fetch(url, options), mapsFetch = (url, options) => globalThis.fetch(url, options), now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
   return {
     async fetch(request, env) {
       try {
@@ -185,7 +185,7 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
           await readJSON(request);
           return json(200, { ok: true }, { "Set-Cookie": await newSession(env.PUBLISH_SECRET, endpoint.origin, now()) });
         }
-        if (["/places", "/places/search"].includes(endpoint.pathname)) {
+        if (["/places", "/places/search", "/places/resolve"].includes(endpoint.pathname)) {
           config(env);
           if (request.method !== "GET") return json(405, { ok: false, error: { code: "method_not_allowed", message: "Use GET." } }, { Allow: "GET" });
           if (request.headers.has("Origin") && !sameOrigin(request)) throw new PublishError(403, "invalid_origin", "Open the notebook directly to use your places.");
@@ -194,6 +194,10 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
           if (endpoint.pathname === "/places") {
             if (endpoint.search) throw new PublishError(400, "invalid_search", "Use /places without query parameters.");
             return json(200, { ok: true, places: await listPlaces(env, githubFetch) });
+          }
+          if (endpoint.pathname === "/places/resolve") {
+            if ([...endpoint.searchParams.keys()].some(key => key !== "url")) throw new PublishError(400, "invalid_maps_link", "Supply a Google Maps place link.");
+            return json(200, { ok: true, place: await resolveGoogleMaps(endpoint.searchParams.get("url"), mapsFetch, geocodeFetch, env.PLACES_SEARCH_URL) });
           }
           if ([...endpoint.searchParams.keys()].some(key => key !== "q")) throw new PublishError(400, "invalid_search", "Search by place name and city.");
           return json(200, { ok: true, places: await searchPlaces(endpoint.searchParams.get("q"), geocodeFetch, env.PLACES_SEARCH_URL) });

@@ -26,8 +26,9 @@ Contents read/write access to this repository only. Never put credentials in cod
 
 [/places/](https://yasharma.com/places/) is a personal map with city filters,
 searchable notes, my photos, and links to Google Maps. Choose **Save a place** in
-the notebook composer to add or update a location, mark it liked or saved for
-later, and optionally add a note or photos. Place-only saves don't create empty
+the notebook composer, paste a Google Maps link and tap **Use link**, or use
+the alternative name-and-city search. Add or update a location, mark it liked or
+saved for later, and optionally add a note or photos. Place-only saves don't create empty
 notes. Locations live in `data/places.json`; other published notes also connect
 through distinctive place aliases or an explicit `places` field.
 See [the places guide](docs/places.md) for the data format and browser checks.
