@@ -117,7 +117,7 @@ export function mountPlaceInput({ api, onChange }) {
   function choose(place) {
     const existing = saved.find(item => (place.mapsURL && googleMapsKey(item.mapsURL) && googleMapsKey(item.mapsURL) === googleMapsKey(place.mapsURL)) || (place.locationSource && item.locationSource === place.locationSource) || (item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase() && item.coordinates?.every((value, index) => Math.abs(value - place.coordinates[index]) < .0001)));
     const editing = id ? { id, revision } : {};
-    fill(existing || { ...place, ...editing, status: get("place-status").value, category: get("place-category").value });
+    fill(existing ? { ...existing, ...place, id: existing.id, revision: existing.revision, status: existing.status, category: existing.category } : { ...place, ...editing, status: get("place-status").value, category: get("place-category").value });
     return existing;
   }
   get("place-maps-url").addEventListener("input", () => {

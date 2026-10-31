@@ -75,6 +75,8 @@ export function mount() {
 
   function controls() {
     publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (placeInput.enabled && (placeInput.pending || placeInput.needsResolution)) || (!placeInput.enabled && !thought.value.trim() && !photos.length);
+    get("place-save-help").hidden = !placeInput.enabled || (!placeInput.pending && !placeInput.needsResolution);
+    get("place-save-help").textContent = placeInput.pending ? "Loading the location before saving…" : "Choose Use link to confirm this pin before saving. If the link fails, try again, use name search, or enter the pin manually under Edit address & pin.";
     publish.textContent = busy ? "Saving…" : preparing ? "Preparing photos…" : placeInput.enabled ? thought.value.trim() || photos.length ? "Save place & note" : placeInput.value().id ? "Save changes" : "Save place" : "Publish";
     placeInput.setBusy(busy || preparing);
     thought.readOnly = busy;

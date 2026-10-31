@@ -12,9 +12,15 @@ const repo = placeRepository(JSON.parse(await readFile(new URL("../../../data/pl
 const initialPlaceCount = repo.catalog().length;
 let reverseAvailable = true;
 const mapsLink = "https://maps.app.goo.gl/notebook-direct-fixture";
-const worker = createPublisher({ fetch: repo.fetch, mapsFetch: async url => {
+const sightglassPinLink = "https://maps.app.goo.gl/AsBLaAHwNQwsBbgn7";
+const sightglassFeatureLink = "https://maps.app.goo.gl/UvZMHdUqm4BCy2eYA";
+const sightglassCID = "2733781384327450309";
+const worker = createPublisher({ fetch: repo.fetch, mapsFetch: async (url, options) => {
   if (url.includes("offline-fixture")) throw new Error("Offline");
   await new Promise(resolve => setTimeout(resolve, 80));
+  if (url === sightglassPinLink) return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Sightglass+Coffee/@37.7770356,-122.4084543,17z/data=!8m2!3d37.7770356!4d-122.4084543" } });
+  if (url === sightglassFeatureLink) return new Response(null, { status: 302, headers: { Location: "https://maps.google.com/maps?q=Sightglass+Coffee,+3014+20th+St,+San+Francisco,+CA+94110&ftid=0x808f7e373f977f1f:0x25f057af5269cec5" } });
+  if (url === `https://www.google.com/maps?cid=${sightglassCID}&output=embed`) return new Response(options.method === "HEAD" ? null : `<script>initEmbed(${JSON.stringify([[[0, 0, 0]], [["0x808f7e373f977f1f:0x25f057af5269cec5", "Sightglass Coffee, 3014 20th St", [37.7592345, -122.4113171], sightglassCID], "Sightglass Coffee", ["3014 20th St", "San Francisco, CA 94110"]]])});</script>`);
   return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Maps+Link+Cafe/@0,0,2z/data=!8m2!3d37.782!4d-122.412" } });
 }, geocodeFetch: async url => {
   if (new URL(url).pathname.includes("reverse") && !reverseAvailable) throw new Error("Address service unavailable");
@@ -142,6 +148,8 @@ try {
   await page.locator("#save-link-as-place").waitFor({ state: "visible" });
   await page.locator("#save-link-as-place").click();
   assert.equal(await page.locator("#publish").isDisabled(), true);
+  assert.equal(await page.locator("#place-save-help").isVisible(), true);
+  assert.match(await page.locator("#place-save-help").textContent(), /Loading/);
   await page.waitForFunction(() => document.querySelector("#place-name").value === "Maps Link Cafe" && !document.querySelector("#publish").disabled);
   assert.equal(await page.locator("#thought").inputValue(), "Good espresso.");
   assert.equal(await page.locator("#place-existing").inputValue(), "", "pasting a link in note mode must not overwrite the previous selection");
@@ -152,6 +160,27 @@ try {
   const imported = repo.catalog().find(place => place.name === "Maps Link Cafe");
   assert.equal(imported.mapsURL, mapsLink);
   assert.deepEqual(imported.coordinates, [37.782, -122.412]);
+  assert.equal(noteFiles().length, noteCount + 1);
+  // Both real share-link formats enable Save changes when updating a selected
+  // place. Reloading a resolved draft must keep that button usable as well.
+  reverseAvailable = true;
+  const sightglass = repo.catalog().find(place => place.name === "Sightglass Coffee");
+  for (const [url, latitude] of [[sightglassPinLink, "37.7770356"], [sightglassFeatureLink, "37.7592345"]]) {
+    await page.locator("#place-existing").selectOption(sightglass.id);
+    await page.locator("#place-maps-url").fill(url);
+    assert.equal(await page.locator("#publish").isDisabled(), true);
+    await page.locator("#place-resolve").click();
+    await page.waitForFunction(lat => document.querySelector("#place-latitude").value === lat && !document.querySelector("#publish").disabled, latitude);
+    assert.equal(await page.locator("#publish").textContent(), "Save changes");
+    assert.equal(await page.locator("#place-save-help").isHidden(), true);
+    await page.reload();
+    await page.locator("#composer").waitFor({ state: "visible" });
+    await page.waitForFunction(() => !document.querySelector("#publish").disabled);
+    await page.locator("#publish").click();
+    await success(page);
+    assert.equal(repo.catalog().find(place => place.id === sightglass.id).coordinates[0], Number(latitude));
+    assert.equal(repo.catalog().find(place => place.id === sightglass.id).mapsURL, url);
+  }
   assert.equal(noteFiles().length, noteCount + 1);
   assert.equal(repo.catalog().find(place => place.id === "fellini-coffee").name, "Fellini Coffee");
 
@@ -171,6 +200,8 @@ try {
   await page.locator("#place-resolve").click();
   await page.waitForFunction(() => document.querySelector("#place-load-status").textContent.includes("couldn't be reached"));
   assert.equal(await page.locator("#publish").isDisabled(), true);
+  assert.equal(await page.locator("#place-save-help").isVisible(), true);
+  assert.match(await page.locator("#place-save-help").textContent(), /Use link/);
   await page.reload();
   await page.locator("#composer").waitFor({ state: "visible" });
   assert.equal(await page.locator("#place-maps-url").inputValue(), "https://maps.app.goo.gl/offline-fixture");

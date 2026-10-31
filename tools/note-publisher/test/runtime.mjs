@@ -34,7 +34,14 @@ const options = {
     const url = new URL(request.url);
     if (url.hostname === "maps.app.goo.gl") {
       assert.equal(request.headers.has("Authorization"), false);
+      if (url.pathname === "/feature-id-fixture") return new Response(null, { status: 302, headers: { Location: "https://maps.google.com/?q=Sightglass+Coffee,+3014+20th+St&ftid=0x808f7e373f977f1f:0x25f057af5269cec5" } });
       return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Runtime+Maps+Cafe/@0,0,2z/data=!8m2!3d35.6638151!4d139.6999153" } });
+    }
+    if (url.hostname === "www.google.com") {
+      assert.equal(request.headers.has("Authorization"), false);
+      assert.equal(request.method, "GET", "Google rejects HEAD on embed URLs");
+      assert.equal(url.searchParams.get("cid"), "2733781384327450309");
+      return new Response(`<script>initEmbed(${JSON.stringify([[["0x808f7e373f977f1f:0x25f057af5269cec5", "Sightglass Coffee, 3014 20th St", [37.7592345, -122.4113171], "2733781384327450309"], "Sightglass Coffee", ["3014 20th St", "San Francisco, CA 94110"]]])});</script>`);
     }
     if (url.hostname === "photon.komoot.io") {
       assert.equal(request.headers.has("Authorization"), false);
@@ -108,6 +115,13 @@ try {
   const importedSave = await publish({ kind: "place", place: { ...importedPlace, category: "Coffee", status: "saved" } });
   assert.equal(importedSave.status, 201, await importedSave.clone().text());
   assert.equal(repository.catalog().at(-1).mapsURL, mapsURL);
+  const featureURL = "https://maps.app.goo.gl/feature-id-fixture";
+  const featureResponse = await runtime.dispatchFetch(`${origin}/places/resolve?url=${encodeURIComponent(featureURL)}`, { headers: { Cookie: cookie } });
+  assert.equal(featureResponse.status, 200, await featureResponse.clone().text());
+  const featurePlace = (await featureResponse.json()).place;
+  assert.deepEqual(featurePlace.coordinates, [37.7592345, -122.4113171]);
+  assert.equal(featurePlace.address, "3014 20th St, San Francisco, CA 94110");
+  assert.equal(featurePlace.mapsURL, featureURL);
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
   console.log("workerd runtime passed: standalone place save and atomic place update with an associated note and photo.");
   console.log("workerd runtime passed: authenticated Google Maps redirects, exact pin import, address enrichment, and original-link saving.");

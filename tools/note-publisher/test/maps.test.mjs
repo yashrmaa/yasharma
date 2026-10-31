@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createPublisher } from "../src/worker.mjs";
-import { googleMapsURL, googleMapsPin, resolveGoogleMaps, validatePlace } from "../src/places.mjs";
+import { googleMapsURL, googleMapsPin, googleMapsEmbedPin, resolveGoogleMaps, validatePlace } from "../src/places.mjs";
 import { googleMapsLink, googleMapsKey } from "../public/place-input.js";
 import { placeRepository } from "./places-repository.mjs";
 
@@ -9,6 +9,48 @@ const short = "https://maps.app.goo.gl/6tkYdRQhpNqzxMXJ9";
 const full = "https://www.google.com/maps/place/Kenyan+Shibuya/@35.6638151,67.9811653,3z/data=!8m2!3d35.6638151!4d139.6999153";
 const geo = async () => Response.json({ features: [{ properties: { name: "A different nearby venue", city: "Tokyo", locality: "Shibuya", street: "Jinnan", housenumber: "1-14-8", country: "Japan" }, geometry: { coordinates: [139, 36] } }] });
 const env = { GITHUB_TOKEN: "fake-token", PUBLISH_SECRET: "p".repeat(64), GITHUB_OWNER: "owner", GITHUB_REPO: "repo", GITHUB_BRANCH: "main", SITE_URL: "https://yasharma.com" };
+const featureLink = "https://maps.app.goo.gl/UvZMHdUqm4BCy2eYA";
+const featureURL = "https://maps.google.com/maps?q=Sightglass+Coffee,+3014+20th+St,+San+Francisco,+CA+94110&ftid=0x808f7e373f977f1f:0x25f057af5269cec5&entry=gps";
+const cid = "2733781384327450309";
+const embedHTML = `<script>initEmbed(${JSON.stringify([[[0, 0, 0]], [["0x808f7e373f977f1f:0x25f057af5269cec5", "Sightglass Coffee, 3014 20th St", [37.7592345, -122.4113171], cid], "Sightglass Coffee", ["3014 20th St", "San Francisco, CA 94110"]]])});</script>`;
+
+test("both reported Sightglass share formats resolve to their selected branch, preserving the shared URL", async () => {
+  const first = "https://maps.app.goo.gl/AsBLaAHwNQwsBbgn7";
+  const calls = [];
+  const mapsFetch = async (url, options) => {
+    calls.push({ url, options });
+    if (url === first) return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Sightglass+Coffee/@37.7770356,-122.4084543,17z/data=!8m2!3d37.7770356!4d-122.4084543" } });
+    if (url === featureLink) return new Response(null, { status: 302, headers: { Location: featureURL } });
+    if (url === `https://www.google.com/maps?cid=${cid}&output=embed`) {
+      if (options.method === "HEAD") return new Response(null, { status: 404 });
+      return new Response(null, { status: 302, headers: { Location: `https://www.google.com/maps/embed?origin=mfe&pb=!1m3!3m2!1m1!4s${cid}` } });
+    }
+    assert.equal(url, `https://www.google.com/maps/embed?origin=mfe&pb=!1m3!3m2!1m1!4s${cid}`);
+    return new Response(options.method === "HEAD" ? null : embedHTML);
+  };
+  const soma = await resolveGoogleMaps(first, mapsFetch, geo);
+  const mission = await resolveGoogleMaps(featureLink, mapsFetch, geo);
+  assert.deepEqual(soma.coordinates, [37.7770356, -122.4084543]);
+  assert.deepEqual(mission.coordinates, [37.7592345, -122.4113171]);
+  assert.equal(mission.name, "Sightglass Coffee");
+  assert.equal(mission.address, "3014 20th St, San Francisco, CA 94110");
+  assert.equal(mission.mapsURL, featureLink);
+  assert.ok(calls.every(({ options }) => options.redirect === "manual" && !options.headers.Authorization));
+});
+
+test("selected entity extraction checks both IDs and ignores viewport, other venues, and malformed data", () => {
+  assert.deepEqual(googleMapsEmbedPin(embedHTML, cid)?.coordinates, [37.7592345, -122.4113171]);
+  assert.equal(googleMapsEmbedPin(embedHTML, "1"), null);
+  assert.equal(googleMapsEmbedPin(embedHTML.replace("0x25f057af5269cec5", "0x1"), cid), null);
+  assert.equal(googleMapsEmbedPin(embedHTML.replace("37.7592345", "137.7592345"), cid), null);
+  assert.equal(googleMapsEmbedPin("<script>initEmbed([not JSON]);</script>", cid), null);
+});
+
+test("decimal CID links preserve 64-bit precision and unresolved entity pages never fall back to a viewport", async () => {
+  const place = await resolveGoogleMaps(`https://www.google.com/maps?cid=${cid}`, async () => new Response(embedHTML), geo);
+  assert.deepEqual(place.coordinates, [37.7592345, -122.4113171]);
+  await assert.rejects(resolveGoogleMaps(featureURL, async () => new Response("<meta content=\"37.7,-122.4\">"), geo), error => error.code === "maps_unresolved");
+});
 
 test("link comparison preserves the place query while ignoring tracking parameters", () => {
   assert.notEqual(googleMapsKey("https://maps.google.com/?q=35,139"), googleMapsKey("https://maps.google.com/?q=36,140"));

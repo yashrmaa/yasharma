@@ -69,6 +69,40 @@ export function googleMapsPin(value) {
   return { name: name.replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 200), coordinates };
 }
 
+function googleMapsCID(url) {
+  const feature = url.searchParams.get("ftid") || url.pathname.match(/!1s(0x[a-f0-9]+:0x[a-f0-9]+)/i)?.[1];
+  const hex = feature?.match(/^0x[a-f0-9]{1,16}:0x([a-f0-9]{1,16})$/i)?.[1];
+  if (hex) return BigInt(`0x${hex}`).toString();
+  const cid = url.searchParams.get("cid");
+  return /^\d{1,20}$/.test(cid || "") && BigInt(cid) <= 18446744073709551615n ? BigInt(cid).toString() : "";
+}
+
+export function googleMapsEmbedPin(html, cid) {
+  // The selected entity carries its own coordinates and CID. The map center,
+  // nearby venues, and arbitrary coordinate pairs must never become its pin.
+  const json = html.match(/\binitEmbed\((\[[\s\S]*?\])\s*\);/)?.[1];
+  if (!json) return null;
+  let data;
+  try { data = JSON.parse(json); } catch { return null; }
+  const pending = [data];
+  while (pending.length) {
+    const item = pending.pop();
+    if (!Array.isArray(item)) continue;
+    const entity = item[0];
+    if (Array.isArray(entity) && entity[3] === cid && typeof entity[0] === "string" && typeof item[1] === "string") {
+      const featureCID = entity[0].match(/^0x[a-f0-9]{1,16}:0x([a-f0-9]{1,16})$/i)?.[1];
+      const coordinates = entity[2];
+      if (featureCID && BigInt(`0x${featureCID}`).toString() === cid && Array.isArray(coordinates) && coordinates.length === 2 && coordinates.every(Number.isFinite) && Math.abs(coordinates[0]) <= 90 && Math.abs(coordinates[1]) <= 180) {
+        const name = item[1].replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 200);
+        const address = Array.isArray(item[2]) && item[2].every(part => typeof part === "string") ? item[2].join(", ").replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 400) : "";
+        return { name, coordinates, address };
+      }
+    }
+    for (const child of item) if (Array.isArray(child)) pending.push(child);
+  }
+  return null;
+}
+
 async function readMapsHTML(response) {
   const reader = response.body?.getReader();
   if (!reader) return "";
@@ -91,6 +125,7 @@ export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEn
   const original = googleMapsURL(value);
   let current = original;
   let pin;
+  let entityCID = "";
   const visited = new Set();
   const request = async (url, method) => {
     try { return await mapsFetch(url.href, { method, redirect: "manual", headers: { Accept: "text/html", "User-Agent": "YasharmaNotebook/1.0 (+https://yasharma.com/places/)" }, signal: AbortSignal.timeout(8000) }); }
@@ -98,16 +133,22 @@ export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEn
   };
   for (let attempt = 0; attempt < 6; attempt++) {
     if ((pin = googleMapsPin(current.href))) break;
+    const cid = googleMapsCID(current);
+    if (cid && !entityCID) {
+      entityCID = cid;
+      current = new URL(`https://www.google.com/maps?cid=${cid}&output=embed`);
+    }
     if (visited.has(current.href)) break;
     visited.add(current.href);
-    const response = await request(current, "HEAD");
+    // Google's embed endpoint returns 404 to HEAD even when GET succeeds.
+    const response = await request(current, entityCID ? "GET" : "HEAD");
     const location = response.headers.get("Location");
     if (response.status >= 300 && response.status < 400 && location) {
       current = googleMapsURL(new URL(location, current).href);
       continue;
     }
     if (!response.ok && response.status !== 405) break;
-    const page = await request(current, "GET");
+    const page = entityCID ? response : await request(current, "GET");
     if (page.status >= 300 && page.status < 400 && page.headers.get("Location")) {
       current = googleMapsURL(new URL(page.headers.get("Location"), current).href);
       continue;
@@ -115,6 +156,8 @@ export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEn
     if (!page.ok) break;
     let html;
     try { html = await readMapsHTML(page); } catch { break; }
+    if (entityCID) pin = googleMapsEmbedPin(html, entityCID);
+    if (pin) break;
     // Only canonical metadata is used; unrelated coordinates in the page are ignored.
     for (const match of html.matchAll(/<(?:meta|link)\b[^>]*>/gi)) {
       if (!/(?:rel|itemprop|property)=["'](?:canonical|url|og:url)["']/i.test(match[0])) continue;
@@ -149,7 +192,7 @@ export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEn
       address = [p.housenumber, p.street, city, p.country].filter(Boolean).join(" ").slice(0, 400);
     }
   } catch { /* Exact link import does not depend on the optional address service. */ }
-  return { ...pin, city, neighborhood, address, precision: "address", mapsURL: original.href, locationSource: original.href };
+  return { ...pin, city, neighborhood, address: pin.address || address, precision: "address", mapsURL: original.href, locationSource: original.href };
 }
 
 // Bound upstream bodies as well as browser inputs; never expose their contents
