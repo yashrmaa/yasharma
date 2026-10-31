@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { realpathSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { placeRepository } from "./places-repository.mjs";
 
 let modulePath = process.env.MINIFLARE_MODULE;
 if (!modulePath) {
@@ -17,8 +18,10 @@ const origin = "https://notebook.test";
 const secret = "p".repeat(64);
 let mode = "success";
 let calls = [];
+let placesMode = false;
+const repository = placeRepository();
 const options = {
-  modules: ["worker.mjs", "session.mjs", "photos.mjs"].map(file => ({
+  modules: ["worker.mjs", "session.mjs", "photos.mjs", "places.mjs"].map(file => ({
     type: "ESModule", path: fileURLToPath(new URL(`../src/${file}`, import.meta.url)),
   })),
   compatibilityDate: "2026-10-01",
@@ -31,6 +34,7 @@ const options = {
     const url = new URL(request.url);
     assert.equal(url.origin, "https://api.github.com", "Never forward credentials to redirects");
     assert.equal(request.headers.get("Authorization"), "Bearer fake-runtime-token");
+    if (placesMode) return repository.fetch(request.url, { method: request.method, headers: Object.fromEntries(request.headers), ...(!["GET", "HEAD"].includes(request.method) ? { body: await request.text() } : {}) });
     calls.push({ method: request.method, url: request.url, body: request.method === "PUT" ? await request.json() : null });
     if (mode === "redirect") return new Response(null, { status: 302, headers: { Location: "https://redirect.invalid/" } });
     if (mode === "collision" && calls.length === 1) return new Response(null, { status: 409 });
@@ -75,7 +79,20 @@ try {
   assert.equal(collision.status, 201, await collision.text());
   assert.deepEqual(calls.map(call => call.method), ["PUT", "GET", "PUT"]);
   assert.notEqual(calls[0].url, calls[2].url);
+  placesMode = true;
+  const location = { name: "Runtime Cafe", city: "San Francisco", category: "Coffee", status: "saved", address: "100 Market Street", coordinates: [37.79, -122.4], precision: "address" };
+  const savedPlace = await publish({ kind: "place", place: location });
+  assert.equal(savedPlace.status, 201, await savedPlace.clone().text());
+  const saved = await savedPlace.json();
+  assert.equal(saved.has_note, false);
+  const savedNote = await publish({ kind: "place", place: { ...location, id: saved.place.id, revision: saved.place.revision, status: "liked" }, text: "Great coffee 🪴", photos: [{ data: readFileSync(new URL("./fixtures/photo.jpg", import.meta.url)).toString("base64"), alt: "Coffee" }] });
+  assert.equal(savedNote.status, 201, await savedNote.clone().text());
+  const noted = await savedNote.json();
+  assert.equal(noted.has_note, true);
+  assert.match(String(repository.file(noted.path)), /places: \[/);
+  assert.equal(repository.catalog()[0].status, "liked");
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
+  console.log("workerd runtime passed: standalone place save and atomic place update with an associated note and photo.");
 } finally {
   await runtime.dispose();
 }

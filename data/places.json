@@ -1,0 +1,31 @@
+[
+  {
+    "id": "bello-coffee",
+    "name": "Bello Coffee & Tea",
+    "aliases": ["Bello coffee", "Bello Coffee & Tea"],
+    "category": "Coffee",
+    "status": "liked",
+    "city": "San Francisco",
+    "neighborhood": "Glen Park",
+    "address": "2885 Diamond Street, San Francisco, CA",
+    "coordinates": [37.73381, -122.43397],
+    "precision": "address",
+    "website": "https://www.bello.coffee/",
+    "locationSource": "https://www.openstreetmap.org/node/974352510"
+  },
+  {
+    "id": "fellini-coffee",
+    "name": "Fellini Coffee",
+    "aliases": ["Fellini Coffee", "Fellini in NYC"],
+    "category": "Coffee",
+    "status": "liked",
+    "city": "New York",
+    "neighborhood": "",
+    "address": "New York, NY",
+    "coordinates": [40.7549, -73.984],
+    "precision": "city",
+    "locationNote": "City-level pin. I haven't recorded which Fellini location this was.",
+    "website": "https://www.fellinicoffee.com/",
+    "locationSource": "https://www.fellinicoffee.com/"
+  }
+]

@@ -9,3 +9,11 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
+{{- if eq .Section "places" -}}
+  {{- $placesStyle := resources.Get "css/places.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ "vendor/leaflet/leaflet.css" | relURL }}">
+<link rel="stylesheet" href="{{ $placesStyle.RelPermalink }}" integrity="{{ $placesStyle.Data.Integrity }}">
+<script src="{{ "vendor/leaflet/leaflet.js" | relURL }}" defer></script>
+  {{- $placesScript := resources.Get "js/places.js" | minify | fingerprint -}}
+<script src="{{ $placesScript.RelPermalink }}" integrity="{{ $placesScript.Data.Integrity }}" defer></script>
+{{- end -}}

@@ -1,0 +1,33 @@
+{{- $places := slice -}}
+{{- $notes := where site.RegularPages "Section" "notes" -}}
+{{- range hugo.Data.places -}}
+  {{- $place := . -}}
+  {{- if not .draft -}}
+    {{- if or (not (in (slice "liked" "saved" "mentioned") .status)) (ne (len .coordinates) 2) -}}
+      {{- errorf "Place %q needs a status (liked/saved/mentioned) and [latitude, longitude] coordinates" .id -}}
+    {{- end -}}
+    {{- $entries := slice -}}
+    {{- range $notes.ByDate.Reverse -}}
+      {{- if and (not .Draft) (not (.Date.After now)) (not (.PublishDate.After now)) (or .ExpiryDate.IsZero (.ExpiryDate.After now)) -}}
+        {{- if in (partial "places/ids.html" .) $place.id -}}
+          {{- $photos := slice -}}
+          {{- range findRESubmatch `<img\b[^>]*\bsrc="([^"]+)"[^>]*>` .Content -}}
+            {{- $url := index . 1 | htmlUnescape -}}
+            {{- if hasPrefix $url "https://yasharma.com/notes-media/" -}}
+              {{- $url = strings.TrimPrefix "https://yasharma.com" $url | relURL -}}
+            {{- end -}}
+            {{- if or (hasPrefix $url "/") (hasPrefix $url "https://") (hasPrefix $url "http://") -}}
+              {{- $photos = $photos | append (dict "url" $url "alt" (printf "My photo from %s" $place.name)) -}}
+            {{- end -}}
+          {{- end -}}
+          {{- $local := partial "notes/local-date.html" . -}}
+          {{- $entries = $entries | append (dict "url" .RelPermalink "text" (.Plain | htmlUnescape | strings.TrimSpace) "date" (.Date.Format "2006-01-02T15:04:05Z07:00") "label" ($local.Format "Jan 2, 2006") "photos" $photos) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $query := printf "%s %s" .name .address -}}
+    {{- $mapsURL := printf "https://www.google.com/maps/search/?api=1&query=%s" ($query | urlquery) -}}
+    {{- $places = $places | append (merge $place (dict "notes" $entries "mapsURL" $mapsURL)) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $places -}}

@@ -22,6 +22,18 @@ Wrangler directly. Manage server-side credentials with `wrangler secret put
 PUBLISH_SECRET` and `wrangler secret put GITHUB_TOKEN`; the GitHub token needs
 Contents read/write access to this repository only. Never put credentials in code.
 
+## Places
+
+[/places/](https://yasharma.com/places/) is a personal map with city filters,
+searchable notes, my photos, and links to Google Maps. Choose **Save a place** in
+the notebook composer to add or update a location, mark it liked or saved for
+later, and optionally add a note or photos. Place-only saves don't create empty
+notes. Locations live in `data/places.json`; other published notes also connect
+through distinctive place aliases or an explicit `places` field.
+See [the places guide](docs/places.md) for the data format and browser checks.
+Run `npm run test:places` to verify the Hugo integration.
+Run `npm run preview:notebook` for a local composer and map with isolated saves.
+
 ## Write a post
 
 ```sh

@@ -44,7 +44,7 @@ async function signIn(page) {
   await page.locator("#sign-in-button").click();
   await page.locator("#composer").waitFor({ state: "visible" });
 }
-async function waitMessage(page, text) { await page.waitForFunction(text => document.getElementById("message").textContent.includes(text), text); }
+async function waitMessage(page, text) { await page.waitForFunction(text => !document.getElementById("feedback").hidden && document.getElementById("message").textContent.includes(text) && document.getElementById("composer").getAttribute("aria-busy") !== "true", text); }
 
 try {
   const ctx = await context({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
@@ -102,7 +102,7 @@ try {
   await waitMessage(page, "wasn’t confirmed");
   await page.reload();
   await page.locator("#composer").waitFor({ state: "visible" });
-  await waitMessage(page, "previous publish was not confirmed");
+  await waitMessage(page, "previous save was not confirmed");
   assert.equal(await page.locator("#thought").inputValue(), "Keep this draft");
   assert.equal(commits.length, 2, "no automatic retries on reload");
 

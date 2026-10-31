@@ -2,10 +2,15 @@
   "name": "yasharma-site",
   "private": true,
   "scripts": {
-    "build:search": "pagefind --site public --output-subdir search"
+    "build:search": "pagefind --site public --output-subdir search",
+    "test:places": "node tools/places/test.mjs",
+    "test:places:browser": "node tools/places/browser.mjs",
+    "preview:notebook": "node tools/places/preview-notebook.mjs"
   },
   "devDependencies": {
     "pagefind": "1.5.2"
   },
-  "engines": { "node": ">=24" }
+  "engines": {
+    "node": ">=24"
+  }
 }

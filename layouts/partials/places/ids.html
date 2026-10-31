@@ -1,0 +1,20 @@
+{{- /* Explicit IDs work for any note; aliases connect future mentions of known places. */ -}}
+{{- $ids := slice -}}
+{{- if eq .Section "notes" -}}
+  {{- $specified := .Params.places | default slice -}}
+  {{- $text := lower .Plain -}}
+  {{- range hugo.Data.places -}}
+    {{- if not .draft -}}
+      {{- $id := .id -}}
+      {{- if in $specified $id -}}
+        {{- $ids = $ids | append $id -}}
+      {{- end -}}
+      {{- range .aliases -}}
+        {{- if strings.Contains $text (lower .) -}}
+          {{- $ids = $ids | append $id -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (uniq $ids) -}}

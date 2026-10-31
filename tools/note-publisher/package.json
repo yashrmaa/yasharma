@@ -6,7 +6,10 @@
     "test": "node --test test/*.test.mjs",
     "test:site": "node test/site.mjs",
     "test:browser": "node test/browser.mjs",
+    "test:places-browser": "node test/places-browser.mjs",
     "test:runtime": "node test/runtime.mjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

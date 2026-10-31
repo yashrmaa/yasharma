@@ -1,0 +1,1 @@
+{{- partial "places/data.html" . | jsonify -}}

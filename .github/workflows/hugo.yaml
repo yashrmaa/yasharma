@@ -76,6 +76,8 @@ jobs:
         env:
           HUGO_BIN: hugo
         run: npm run test:site --prefix tools/note-publisher
+      - name: Check places map and note associations
+        run: npm run test:places
       - name: Build with Hugo
         env:
           # For maximum backward compatibility with Hugo modules

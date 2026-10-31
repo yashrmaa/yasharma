@@ -1,16 +1,10 @@
 import { cookie, newSession, hasSession, sameOrigin, SECURITY_HEADERS } from "./session.mjs";
 import { validatePhotos } from "./photos.mjs";
+import { PublishError, validatePlace, listPlaces, searchPlaces, savePlace } from "./places.mjs";
 
-const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
+const ASSET_PATHS = new Set(["/", "/composer.js", "/photo-input.js", "/place-input.js", "/composer.css", "/manifest.webmanifest", "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"]);
 const MAX_BYTES = 32 * 1024;
 const encoder = new TextEncoder();
-
-class PublishError extends Error {
-  constructor(status, code, message, details = {}) {
-    super(message);
-    Object.assign(this, { status, code, details });
-  }
-}
 
 function json(status, value, headers = {}) {
   return new Response(JSON.stringify(value), {
@@ -87,12 +81,14 @@ function validate(input, siteURL) {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     throw new PublishError(400, "invalid_input", "Send a JSON object.");
   }
-  if (Object.keys(input).some(key => !["kind", "url", "title", "text", "categories", "photos"].includes(key))) {
-    throw new PublishError(400, "unknown_field", "Only kind, url, title, text, categories, and photos are accepted.");
+  if (Object.keys(input).some(key => !["kind", "url", "title", "text", "categories", "photos", "place"].includes(key))) {
+    throw new PublishError(400, "unknown_field", "Only note fields and an optional place are accepted.");
   }
-  if (!["link", "note"].includes(input.kind)) {
-    throw new PublishError(400, "invalid_kind", "kind must be link or note.");
+  if (!["link", "note", "place"].includes(input.kind)) {
+    throw new PublishError(400, "invalid_kind", "kind must be link, note, or place.");
   }
+  const place = input.kind === "place" ? validatePlace(input.place) : undefined;
+  if (input.kind !== "place" && input.place !== undefined) throw new PublishError(400, "invalid_place", "Use place mode to save a location with an optional note.");
   const text = field(input, "text", 10000);
   let title = field(input, "title", 300);
   const rawURL = field(input, "url", 4096);
@@ -115,10 +111,10 @@ function validate(input, siteURL) {
       throw new PublishError(400, "invalid_url", "Supply an external http:// or https:// URL without credentials or spaces.");
     }
     title ||= url.hostname;
-  } else if ((!text && !photos.length) || rawURL) {
+  } else if ((!place && !text && !photos.length) || rawURL) {
     throw new PublishError(400, "invalid_note", "A note needs text or a photo and must not include a URL field. Put any links in the text.");
   }
-  return { kind: input.kind, text, title, url: url?.href, photos, categories: [...new Set(categories.map(value => value.trim().toLowerCase()))] };
+  return { kind: input.kind, text, title, url: url?.href, photos, place, categories: [...new Set(categories.map(value => value.trim().toLowerCase()))] };
 }
 
 // JSON strings are valid YAML quoted scalars. Escape YAML's extra line breaks too.
@@ -132,6 +128,7 @@ export function markdown(entry, date) {
   if (entry.title) lines.push(`title: ${yamlString(entry.title)}`);
   if (entry.url) lines.push(`source_url: ${yamlString(entry.url)}`);
   if (entry.categories?.length) lines.push(`categories: [${entry.categories.map(yamlString).join(", ")}]`);
+  if (entry.places?.length) lines.push(`places: [${entry.places.map(yamlString).join(", ")}]`);
   lines.push("draft: false", "---", "");
   // Hugo's safe Markdown renderer handles raw HTML and unsafe URLs. Keep the
   // Markdown source intact, but never let API text invoke trusted shortcodes.
@@ -159,7 +156,7 @@ function config(env) {
 
 // workerd requires the global receiver for fetch; an extracted, unbound reference
 // throws "Illegal invocation" before sending anything to GitHub.
-export function createPublisher({ fetch: githubFetch = (url, options) => globalThis.fetch(url, options), now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
+export function createPublisher({ fetch: githubFetch = (url, options) => globalThis.fetch(url, options), geocodeFetch = (url, options) => globalThis.fetch(url, options), now = () => new Date(), uuid = () => crypto.randomUUID(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
   return {
     async fetch(request, env) {
       try {
@@ -188,6 +185,19 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
           await readJSON(request);
           return json(200, { ok: true }, { "Set-Cookie": await newSession(env.PUBLISH_SECRET, endpoint.origin, now()) });
         }
+        if (["/places", "/places/search"].includes(endpoint.pathname)) {
+          config(env);
+          if (request.method !== "GET") return json(405, { ok: false, error: { code: "method_not_allowed", message: "Use GET." } }, { Allow: "GET" });
+          if (request.headers.has("Origin") && !sameOrigin(request)) throw new PublishError(403, "invalid_origin", "Open the notebook directly to use your places.");
+          const authenticated = request.headers.has("Authorization") ? await authorized(request, env.PUBLISH_SECRET) : await hasSession(request, env.PUBLISH_SECRET, now());
+          if (!authenticated) throw new PublishError(401, "unauthorized", "Sign in to use your places.");
+          if (endpoint.pathname === "/places") {
+            if (endpoint.search) throw new PublishError(400, "invalid_search", "Use /places without query parameters.");
+            return json(200, { ok: true, places: await listPlaces(env, githubFetch) });
+          }
+          if ([...endpoint.searchParams.keys()].some(key => key !== "q")) throw new PublishError(400, "invalid_search", "Search by place name and city.");
+          return json(200, { ok: true, places: await searchPlaces(endpoint.searchParams.get("q"), geocodeFetch, env.PLACES_SEARCH_URL) });
+        }
         if (endpoint.pathname !== "/publish" || endpoint.search) throw new PublishError(404, "not_found", "Use /publish.");
         if (request.method !== "POST") return json(405, { ok: false, error: { code: "method_not_allowed", message: "Use POST." } }, { Allow: "POST" });
         const site = config(env);
@@ -202,6 +212,10 @@ export function createPublisher({ fetch: githubFetch = (url, options) => globalT
         }
         const entry = validate(await readJSON(request, 2 * 1024 * 1024), site);
         const date = now().toISOString();
+        if (entry.kind === "place") {
+          const result = await savePlace({ entry, env: { ...env, SITE_URL: site }, fetch: githubFetch, date, uuid, sleep, noteDocument: id => markdown({ ...entry, kind: "note", places: [id] }, date) });
+          return json(201, result);
+        }
         const headers = {
           Authorization: `Bearer ${env.GITHUB_TOKEN}`,
           Accept: "application/vnd.github+json",

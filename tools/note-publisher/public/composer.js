@@ -1,4 +1,5 @@
 import { preparePhoto } from "./photo-input.js";
+import { mountPlaceInput } from "./place-input.js";
 const DRAFT_KEY = "notebook.draft.v1";
 
 export function entryFromText(value) {
@@ -15,6 +16,10 @@ export function entryFromText(value) {
 
 export function entryError(entry) {
   if (entry.kind === "note" && !entry.text && !entry.photos?.length) return "Write something or add a photo before publishing.";
+  if (entry.kind === "place") {
+    if (!entry.place?.name || !entry.place.city || !entry.place.address || !entry.place.category) return "Choose a place and enter its name, city, address, and kind.";
+    if (!Array.isArray(entry.place.coordinates) || entry.place.coordinates.length !== 2 || !entry.place.coordinates.every(Number.isFinite) || Math.abs(entry.place.coordinates[0]) > 90 || Math.abs(entry.place.coordinates[1]) > 180) return "Choose a location from search, or enter valid latitude and longitude.";
+  }
   if (entry.text.length > 10000) return "Keep your thought under 10,000 characters.";
   if ((entry.url || "").length > 4096) return "This link is too long (maximum 4,096 characters).";
   if (new TextEncoder().encode(JSON.stringify({ ...entry, photos: undefined })).length > 32768) return "This entry is too large. Shorten it before publishing.";
@@ -36,6 +41,8 @@ export function mount() {
   let pending = false;
   let storageWorks = true;
   let siteURL = "https://yasharma.com";
+  const placeInput = mountPlaceInput({ api, onChange: () => { if (!pending) get("feedback").hidden = true; saveDraft(); controls(); } });
+  const draftValue = () => ({ text: thought.value, categories: categories.value, photos, location: placeInput.draft() });
 
   function feedback(message, state = "error", url = "") {
     get("feedback").hidden = false;
@@ -55,20 +62,21 @@ export function mount() {
   function draftStatus() {
     get("draft-status").textContent = !storageWorks
       ? "Draft saving is unavailable. Keep this window open or copy your text."
-      : thought.value || photos.length || categories.value ? "Draft saved on this device." : "Drafts stay on this device.";
+      : thought.value || photos.length || categories.value || (placeInput.enabled && placeInput.value().name) ? "Draft saved on this device." : "Drafts stay on this device.";
   }
 
   function saveDraft() {
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify({ text: thought.value, categories: categories.value, photos, pending }));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draftValue(), pending }));
       storageWorks = true;
     } catch { storageWorks = false; }
     draftStatus();
   }
 
   function controls() {
-    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (!thought.value.trim() && !photos.length);
-    publish.textContent = busy ? "Publishing…" : preparing ? "Preparing photos…" : "Publish";
+    publish.disabled = busy || preparing || !signedIn || !navigator.onLine || (!placeInput.enabled && !thought.value.trim() && !photos.length);
+    publish.textContent = busy ? "Saving…" : preparing ? "Preparing photos…" : placeInput.enabled ? thought.value.trim() || photos.length ? "Save place & note" : placeInput.value().id ? "Save changes" : "Save place" : "Publish";
+    placeInput.setBusy(busy || preparing);
     thought.readOnly = busy;
     categories.readOnly = busy;
     picker.disabled = busy || preparing;
@@ -79,6 +87,7 @@ export function mount() {
 
   function auth(authenticated) {
     signedIn = authenticated;
+    placeInput.setAuthenticated(authenticated);
     get("sign-in").hidden = authenticated;
     get("composer").hidden = !authenticated;
     get("sign-out").hidden = !authenticated;
@@ -107,6 +116,7 @@ export function mount() {
       const data = await api("/session");
       siteURL = new URL(data.site_url).origin;
       get("notebook-link").href = `${siteURL}/notes/`;
+      get("places-link").href = `${siteURL}/places/`;
       get("deployment-link").href = data.actions_url;
       auth(data.authenticated === true);
       get("connection").hidden = true;
@@ -121,12 +131,13 @@ export function mount() {
   const draft = readDraft();
   thought.value = draft?.text || "";
   categories.value = typeof draft?.categories === "string" ? draft.categories : "";
+  placeInput.restore(draft?.location);
   photos = Array.isArray(draft?.photos) ? draft.photos.filter(photo => typeof photo?.data === "string" && /^[A-Za-z0-9+/]*={0,2}$/.test(photo.data) && photo.data.length < 683000 && typeof photo.alt === "string").slice(0, 3) : [];
   if (photos.length || categories.value) get("extras").open = true;
   renderPhotos();
   pending = draft?.pending === true;
   saveDraft(); // Also detects browsers that prohibit local storage.
-  if (pending) feedback("Your previous publish was not confirmed. Check your notes before publishing this draft again.");
+  if (pending) feedback("Your previous save was not confirmed. Check your notes or map before saving this draft again.");
   void checkSession();
 
   thought.addEventListener("input", () => { saveDraft(); controls(); });
@@ -214,12 +225,12 @@ export function mount() {
     event.preventDefault();
     if (busy || preparing || !signedIn) return;
     if (!navigator.onLine) { feedback("You’re offline. Reconnect before publishing; your draft is kept here."); return; }
-    const entry = entryFromText(thought.value);
+    const entry = placeInput.enabled ? { kind: "place", text: thought.value.trim(), place: placeInput.value() } : entryFromText(thought.value);
     entry.categories = categories.value.split(",").map(value => value.trim()).filter(Boolean);
     entry.photos = photos;
     const validation = entryError(entry);
     if (validation) { feedback(validation); return; }
-    const outgoing = JSON.stringify({ text: thought.value, categories: categories.value, photos });
+    const outgoing = JSON.stringify(draftValue());
     busy = true;
     pending = true;
     saveDraft();
@@ -228,22 +239,27 @@ export function mount() {
     try {
       const data = await api("/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(entry) });
       const url = new URL(data.url);
-      if (data.status !== "committed" || url.origin !== siteURL || !/^\/notes\/[^/]+\/$/.test(url.pathname)) throw new Error("The publisher returned an incomplete confirmation.");
+      const noteURL = /^\/notes\/[^/]+\/$/.test(url.pathname);
+      const placeURL = entry.kind === "place" && url.pathname === "/places/" && url.searchParams.get("place") === data.place_id;
+      if (data.status !== "committed" || url.origin !== siteURL || !(noteURL || placeURL) || (entry.kind === "place" && (!data.place || data.place.id !== data.place_id || !/^[a-f0-9]{64}$/.test(data.place.revision)))) throw new Error("The publisher returned an incomplete confirmation.");
       pending = false;
       // Preserve a newer draft written by another window while the request ran.
       const saved = readDraft();
-      const newer = saved && JSON.stringify({ text: saved.text, categories: saved.categories || "", photos: saved.photos || [] }) !== outgoing;
+      const newer = saved && JSON.stringify({ text: saved.text, categories: saved.categories || "", photos: saved.photos || [], location: saved.location || null }) !== outgoing;
       thought.value = newer ? saved.text : "";
       categories.value = newer ? saved.categories || "" : "";
       photos = newer ? saved.photos || [] : [];
+      if (data.place) placeInput.saved(data.place);
+      if (newer) placeInput.restore(saved.location);
       renderPhotos();
       saveDraft();
-      feedback("Saved. Your note will appear after the site finishes deploying. The link may briefly show 404.", "success", url.href);
+      get("note-link").textContent = placeURL ? "View place ↗" : "View note ↗";
+      feedback(entry.kind === "place" ? data.has_note ? "Saved. Your place, note, and photos will appear after the site finishes deploying." : "Saved. Your place will appear on the map after deployment. No note was created." : "Saved. Your note will appear after the site finishes deploying. The link may briefly show 404.", "success", url.href);
     } catch (error) {
       pending = !error.known;
       saveDraft();
       if (error.status === 401) auth(false);
-      feedback(error.known ? `${error.message} Your draft has been kept.` : "Publishing wasn’t confirmed. Your draft is kept. Check your notes and deployment status before trying again; the save may have succeeded.");
+      feedback(error.known ? `${error.message} Your draft has been kept.` : "Saving wasn’t confirmed. Your draft is kept. Check your notes, map, and deployment status before trying again; the save may have succeeded.");
     } finally { busy = false; controls(); }
   });
 

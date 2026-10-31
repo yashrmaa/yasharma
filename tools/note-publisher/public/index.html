@@ -31,7 +31,29 @@
       <button id="sign-in-button" type="submit">Sign in</button>
     </form>
     <form id="composer" hidden>
-      <label for="thought">What do you want to remember?</label>
+      <div class="compose-modes" role="group" aria-label="What would you like to save?">
+        <button type="button" data-compose-mode="note" aria-pressed="true">Write a note</button>
+        <button type="button" data-compose-mode="place" aria-pressed="false">Save a place</button>
+      </div>
+      <section id="place-fields" aria-label="Place details" hidden>
+        <div class="place-section-heading"><h2>Your places</h2><button id="place-refresh" type="button" class="quiet">Reload places</button></div>
+        <label for="place-existing">Update a saved place, or add a new one</label>
+        <select id="place-existing"><option value="">Add a new place…</option></select>
+        <label for="place-query">Find a place</label>
+        <div class="place-search-row"><input id="place-query" type="search" maxlength="200" placeholder="Cafe name or street address, and city" autocomplete="off"><button id="place-search-button" type="button">Search</button></div>
+        <p id="place-load-status" class="muted" role="status" aria-live="polite">Search for somewhere new or select a saved place.</p>
+        <div id="place-results" aria-label="Place search results"></div>
+        <p class="place-attribution muted">Search by <a href="https://photon.komoot.io/" target="_blank" rel="noopener noreferrer">Photon</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a></p>
+        <label for="place-name">Place name</label><input id="place-name" maxlength="200" autocomplete="off">
+        <div class="place-form-row"><div><label for="place-status">My list</label><select id="place-status"><option value="saved">Saved for later</option><option value="liked">Liked</option><option value="mentioned">Mentioned in my notes</option></select></div><div><label for="place-category">Kind of place</label><input id="place-category" maxlength="60" list="place-kinds"><datalist id="place-kinds"><option value="Coffee"><option value="Restaurants"><option value="Drinks"><option value="Outdoors"><option value="Shops"><option value="Culture"><option value="Other"></datalist></div></div>
+        <p id="place-location" class="muted"></p><a id="place-map-check" class="muted" target="_blank" rel="noopener noreferrer" hidden>Check location in Google Maps ↗</a>
+        <details id="place-location-details"><summary>Edit address &amp; pin / add manually</summary>
+          <div class="place-form-row"><div><label for="place-city">City</label><input id="place-city" maxlength="120"></div><div><label for="place-neighborhood">Neighborhood (optional)</label><input id="place-neighborhood" maxlength="120"></div></div>
+          <label for="place-address">Address or area</label><input id="place-address" maxlength="400">
+          <div class="place-form-row"><div><label for="place-latitude">Latitude</label><input id="place-latitude" inputmode="decimal" type="number" min="-90" max="90" step="any"></div><div><label for="place-longitude">Longitude</label><input id="place-longitude" inputmode="decimal" type="number" min="-180" max="180" step="any"></div></div><label for="place-precision">Pin accuracy</label><select id="place-precision"><option value="address">Exact location</option><option value="city">Approximate area</option></select>
+        </details>
+      </section>
+      <label for="thought" id="thought-label">What do you want to remember?</label>
       <textarea id="thought" name="thought" rows="10" maxlength="15000" placeholder="A thought, a quote, something you learned…" aria-describedby="writing-help draft-status"></textarea>
       <p id="writing-help" class="muted">For a link, paste its URL on the first line. Add a thought below it if you like.</p>
       <p id="day-help" class="muted">Each publish adds a new timed entry under today’s date.</p>
@@ -54,7 +76,7 @@
       <p id="message"></p>
       <p id="result-links" hidden><a id="note-link" target="_blank" rel="noopener noreferrer">View note ↗</a><span aria-hidden="true"> · </span><a id="deployment-link" target="_blank" rel="noopener noreferrer">Deployment status ↗</a></p>
     </section>
-    <footer><a id="notebook-link" href="https://yasharma.com/notes/" target="_blank" rel="noopener noreferrer">Read notes ↗</a></footer>
+    <footer><a id="notebook-link" href="https://yasharma.com/notes/" target="_blank" rel="noopener noreferrer">Read notes ↗</a><span aria-hidden="true"> · </span><a id="places-link" href="https://yasharma.com/places/" target="_blank" rel="noopener noreferrer">Explore my map ↗</a></footer>
     <noscript>Enable JavaScript to save your draft and publish from this composer.</noscript>
   </main>
 </body>

@@ -101,6 +101,10 @@ menu:
       name: reading
       url: /reading/
       weight: 30
+    - identifier: places
+      name: places
+      url: /places/
+      weight: 40
 
 pygmentsUseClasses: true
 markup:

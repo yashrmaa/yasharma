@@ -1,0 +1,91 @@
+{{ define "main" }}
+{{ $places := partial "places/data.html" . }}
+{{ $cities := slice }}
+{{ $categories := slice }}
+{{ range $places }}
+  {{ $cities = $cities | append .city }}
+  {{ $categories = $categories | append .category }}
+{{ end }}
+<div class="places-page" data-places-page>
+  <header class="places-intro">
+    <div>
+      <p class="places-eyebrow"><span aria-hidden="true">↗</span> A personal atlas</p>
+      <h1>Places worth <em>keeping.</em></h1>
+      <p class="places-deck">Good coffee, memorable meals, little discoveries.<br>A few pins from my corner of the world.</p>
+    </div>
+    <div class="places-intro-aside">
+      <span class="places-stamp" aria-hidden="true">a little<br>less lost <span>✳</span></span>
+      <p>{{ len $places }} places &nbsp; / &nbsp; {{ len (uniq $cities) }} cities<br><span>Collected along the way</span></p>
+    </div>
+  </header>
+
+  <section class="places-explorer" aria-label="Explore my places" data-source="{{ (.OutputFormats.Get "JSON").RelPermalink }}">
+    <div class="places-toolbar" data-js-control hidden>
+      <div class="places-city-tabs" role="group" aria-label="Filter by city">
+        <button type="button" data-city="" aria-pressed="true">Everywhere <span>{{ len $places }}</span></button>
+        {{ range uniq $cities }}
+        {{ $city := . }}
+        <button type="button" data-city="{{ . }}" aria-pressed="false">{{ . }} <span>{{ len (where $places "city" $city) }}</span></button>
+        {{ end }}
+      </div>
+      <button type="button" class="places-share" data-share>Share this map <span aria-hidden="true">↗</span></button>
+    </div>
+
+    <div class="places-workspace">
+      <aside class="places-sidebar" aria-label="Places and notes">
+        <div class="places-search-area" data-js-control hidden>
+          <label class="places-search"><span aria-hidden="true">⌕</span><span class="places-sr-only">Search places, notes, or neighborhoods</span><input type="search" id="places-search" placeholder="A place, a neighborhood, a craving…" autocomplete="off"></label>
+          <div class="places-filter-row">
+            <label><span class="places-sr-only">Kind of place</span><select id="places-category"><option value="">All kinds of places</option>{{ range sort (uniq $categories) }}<option value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
+            <label><span class="places-sr-only">Saved or liked</span><select id="places-status"><option value="">All statuses</option><option value="liked">Liked</option><option value="saved">Saved for later</option><option value="mentioned">In my notes</option></select></label>
+          </div>
+        </div>
+        <div class="places-list-heading"><h2>The little list</h2><span id="places-count" role="status" aria-live="polite">{{ len $places }} places</span></div>
+        <div class="places-list" id="places-list">
+          {{ range $index, $place := $places }}
+          <article class="place-card" id="place-{{ .id }}" data-place="{{ .id }}" aria-label="{{ .name }}">
+            <div class="place-card-topline"><span class="place-number">{{ printf "%02d" (add $index 1) }}</span><span class="place-kind">{{ .category }}</span><span class="place-status" data-status="{{ .status }}">{{ if eq .status "liked" }}<span aria-hidden="true">♥</span> Liked{{ else if eq .status "saved" }}Saved for later{{ else }}From my notes{{ end }}</span></div>
+            <button type="button" class="place-select" data-select="{{ .id }}" aria-label="Show {{ .name }} on the map" aria-pressed="false" disabled>
+              <h3>{{ .name }} <span aria-hidden="true">↗</span></h3>
+              <p>{{ with .neighborhood }}{{ . }} · {{ end }}{{ .city }}</p>
+            </button>
+            {{ $photos := slice }}
+            {{ range .notes }}{{ range .photos }}{{ $photos = $photos | append . }}{{ end }}{{ end }}
+            {{ with $photos }}
+            <button type="button" class="place-photo" data-photo="{{ $place.id }}" aria-label="Enlarge my photo from {{ $place.name }}" disabled>
+              <img src="{{ (index . 0).url }}" alt="{{ (index . 0).alt }}" width="640" height="360" loading="lazy">
+              <span>Through my lens <span aria-hidden="true">⤢</span></span>
+            </button>
+            {{ end }}
+            {{ with .notes }}{{ with index . 0 }}
+            {{ with .text }}<blockquote><p>{{ . }}</p></blockquote>{{ end }}
+            <a class="place-note-link" href="{{ .url }}">From my notebook <span>· {{ .label }}</span> <span aria-hidden="true">↗</span></a>
+            {{ end }}{{ end }}
+            {{ with .locationNote }}<p class="place-location-note">{{ . }}</p>{{ end }}
+            <div class="place-card-actions"><a href="{{ .mapsURL }}" target="_blank" rel="noopener noreferrer">Open in Google Maps <span aria-hidden="true">↗</span></a><button type="button" data-select="{{ .id }}" data-js-control hidden>Find on map <span aria-hidden="true">⊙</span></button></div>
+          </article>
+          {{ end }}
+        </div>
+        <div class="places-empty" id="places-empty" hidden><span aria-hidden="true">⌕</span><h3>No pins here just yet.</h3><p>Try another city, a different word, or fewer filters.</p><button type="button" data-reset>Show all places <span aria-hidden="true">↗</span></button></div>
+        <p class="places-sidebar-foot">A growing collection. Always room for one more.</p>
+      </aside>
+
+      <div class="places-map-pane">
+        <div id="places-map" class="places-map" aria-label="Interactive map of my places"></div>
+        <div class="places-map-message" id="places-map-message" role="status"><p>A little map is on its way.</p><span>The places and Google Maps links are also in the list.</span></div>
+        <div class="places-map-top" data-js-control hidden><span class="places-map-label"><span></span> <span id="places-map-label">A few good places</span></span><button type="button" data-fit aria-label="Zoom to all filtered places">Show all pins <span aria-hidden="true">⤢</span></button></div>
+        <div class="places-map-bottom" data-js-control hidden><span class="places-map-caption">Follow a pin.<br><em>Find a little something.</em></span><button type="button" data-random><span aria-hidden="true">⚄</span> Pick a place for me</button></div>
+        <div class="place-map-detail" id="place-map-detail" hidden aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="places-explorer-footer"><p><span aria-hidden="true">✳</span> Personal notes, my own photos, no particular order.</p><a href="{{ "notes/" | relURL }}">More from my notebook <span aria-hidden="true">↗</span></a></div>
+  </section>
+  <p id="places-announcement" class="places-sr-only" role="status" aria-live="polite"></p>
+  <noscript><p class="places-noscript">Turn on JavaScript to explore the map. My notes, photos, and Google Maps links are available above.</p></noscript>
+  <dialog class="places-photo-dialog" id="places-photo-dialog" aria-labelledby="places-photo-title">
+    <div class="places-photo-header"><h2 id="places-photo-title">Through my lens</h2><button type="button" data-close-photo aria-label="Close photo">×</button></div>
+    <figure><img id="places-dialog-image" alt=""><figcaption><span id="places-photo-caption"></span><span id="places-photo-counter"></span></figcaption></figure>
+    <div class="places-photo-nav"><button type="button" data-previous-photo>← Previous</button><a id="places-photo-source">Read the original note ↗</a><button type="button" data-next-photo>Next →</button></div>
+  </dialog>
+</div>
+{{ end }}

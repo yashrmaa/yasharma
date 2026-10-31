@@ -7,6 +7,7 @@
     {{ $local := partial "notes/local-date.html" . }}
     <a href="{{ .RelPermalink }}" aria-label="Permalink: {{ $local.Format "Jan 2, 2006 at 3:04 PM MST" }}"><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $local.Format "Jan 2, 2006 · 3:04 PM MST" }}</time></a>
     {{ range .GetTerms "categories" }}<span aria-hidden="true"> · </span><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+    {{ range partial "places/ids.html" . }}<span aria-hidden="true"> · </span><a href="{{ "places/" | relURL }}?place={{ . | urlquery }}">On my map ↗</a>{{ end }}
     {{ if .Draft }} · Draft{{ end }}
   </footer>
 </article>
