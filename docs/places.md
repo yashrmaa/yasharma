@@ -13,6 +13,12 @@ Short shared links and full Google Maps links are supported; the original
 link is kept for opening the exact venue. The pin comes from the Maps link.
 Address lookup only adds city/address details, and an outage leaves the exact
 pin available for manual entry under **Edit address & pin / add manually**.
+Districts and localities stay in Neighborhood instead of becoming city labels.
+When a city is missing or ambiguous, a second Photon lookup checks actual city
+features whose extent includes the pin, rather than picking an unrelated nearby
+city. Unverified cities remain blank for manual entry. Bengaluru is displayed
+consistently as Bangalore; Peru's metropolitan Lima districts are grouped under
+Lima using their province, with Miraflores and similar districts as neighborhoods.
 
 **Or search by name and city** keeps the existing Photon/OpenStreetMap search
 available. Places has its own form, save button, and draft. Add an optional

@@ -859,9 +859,9 @@
     "name": "Al Toke Pez",
     "category": "Restaurants",
     "status": "saved",
-    "city": "Miraflores",
-    "neighborhood": "",
-    "address": "Calle Manuel Bonilla Miraflores Peru",
+    "city": "Lima",
+    "neighborhood": "Miraflores",
+    "address": "Calle Manuel Bonilla Miraflores Lima Peru",
     "coordinates": [
       -12.1198105,
       -77.0283461
@@ -964,9 +964,9 @@
     "name": "The Rameshwaram Cafe @ JP Nagar",
     "category": "Restaurants",
     "status": "saved",
-    "city": "JP Nagar",
-    "neighborhood": "KSRTC Layout",
-    "address": "17th Main Road JP Nagar India",
+    "city": "Bangalore",
+    "neighborhood": "JP Nagar",
+    "address": "17th Main Road KSRTC Layout JP Nagar 560078 Bangalore India",
     "coordinates": [
       12.9065068,
       77.5905475

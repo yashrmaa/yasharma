@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createPublisher } from "../src/worker.mjs";
-import { googleMapsURL, googleMapsPin, googleMapsEmbedPin, resolveGoogleMaps, validatePlace } from "../src/places.mjs";
+import { googleMapsURL, googleMapsPin, googleMapsEmbedPin, resolveGoogleMaps, searchPlaces, validatePlace } from "../src/places.mjs";
 import { googleMapsLink, googleMapsKey } from "../public/place-input.js";
 import { placeRepository } from "./places-repository.mjs";
 
@@ -13,6 +13,46 @@ const featureLink = "https://maps.app.goo.gl/UvZMHdUqm4BCy2eYA";
 const featureURL = "https://maps.google.com/maps?q=Sightglass+Coffee,+3014+20th+St,+San+Francisco,+CA+94110&ftid=0x808f7e373f977f1f:0x25f057af5269cec5&entry=gps";
 const cid = "2733781384327450309";
 const embedHTML = `<script>initEmbed(${JSON.stringify([[[0, 0, 0]], [["0x808f7e373f977f1f:0x25f057af5269cec5", "Sightglass Coffee, 3014 20th St", [37.7592345, -122.4113171], cid], "Sightglass Coffee", ["3014 20th St", "San Francisco, CA 94110"]]])});</script>`;
+const bangaloreProperties = { name: "The Rameshwaram Cafe", street: "17th Main Road", locality: "KSRTC Layout", district: "JP Nagar", county: "Bangalore South", state: "Karnataka", country: "India", countrycode: "IN" };
+const bangaloreBoundary = { type: "Feature", properties: { name: "Bengaluru", osm_key: "place", osm_value: "city", countrycode: "IN", extent: [77.4598797, 13.1426196, 77.7840639, 12.8334905] } };
+
+test("JP Nagar stays a neighborhood and a containing city boundary supplies Bangalore without moving the pin", async () => {
+  const calls = [];
+  const url = "https://www.google.com/maps/place/The+Rameshwaram+Cafe/data=!3d12.9065068!4d77.5905475";
+  const result = await resolveGoogleMaps(url, () => { throw new Error("No Maps fetch needed"); }, async (value, options) => {
+    const request = new URL(value); calls.push({ request, options });
+    return Response.json({ features: request.searchParams.has("layer") ? [bangaloreBoundary] : [{ properties: bangaloreProperties }] });
+  });
+  assert.equal(result.city, "Bangalore");
+  assert.equal(result.neighborhood, "JP Nagar");
+  assert.deepEqual(result.coordinates, [12.9065068, 77.5905475]);
+  assert.match(result.address, /JP Nagar Bangalore India/);
+  assert.equal(calls[1].request.searchParams.get("osm_tag"), "place:city");
+  assert.ok(calls.every(({ options }) => !options.headers.Authorization));
+});
+
+test("Miraflores is retained as the neighborhood inside Lima, using the province rather than the broader department", async () => {
+  const url = "https://www.google.com/maps/place/Al+Toke+Pez/data=!3d-12.1198105!4d-77.0283461";
+  const place = await resolveGoogleMaps(url, () => {}, async () => Response.json({ features: [{ properties: { city: "Miraflores", district: "Miraflores", county: "Province of Lima", state: "Department of Lima", country: "Peru", countrycode: "PE", street: "Calle Manuel Bonilla" } }] }));
+  assert.equal(place.city, "Lima");
+  assert.equal(place.neighborhood, "Miraflores");
+  assert.deepEqual(place.coordinates, [-12.1198105, -77.0283461]);
+});
+
+test("unknown city lookup does not promote districts, states, or a nearby city whose boundary excludes the pin", async () => {
+  const url = "https://www.google.com/maps/place/Cafe/data=!3d12.9065068!4d77.5905475";
+  for (const candidates of [[], [{ properties: { ...bangaloreBoundary.properties, name: "A different nearby city", extent: [78, 14, 79, 13] } }], [{ properties: { ...bangaloreBoundary.properties, name: "An unbounded nearby city", extent: undefined } }]]) {
+    const result = await resolveGoogleMaps(url, () => {}, async value => Response.json({ features: new URL(value).searchParams.has("layer") ? candidates : [{ properties: bangaloreProperties }] }));
+    assert.equal(result.city, "");
+    assert.equal(result.neighborhood, "JP Nagar");
+  }
+});
+
+test("name search uses the same city/neighborhood extraction as Google Maps links", async () => {
+  const places = await searchPlaces("Rameshwaram Cafe JP Nagar", async value => Response.json({ features: new URL(value).pathname.includes("reverse") ? [bangaloreBoundary] : [{ properties: bangaloreProperties, geometry: { coordinates: [77.5905475, 12.9065068] } }] }));
+  assert.equal(places[0].city, "Bangalore");
+  assert.equal(places[0].neighborhood, "JP Nagar");
+});
 
 test("both reported Sightglass share formats resolve to their selected branch, preserving the shared URL", async () => {
   const first = "https://maps.app.goo.gl/AsBLaAHwNQwsBbgn7";

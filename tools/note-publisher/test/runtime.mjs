@@ -34,6 +34,7 @@ const options = {
     const url = new URL(request.url);
     if (url.hostname === "maps.app.goo.gl") {
       assert.equal(request.headers.has("Authorization"), false);
+      if (url.pathname === "/jp-nagar-fixture") return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Rameshwaram+Cafe/data=!3d12.9065068!4d77.5905475" } });
       if (url.pathname === "/feature-id-fixture") return new Response(null, { status: 302, headers: { Location: "https://maps.google.com/?q=Sightglass+Coffee,+3014+20th+St&ftid=0x808f7e373f977f1f:0x25f057af5269cec5" } });
       return new Response(null, { status: 302, headers: { Location: "https://www.google.com/maps/place/Runtime+Maps+Cafe/@0,0,2z/data=!8m2!3d35.6638151!4d139.6999153" } });
     }
@@ -45,6 +46,7 @@ const options = {
     }
     if (url.hostname === "photon.komoot.io") {
       assert.equal(request.headers.has("Authorization"), false);
+      if (url.searchParams.get("lat") === "12.9065068") return Response.json({ features: [{ properties: url.searchParams.has("layer") ? { name: "Bengaluru", osm_key: "place", osm_value: "city", countrycode: "IN", extent: [77.4598797, 13.1426196, 77.7840639, 12.8334905] } : { district: "JP Nagar", locality: "KSRTC Layout", countrycode: "IN", country: "India", street: "17th Main Road" } }] });
       return Response.json({ features: [{ properties: { city: "Tokyo", street: "Jinnan", country: "Japan" } }] });
     }
     assert.equal(url.origin, "https://api.github.com", "Never forward credentials to redirects");
@@ -130,6 +132,12 @@ try {
   assert.deepEqual(featurePlace.coordinates, [37.7592345, -122.4113171]);
   assert.equal(featurePlace.address, "3014 20th St, San Francisco, CA 94110");
   assert.equal(featurePlace.mapsURL, featureURL);
+  const bangaloreResponse = await runtime.dispatchFetch(`${origin}/places/resolve?url=${encodeURIComponent("https://maps.app.goo.gl/jp-nagar-fixture")}`, { headers: { Cookie: cookie } });
+  assert.equal(bangaloreResponse.status, 200, await bangaloreResponse.clone().text());
+  const bangalorePlace = (await bangaloreResponse.json()).place;
+  assert.equal(bangalorePlace.city, "Bangalore");
+  assert.equal(bangalorePlace.neighborhood, "JP Nagar");
+  assert.deepEqual(bangalorePlace.coordinates, [12.9065068, 77.5905475]);
   console.log("workerd runtime passed: cookie auth, note/link/photo publishing, categories, Unicode, redirect refusal, collision recovery; no real GitHub writes.");
   console.log("workerd runtime passed: place remarks and photos save atomically without notebook posts.");
   console.log("workerd runtime passed: authenticated Google Maps redirects, exact pin import, address enrichment, and original-link saving.");

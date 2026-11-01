@@ -123,6 +123,54 @@ async function readMapsHTML(response) {
   return new TextDecoder().decode(result);
 }
 
+function cityName(value, properties) {
+  const name = String(value || "").trim().slice(0, 120);
+  return /^bengaluru$/i.test(name) && (properties.countrycode === "IN" || properties.country === "India") ? "Bangalore" : name;
+}
+
+async function addressFields(p, coordinates, geocodeFetch, endpoint, cityLookups = new Map()) {
+  const district = String(p.district || p.suburb || "").trim();
+  const locality = String(p.locality || "").trim();
+  const suppliedCity = String(p.city || p.town || p.village || "").trim();
+  const isSettlement = p.osm_key === "place" && ["city", "town", "village"].includes(p.osm_value);
+  const ambiguous = suppliedCity && suppliedCity.toLocaleLowerCase() === district.toLocaleLowerCase() && !isSettlement;
+  let city = ambiguous ? "" : suppliedCity || (isSettlement ? p.name : "");
+  // Lima's metropolitan districts are municipalities in the geocoder. The
+  // province identifies their parent city; the department alone is too broad.
+  if ((p.countrycode === "PE" || p.country === "Peru") && /^(?:province of |provincia de )?lima(?: province)?$/i.test(String(p.county || "").trim())) city = "Lima";
+  if (!city) {
+    try {
+      const url = new URL(endpoint);
+      url.pathname = url.pathname.replace(/\/api\/?$/, "/reverse");
+      url.search = "";
+      url.searchParams.set("lat", String(coordinates[0]));
+      url.searchParams.set("lon", String(coordinates[1]));
+      url.searchParams.set("lang", "en");
+      url.searchParams.set("layer", "city");
+      url.searchParams.set("osm_tag", "place:city");
+      url.searchParams.set("radius", "50");
+      url.searchParams.set("limit", "5");
+      const key = `${p.countrycode || p.country || ""}:${coordinates.map(n => n.toFixed(2)).join(",")}`;
+      if (!cityLookups.has(key)) cityLookups.set(key, (async () => {
+        const response = await geocodeFetch(url.href, { redirect: "manual", headers: { Accept: "application/json", "User-Agent": "YasharmaNotebook/1.0 (+https://yasharma.com/places/)" }, signal: AbortSignal.timeout(5000), cf: { cacheTtl: 86400, cacheEverything: true } });
+        return response.ok ? (await readResponse(response)).features || [] : [];
+      })());
+      const candidates = await cityLookups.get(key);
+      const containing = candidates.find(feature => {
+        const candidate = feature.properties || {};
+        const bounds = candidate.extent;
+        return candidate.osm_key === "place" && candidate.osm_value === "city" && (!p.countrycode || candidate.countrycode === p.countrycode) && Array.isArray(bounds) && bounds.length === 4 && bounds.every(Number.isFinite) && coordinates[1] >= bounds[0] && coordinates[1] <= bounds[2] && coordinates[0] >= bounds[3] && coordinates[0] <= bounds[1];
+      });
+      if (containing) city = containing.properties.name;
+    } catch { /* Keep the city blank for manual entry rather than inventing one. */ }
+  }
+  city = cityName(city, p);
+  const neighborhood = [district, locality].find(value => value && value.toLocaleLowerCase() !== city.toLocaleLowerCase()) || "";
+  const smallerArea = locality && ![neighborhood, city].some(value => value.toLocaleLowerCase() === locality.toLocaleLowerCase()) ? locality : "";
+  const address = [p.housenumber, p.street, smallerArea, neighborhood, p.postcode, city, p.country].filter(Boolean).join(" ").slice(0, 400);
+  return { city, neighborhood: neighborhood.slice(0, 120), address };
+}
+
 export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEndpoint = "https://photon.komoot.io/api/") {
   const original = googleMapsURL(value);
   let current = original;
@@ -188,10 +236,7 @@ export async function resolveGoogleMaps(value, mapsFetch, geocodeFetch, searchEn
     const response = await geocodeFetch(reverse.href, { redirect: "manual", headers: { Accept: "application/json", "User-Agent": "YasharmaNotebook/1.0 (+https://yasharma.com/places/)" }, signal: AbortSignal.timeout(5000), cf: { cacheTtl: 86400, cacheEverything: true } });
     if (response.ok) {
       const result = await readResponse(response);
-      const p = result.features?.[0]?.properties || {};
-      city = String(p.city || p.town || p.village || p.district || p.state || "").slice(0, 120);
-      neighborhood = String(p.suburb || p.locality || "").slice(0, 120);
-      address = [p.housenumber, p.street, city, p.country].filter(Boolean).join(" ").slice(0, 400);
+      if (result.features?.[0]) ({ city, neighborhood, address } = await addressFields(result.features[0].properties || {}, pin.coordinates, geocodeFetch, searchEndpoint));
     }
   } catch { /* Exact link import does not depend on the optional address service. */ }
   return { ...pin, city, neighborhood, address: pin.address || address, precision: "address", mapsURL: original.href, locationSource: original.href };
@@ -283,15 +328,16 @@ export async function searchPlaces(query, geocodeFetch, endpoint = "https://phot
     result = await readResponse(response);
   } catch { throw new PublishError(502, "search_unavailable", "Place search is unavailable. Try again, choose a saved place, or add its location manually."); }
   if (!Array.isArray(result.features)) throw new PublishError(502, "search_unavailable", "Place search returned no usable results. Try a more specific name or add the location manually.");
-  return result.features.slice(0, 6).flatMap(feature => {
+  const cityLookups = new Map();
+  const places = await Promise.all(result.features.slice(0, 6).map(async feature => {
     const p = feature.properties || {};
     const coordinates = feature.geometry?.coordinates;
-    if (!Array.isArray(coordinates) || coordinates.length !== 2 || !coordinates.every(Number.isFinite) || Math.abs(coordinates[0]) > 180 || Math.abs(coordinates[1]) > 90) return [];
-    const city = p.city || p.town || p.village || p.district || p.state || p.country || "";
-    const address = [p.housenumber, p.street, p.postcode, city, p.country].filter(Boolean).join(" ");
+    if (!Array.isArray(coordinates) || coordinates.length !== 2 || !coordinates.every(Number.isFinite) || Math.abs(coordinates[0]) > 180 || Math.abs(coordinates[1]) > 90) return null;
+    const { city, neighborhood, address } = await addressFields(p, [coordinates[1], coordinates[0]], geocodeFetch, endpoint, cityLookups);
     const type = { N: "node", W: "way", R: "relation" }[p.osm_type];
-    return [{ name: String(p.name || p.street || city).slice(0, 200), city: String(city).slice(0, 120), neighborhood: String(p.suburb || p.locality || "").slice(0, 120), address: String(address || p.name || city).slice(0, 400), coordinates: [coordinates[1], coordinates[0]], precision: p.osm_key === "place" && p.osm_value !== "house" ? "city" : "address", locationSource: type && /^\d+$/.test(String(p.osm_id)) ? `https://www.openstreetmap.org/${type}/${p.osm_id}` : "" }];
-  });
+    return { name: String(p.name || p.street || city).slice(0, 200), city, neighborhood, address: String(address || p.name || city).slice(0, 400), coordinates: [coordinates[1], coordinates[0]], precision: p.osm_key === "place" && p.osm_value !== "house" ? "city" : "address", locationSource: type && /^\d+$/.test(String(p.osm_id)) ? `https://www.openstreetmap.org/${type}/${p.osm_id}` : "" };
+  }));
+  return places.filter(Boolean);
 }
 
 export async function savePlace({ entry, env, fetch: githubFetch, date, uuid, sleep }) {
