@@ -980,5 +980,26 @@
       "The Rameshwaram Cafe @ JP Nagar"
     ],
     "updatedAt": "2026-11-01T00:01:23.192Z"
+  },
+  {
+    "name": "Kahnfections",
+    "category": "Bakeries",
+    "status": "saved",
+    "city": "San Francisco",
+    "neighborhood": "Mission",
+    "address": "3321 20th St, San Francisco, CA 94110",
+    "coordinates": [
+      37.7587553,
+      -122.4152538
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/L1ScHjrbdXbhVvKt8?g_st=ic",
+    "mapsURL": "https://maps.app.goo.gl/L1ScHjrbdXbhVvKt8?g_st=ic",
+    "comment": "Get the mushroom gruyere croissant. The biscuits are great too",
+    "id": "kahnfections-962aa0bf",
+    "aliases": [
+      "Kahnfections"
+    ],
+    "updatedAt": "2026-11-01T19:48:18.272Z"
   }
 ]
