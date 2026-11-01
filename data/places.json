@@ -959,5 +959,26 @@
       "GLITCH COFFEE OSAKA"
     ],
     "updatedAt": "2026-10-31T23:57:54.209Z"
+  },
+  {
+    "name": "The Rameshwaram Cafe @ JP Nagar",
+    "category": "Restaurants",
+    "status": "saved",
+    "city": "JP Nagar",
+    "neighborhood": "KSRTC Layout",
+    "address": "17th Main Road JP Nagar India",
+    "coordinates": [
+      12.9065068,
+      77.5905475
+    ],
+    "precision": "address",
+    "locationSource": "https://maps.app.goo.gl/kmtQRzeqSYHPFsMY7",
+    "mapsURL": "https://maps.app.goo.gl/kmtQRzeqSYHPFsMY7",
+    "comment": "Crowded but worth it",
+    "id": "the-rameshwaram-cafe-jp-nagar-d96f2fee",
+    "aliases": [
+      "The Rameshwaram Cafe @ JP Nagar"
+    ],
+    "updatedAt": "2026-11-01T00:01:23.192Z"
   }
 ]
