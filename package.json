@@ -8,7 +8,7 @@
     "preview:notebook": "node tools/places/preview-notebook.mjs"
   },
   "devDependencies": {
-    "pagefind": "1.5.2"
+    "pagefind": "1.6.0"
   },
   "engines": {
     "node": ">=24"
