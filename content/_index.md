@@ -15,11 +15,13 @@ comments: false
 <img src="about/photo.jpeg" alt="Yash Sharma" width="200" style="border-radius: 8px; margin-bottom: 20px;">
 {{< /trusted-html >}}
 
-I live in San Francisco and build AI agents at work.
+I'm a software engineer and tech lead in San Francisco. I've built AI agents, worked on medical AI, and designed large-scale software systems.
+
+## Work
 
 ### Autonomous Bug Fixing Agents
 
-I work on autonomous bug fixing agents. The goal is to build a product that can fix most software bugs on it's own. It's like you've got this really smart co-worker that works when you sleep. Production systems have tons of issues some are priority, most are not. Our system works on them and regularly sends pull requests for engineers to review.
+I worked on autonomous bug fixing agents. The goal is to build a product that can fix most software bugs on it's own. It's like you've got this really smart co-worker that works when you sleep. Production systems have tons of issues some are priority, most are not. Our system works on them and regularly sends pull requests for engineers to review.
 
 * I built an unreleased multi-agent system for root cause analysis for production bugs based on [GDM's AI Co-Scientist](https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/).
 * Created a new context compaction strategy inspired from [observation masking](https://arxiv.org/pdf/2508.21433) that reduced the **total tokens used and latency by 50%** while keeping the cache hit rate close to baseline.
@@ -48,18 +50,9 @@ The complexity of human bodies make medical diagnosis incredibly challenging. Me
 * I vibe-coded an [iOS app](https://github.com/yashrmaa/noisemeter) that measures noise and tells me it's impact on my health.
 
 
-## Media
-
-* I was a guest on the [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb) where I talked about AI and my journey from a small town in India to the forefront of AI in San Francisco.
-
-* I wrote a reader essay about [legal immigration](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/) on Tangle.
-
-* My essay was referenced in [The H-1B debate between Trump, Musk, and MAGA.](https://www.readtangle.com/h1b-debate-musk-trump-immigration/) in Jan, 2025.
-
-* My essay was again featured in the story: [President Trump orders H-1B visa applicants to pay a $100,000 fee](https://www.readtangle.com/president-trump-orders-h1b-visa-applicants-to-pay-a-100-000-fee/) in Sep, 2025.
-
-
 ## Selected writing
+
+I share longer pieces on the [blog](/blog/) and shorter thoughts in my [notes](/notes/).
 
 Interesting pieces:
 
@@ -73,7 +66,20 @@ Interesting pieces:
 
 I also publish selected writing on [Substack](https://yasharma.substack.com).
 
+RSS: [All](/index.xml) · [Blog](/blog/index.xml) · [Notes](/notes/index.xml)
+
 {{< recent-notes >}}
+
+## Media
+
+* I was a guest on the [Cillers Hackathon podcast](https://open.spotify.com/episode/1BJHEsJ04xMgAPliO8awSa?si=6ddfa595649449bb) where I talked about AI and my journey from a small town in India to the forefront of AI in San Francisco.
+
+* I wrote a reader essay about [legal immigration](https://www.readtangle.com/otherposts/the-harsh-realities-of-legal-immigration/) on Tangle.
+
+* My essay was referenced in [The H-1B debate between Trump, Musk, and MAGA.](https://www.readtangle.com/h1b-debate-musk-trump-immigration/) in Jan, 2025.
+
+* My essay was again featured in the story: [President Trump orders H-1B visa applicants to pay a $100,000 fee](https://www.readtangle.com/president-trump-orders-h1b-visa-applicants-to-pay-a-100-000-fee/) in Sep, 2025.
+
 
 ## Currently
 

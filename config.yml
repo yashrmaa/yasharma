@@ -89,6 +89,10 @@ params:
 
 menu:
   main:
+    - identifier: work
+      name: work
+      url: /#work
+      weight: 5
     - identifier: notes
       name: notes
       url: /notes/
