@@ -13,6 +13,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  # Weekly rebuild to pick up the latest Ocean Radar bundle (which rebuilds Mondays 06:00 UTC).
+  schedule:
+    - cron: '0 9 * * 1'
+
 # The build cannot deploy or mint an OIDC token.
 permissions:
   contents: read
@@ -44,7 +48,7 @@ jobs:
           persist-credentials: false
       - name: Setup Pages
         id: pages
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -90,15 +94,28 @@ jobs:
             --baseURL "${{ steps.pages.outputs.base_url || 'https://yasharma.com' }}/"
       - name: Run pagefind
         run: npm run build:search
+      - name: Add Ocean Radar at /oceanrader/
+        # Built by github.com/yashrmaa/ocean-radar and published as its "site" release.
+        # If the bundle can't be fetched, the rest of the site still deploys.
+        run: |
+          bundle="$RUNNER_TEMP/oceanradar-site.tar.gz"
+          if curl --fail --location --proto '=https' --tlsv1.2 --retry 3 -o "$bundle" \
+              "https://github.com/yashrmaa/ocean-radar/releases/download/site/oceanradar-site.tar.gz"; then
+            mkdir -p public/oceanrader
+            tar -xzf "$bundle" -C public/oceanrader --no-same-owner
+            test -f public/oceanrader/index.html
+          else
+            echo "::warning::Ocean Radar bundle unavailable; deploying the site without /oceanrader/"
+          fi
       - name: Upload artifact
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./public
 
   # Deployment job
   deploy:
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
     permissions:
       pages: write
       id-token: write
